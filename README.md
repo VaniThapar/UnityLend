@@ -10,3 +10,7 @@ https://drive.google.com/file/d/1gyd7sokLba8Ai6vOULL_auioWAXFHsps/view?usp=drive
 
 SQL queries to create the tables:
 [Queries.pdf](https://github.com/VaniThapar/UnityLend/files/14318947/Queries.pdf)
+
+SQL queries to populate the dummy data into tables:
+[dummyData.pdf](https://github.com/VaniThapar/UnityLend/files/14319004/dummyData.pdf)
+
