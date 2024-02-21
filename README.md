@@ -1,8 +1,12 @@
 # DB Design:
 https://docs.google.com/document/d/1yztmCw-_h2KMAJjfsULA9HYDZTXnV1R2zH4husLGwB4/edit
+# Steps to setup database
+#TODO:: Parthusa need to populate the details 
 
-# To run the project:
-run: git clone https://github.com/VaniThapar/UnityLend.git
+# To run the project follow the below steps:
+Clone the project : git clone https://github.com/VaniThapar/UnityLend.git
+Compile the project : mvn clean install
+Run the project: mvn spring:boot run
 
 # E R Diagram:
 Google Drive Link: 
