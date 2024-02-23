@@ -1,0 +1,23 @@
+package com.educare.unitylend.model;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class BorrowRequest {
+    private UUID requestId;
+    private User borrower;
+    private Community community;
+    private String returnPeriod;
+    private String status;
+    private LocalDateTime timestamp;
+    private BigDecimal collectedAmount;
+    private BigDecimal targetAmount;
+}
