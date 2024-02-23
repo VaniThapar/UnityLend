@@ -15,11 +15,11 @@ public class User {
     private UUID userID;
     private String password;
     private String name;
-    private String email;
-    private Date dob;
-    private Integer income;
-    private String locality;
-    private String college;
-    private String company;
-    private UUID walletID;
+//    private String email;
+//    private Date dob;
+//    private Integer income;
+//    private String locality;
+//    private String college;
+//    private String company;
+//    private UUID walletID;
 }
