@@ -12,7 +12,9 @@ public interface UserService {
      * @throws ServiceException : Throws if any exception occurs
      */
     List<User> getUsers() throws ServiceException;
+    void updateUser(User user) throws ServiceException;
 
+    void createUser(User user) throws ServiceException;
     /**
      * @param userId : Uniquely identifies a user
      * @return Object of {@link User} for the given parameter
