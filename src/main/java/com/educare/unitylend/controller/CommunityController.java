@@ -44,7 +44,6 @@ public class CommunityController extends BaseController {
 
     @PostMapping("/create-community")
     public ResponseEntity<String> createNewCommunity(@RequestBody Community community) throws ControllerException {
-        // Create the user
         try {
             communityService.createCommunity(community);
             return ResponseEntity.ok("succcesss!!!");
