@@ -8,6 +8,8 @@ import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.UUID;
+
 @Mapper
 @Repository
 
@@ -29,4 +31,7 @@ public interface CommunityRepository {
 
     @Select("SELECT commontag FROM community WHERE commontag = #{commontag}")
     String findByCommontag(String commontag);
+
+    @Select("SELECT communityid FROM community WHERE communityname = #{name}")
+    UUID getCommunityIdByName(String name);
 }
