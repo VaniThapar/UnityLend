@@ -60,7 +60,29 @@ public class User {
         this.collegeuniversity = collegeuniversity;
     }
 
+    public void setUserid(UUID userid) {
+        this.userid = userid;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setDob(LocalDate dob) {
+        this.dob = dob;
+    }
+
     public UUID getUserid() {
+
+        System.out.println(userid);
         return userid;
     }
 

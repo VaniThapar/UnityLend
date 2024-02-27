@@ -46,22 +46,22 @@ public class UserController extends BaseController {
 
     }
 
-    @PutMapping("/{userId}")
-    public ResponseEntity<String> updateUser(@PathVariable String userId, @RequestBody User updatedUser) throws ControllerException  {
-        // Set the userId in the updatedUser object
-        //updatedUser.setUserId(userId);
-
-        // Validate and update the user
-        try {
-            userService.updateUser(updatedUser);
-        }
-        catch (Exception e) {
-            log.error("Error encountered in getting the users");
-            throw new ControllerException("Error encountered in getting the users", e);
-        }
-
-        return ResponseEntity.ok("User updated successfully");
-}
+//    @PutMapping("/{userId}")
+//    public ResponseEntity<String> updateUser(@PathVariable String userId, @RequestBody User updatedUser) throws ControllerException  {
+//        // Set the userId in the updatedUser object
+//        //updatedUser.setUserId(userId);
+//
+//        // Validate and update the user
+//        try {
+//            userService.updateUser(updatedUser);
+//        }
+//        catch (Exception e) {
+//            log.error("Error encountered in getting the users");
+//            throw new ControllerException("Error encountered in getting the users", e);
+//        }
+//
+//        return ResponseEntity.ok("User updated successfully");
+//}
 
 }
 

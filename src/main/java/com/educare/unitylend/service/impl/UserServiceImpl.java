@@ -3,6 +3,7 @@ package com.educare.unitylend.service.impl;
 import com.educare.unitylend.Exception.ServiceException;
 import com.educare.unitylend.controller.UserCommunityController;
 import com.educare.unitylend.dao.CommunityRepository;
+import com.educare.unitylend.dao.UserCommunityRepository;
 import com.educare.unitylend.dao.UserRepository;
 import com.educare.unitylend.model.User;
 import com.educare.unitylend.service.UserService;
@@ -21,6 +22,7 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     private CommunityRepository communityRepository;
     private UserCommunityController userCommunityController;
+    private UserCommunityRepository userCommunityRepository;
 
     @Override
     public List<User> getUsers() throws ServiceException {
@@ -48,22 +50,34 @@ public class UserServiceImpl implements UserService {
 
 
     public void createUser(User newUser) throws ServiceException {
+      //  System.out.println(newUser.getUserid());
        List<String> matchingCommontags = findMatchingCommontags(newUser);
         try {
             // Add any validation logic if needed before saving to the database
                 for(String str:matchingCommontags){
-                    if(!communityRepository.existsByCommontag(str)){
+                  //  System.out.println(str);
+                    if(!communityRepository.existsByCommontag(str)) {
 
-                        communityRepository.createCommunityUsingStrings(str,str);
+                        communityRepository.createCommunityUsingStrings(str, str);
                     }
+
                 }
 
                 userRepository.createUser(newUser);
+              //  newUser.setUserid(userRepository.settingID(newUser.getEmail()));
                 log.info("addeddd!!!!", newUser.getIncome());
                 newUser.setBorrowingLimit(newUser.getIncome() / 2);
 
                 log.info("addeddd!!!!", newUser.getBorrowingLimit());
-            //    userCommunityController.createUserCommunityMapping(newUser.getUserid(),);
+
+            String collegeuni = newUser.getCollegeuniversity();
+           // System.out.println("collegeuni "+collegeuni);
+//            if(collegeuni!=null){
+//                System.out.println(newUser.getUserid());
+//                System.out.println("commu id "+communityRepository.getCommunityIdByName(collegeuni));
+//                userCommunityRepository.createUserCommunityMapping(newUser.getUserid(),communityRepository.getCommunityIdByName(collegeuni));
+//            }
+
 
         } catch (Exception e) {
             log.error("Error encountered during user creation operation");
@@ -98,15 +112,15 @@ public class UserServiceImpl implements UserService {
         return matchingCommontags;
     }
 
-    public void updateUser(User user) throws ServiceException  {
-        // Your logic to validate and perform additional checks before updating
-        try {
-            userRepository.updateUser(user);
-        }
-        catch (Exception e) {
-            log.error("Error encountered during user fetching operation");
-            throw new ServiceException("Error encountered during user fetch operation", e);
-        }
-    }
+//    public void updateUser(User user) throws ServiceException  {
+//        // Your logic to validate and perform additional checks before updating
+//        try {
+//            userRepository.updateUser(user);
+//        }
+//        catch (Exception e) {
+//            log.error("Error encountered during user fetching operation");
+//            throw new ServiceException("Error encountered during user fetch operation", e);
+//        }
+//    }
 
 }
