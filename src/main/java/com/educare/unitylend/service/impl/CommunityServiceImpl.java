@@ -3,7 +3,6 @@ package com.educare.unitylend.service.impl;
 import com.educare.unitylend.Exception.ServiceException;
 import com.educare.unitylend.dao.CommunityRepository;
 import com.educare.unitylend.model.Community;
-import com.educare.unitylend.model.User;
 import com.educare.unitylend.service.CommunityService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +22,7 @@ public class CommunityServiceImpl implements CommunityService {
             //  log.info("userList ",userList);
             return communityList;
         } catch (Exception e) {
-            //log.error("Error encountered during user fetching operation");
+            log.error("Error encountered during user fetching operation");
             throw new ServiceException("Error encountered during user fetch operation", e);
         }
     }
@@ -33,10 +32,9 @@ public class CommunityServiceImpl implements CommunityService {
         try {
             String communityName= communityRepository.getCommunity(communityTag);
             //  log.info("userList ",userList);
-            System.out.println(communityName);
             return communityName;
         } catch (Exception e) {
-            //log.error("Error encountered during user fetching operation");
+            log.error("Error encountered during user fetching operation");
             throw new ServiceException("Error encountered during user fetch operation", e);
         }
     }

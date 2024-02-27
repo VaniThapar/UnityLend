@@ -5,14 +5,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
-    private UUID userid;
+    private String userid;
     private String password;
     private String name;
     private String email;
@@ -44,7 +43,6 @@ public class User {
     }
 
     public String getName() {
-        System.out.println(name);
         return name;
     }
 
@@ -60,8 +58,8 @@ public class User {
         this.collegeuniversity = collegeuniversity;
     }
 
-    public void setUserid(UUID userid) {
-        this.userid = userid;
+    public String getUserid() {
+        return userid;
     }
 
     public void setPassword(String password) {
@@ -80,10 +78,8 @@ public class User {
         this.dob = dob;
     }
 
-    public UUID getUserid() {
-
-        System.out.println(userid);
-        return userid;
+    public void setUserid(String userid) {
+        this.userid = userid;
     }
 
     public String getLocality() {
@@ -95,7 +91,7 @@ public class User {
     }
 
     public void setIncome(Integer income) {
-        System.out.println(income);
+        // System.out.println(income);
         this.income = income;
     }
 
@@ -105,7 +101,7 @@ public class User {
 
     public void setBorrowingLimit(Integer borrowingLimit) {
         this.borrowingLimit = borrowingLimit;
-        System.out.println(borrowingLimit);
+        //   System.out.println(borrowingLimit);
     }
 
 

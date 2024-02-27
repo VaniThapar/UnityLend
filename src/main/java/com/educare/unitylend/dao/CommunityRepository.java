@@ -1,14 +1,12 @@
 package com.educare.unitylend.dao;
 
 import com.educare.unitylend.model.Community;
-import com.educare.unitylend.model.User;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.UUID;
 
 @Mapper
 @Repository
@@ -33,5 +31,5 @@ public interface CommunityRepository {
     String findByCommontag(String commontag);
 
     @Select("SELECT communityid FROM community WHERE communityname = #{name}")
-    UUID getCommunityIdByName(String name);
+    String getCommunityIdByName(String name);
 }

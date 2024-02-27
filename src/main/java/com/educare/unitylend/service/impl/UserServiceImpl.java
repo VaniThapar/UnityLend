@@ -50,33 +50,36 @@ public class UserServiceImpl implements UserService {
 
 
     public void createUser(User newUser) throws ServiceException {
-      //  System.out.println(newUser.getUserid());
        List<String> matchingCommontags = findMatchingCommontags(newUser);
         try {
             // Add any validation logic if needed before saving to the database
-                for(String str:matchingCommontags){
-                  //  System.out.println(str);
-                    if(!communityRepository.existsByCommontag(str)) {
+            for (String tag : matchingCommontags) {
+                if (!communityRepository.existsByCommontag(tag)) {
 
-                        communityRepository.createCommunityUsingStrings(str, str);
+                    communityRepository.createCommunityUsingStrings(tag, tag);
                     }
 
                 }
 
                 userRepository.createUser(newUser);
-              //  newUser.setUserid(userRepository.settingID(newUser.getEmail()));
-                log.info("addeddd!!!!", newUser.getIncome());
+            newUser.setUserid(userRepository.settingID(newUser.getEmail()));
+            //  log.info("addeddd!!!!", newUser.getIncome());
                 newUser.setBorrowingLimit(newUser.getIncome() / 2);
 
-                log.info("addeddd!!!!", newUser.getBorrowingLimit());
+            //    log.info("addeddd!!!!", newUser.getBorrowingLimit());
 
-            String collegeuni = newUser.getCollegeuniversity();
-           // System.out.println("collegeuni "+collegeuni);
-//            if(collegeuni!=null){
-//                System.out.println(newUser.getUserid());
-//                System.out.println("commu id "+communityRepository.getCommunityIdByName(collegeuni));
-//                userCommunityRepository.createUserCommunityMapping(newUser.getUserid(),communityRepository.getCommunityIdByName(collegeuni));
-//            }
+            String collegeUni = newUser.getCollegeuniversity();
+            String office = newUser.getOfficename();
+            String locality = newUser.getLocality();
+            if (collegeUni != null) {
+                userCommunityRepository.createUserCommunityMapping(newUser.getUserid(), communityRepository.getCommunityIdByName(collegeUni));
+            }
+            if (office != null) {
+                userCommunityRepository.createUserCommunityMapping(newUser.getUserid(), communityRepository.getCommunityIdByName(office));
+            }
+            if (locality != null) {
+                userCommunityRepository.createUserCommunityMapping(newUser.getUserid(), communityRepository.getCommunityIdByName(locality));
+            }
 
 
         } catch (Exception e) {
@@ -112,15 +115,13 @@ public class UserServiceImpl implements UserService {
         return matchingCommontags;
     }
 
-//    public void updateUser(User user) throws ServiceException  {
-//        // Your logic to validate and perform additional checks before updating
-//        try {
-//            userRepository.updateUser(user);
-//        }
-//        catch (Exception e) {
-//            log.error("Error encountered during user fetching operation");
-//            throw new ServiceException("Error encountered during user fetch operation", e);
-//        }
-//    }
+    public void updateUser(User user) throws ServiceException {
+        try {
+            userRepository.updateUser(user);
+        } catch (Exception e) {
+            log.error("Error encountered during user fetching operation");
+            throw new ServiceException("Error encountered during user fetch operation", e);
+        }
+    }
 
 }

@@ -2,7 +2,6 @@ package com.educare.unitylend.controller;
 
 import com.educare.unitylend.Exception.ControllerException;
 import com.educare.unitylend.model.Community;
-import com.educare.unitylend.model.User;
 import com.educare.unitylend.service.CommunityService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,10 +43,9 @@ public class CommunityController extends BaseController {
 
     @PostMapping("/create-community")
     public ResponseEntity<String> createNewCommunity(@RequestBody Community community) throws ControllerException {
-        // Create the user
         try {
             communityService.createCommunity(community);
-            return ResponseEntity.ok("succcesss!!!");
+            return ResponseEntity.ok("success!!!");
         } catch (Exception e) {
             log.error("Error encountered in getting the users");
             throw new ControllerException("Error encountered in getting the users", e);
