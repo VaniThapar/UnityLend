@@ -1,8 +1,6 @@
 package com.educare.unitylend.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 
@@ -11,16 +9,17 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
-    private String userid;
-    private String password;
-    private String name;
-    private String email;
-    private LocalDate dob;
-    private Integer income;
-    private Integer borrowingLimit;
-    private String officename;
-    private String collegeuniversity;
-    private String locality;
+
+    @Getter @Setter private String userid;
+    @Getter @Setter private String password;
+    @Getter @Setter private String name;
+    @Getter @Setter private String email;
+    @Getter @Setter private LocalDate dob;
+    @Getter @Setter private Integer income;
+    @Getter @Setter private Integer borrowingLimit;
+    @Getter @Setter private String officename;
+    @Getter @Setter private String collegeuniversity;
+    @Getter @Setter private String locality;
 
     public Integer getIncome() {
         return income;
