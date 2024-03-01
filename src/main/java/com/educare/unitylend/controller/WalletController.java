@@ -1,17 +1,14 @@
 package com.educare.unitylend.controller;
 
 import com.educare.unitylend.Exception.ControllerException;
-import com.educare.unitylend.Exception.ServiceException;
-import com.educare.unitylend.model.User;
 import com.educare.unitylend.model.Wallet;
-import com.educare.unitylend.service.UserService;
 import com.educare.unitylend.service.WalletService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @AllArgsConstructor
@@ -20,7 +17,6 @@ import java.util.List;
 public class WalletController extends BaseController {
 
     WalletService walletService;
-
     @GetMapping("/get-user-info/{userId}")
 
     public Wallet getWalletInfo(@PathVariable String userId) throws ControllerException{
@@ -33,24 +29,11 @@ public class WalletController extends BaseController {
         }
     }
 
-    @PostMapping("/generate-wallet")
-
-    public ResponseEntity<String> generateWallet(@RequestBody Wallet wallet) throws ControllerException {
-        // Generate the wallet
-        try {
-            walletService.generateWallet(wallet);
-            return ResponseEntity.ok("succcessfully created wallet!!!");
-        } catch (Exception e) {
-            log.error("Error encountered in generating the wallet");
-            throw new ControllerException("Error encountered in generating the wallet", e);
-        }
-
     }
 
 
 
 
 
-}
 
 

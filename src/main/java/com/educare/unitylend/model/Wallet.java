@@ -4,20 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.UUID;
-
-import lombok.Getter;
-import lombok.Setter;
-
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Wallet {
-    @Getter @Setter private String walletid;
-    @Getter @Setter private User user;
-    @Getter @Setter private Float balance=0f;
-
+    private String walletid;
+    private User user;
+    private Float balance = 0f;
     public String getWalletid() {
         return walletid;
     }

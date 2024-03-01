@@ -5,8 +5,10 @@ import com.educare.unitylend.controller.UserCommunityController;
 import com.educare.unitylend.dao.CommunityRepository;
 import com.educare.unitylend.dao.UserCommunityRepository;
 import com.educare.unitylend.dao.UserRepository;
+import com.educare.unitylend.dao.WalletRepository;
 import com.educare.unitylend.model.User;
 import com.educare.unitylend.service.UserService;
+import com.educare.unitylend.service.WalletService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,8 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
+    private WalletRepository walletRepository;
+    private WalletService walletService;
     private CommunityRepository communityRepository;
     private UserCommunityController userCommunityController;
     private UserCommunityRepository userCommunityRepository;
@@ -81,6 +85,7 @@ public class UserServiceImpl implements UserService {
                 userCommunityRepository.createUserCommunityMapping(newUser.getUserid(), communityRepository.getCommunityIdByName(locality));
             }
 
+            walletService.generateWallet(newUser.getUserid());
 
         } catch (Exception e) {
             log.error("Error encountered during user creation operation");
