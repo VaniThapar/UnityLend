@@ -12,7 +12,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LendingHistory {
-    private UUID lendTransactionId;
+    private String lendTransactionId;
     private User lender;
     private User borrower;
     private BorrowRequest borrowRequest;

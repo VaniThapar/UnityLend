@@ -1353,3 +1353,6 @@ SELECT
 FROM
     "User" u;
 
+alter table "TempUser" rename to "tempuser";
+
+

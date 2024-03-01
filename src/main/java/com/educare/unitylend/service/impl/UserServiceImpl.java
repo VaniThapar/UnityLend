@@ -117,10 +117,27 @@ public class UserServiceImpl implements UserService {
 
     public void updateUser(User user) throws ServiceException {
         try {
+            System.out.println(user);
             userRepository.updateUser(user);
+
         } catch (Exception e) {
             log.error("Error encountered during user fetching operation");
             throw new ServiceException("Error encountered during user fetch operation", e);
+        }
+    }
+
+    public boolean markUserAsInactive(String userId) throws ServiceException {
+        try {
+            User user = userRepository.getUserForUserId(userId);
+            if (user != null) {
+                user.setActive(false);
+                userRepository.inactivatingUser(user);
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            throw new ServiceException("Error marking user as inactive", e);
         }
     }
 

@@ -10,7 +10,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Wallet {
-    private UUID Wallet;
-    private UUID userId;
+    private String Walletid;
+
     private Float Balance;
 }
