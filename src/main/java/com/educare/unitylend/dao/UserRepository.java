@@ -1,10 +1,7 @@
 package com.educare.unitylend.dao;
 
 import com.educare.unitylend.model.User;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.SelectProvider;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -13,22 +10,39 @@ import java.util.List;
 @Repository
 public interface UserRepository {
 
-    @Select(SELECT_USERS)
+//    static String getUserForUserIdQuery(String userId){
+//        StringBuilder sqlQueryBuilder = new StringBuilder();
+//
+//        sqlQueryBuilder.append("select userid as userID, password, name,email,dob,income,officename,collegeuniversity,locality,isactive from User where 1=1 ");
+//        if(userId != null){
+//            sqlQueryBuilder.append(" and userId = %s".formatted(userId));
+//        }
+//
+//        return sqlQueryBuilder.toString();
+//    }
+
+    @Select("select * from tempuser")
     List<User> getAllUsers();
 
-    @SelectProvider(type = UserRepository.class, method = "getUserForUserIdQuery")
-    User getUserForUserId(@Param("userId") String userId);
+//    @SelectProvider(type = UserRepository.class, method = "getUserForUserIdQuery")
+//    User getUserForUserId(@Param("UserId") String userId);
+    //  static final List<String> SELECT_USERS = "select password from User";
 
-    static final String SELECT_USERS = "select user_id as userID, password, name from user_table";
+    @Insert("INSERT INTO tempuser (userid, password, name,email,dob,income,officename,collegeuniversity,locality) VALUES (CAST(uuid_generate_v4() AS VARCHAR), #{password}, #{name}, #{email},#{dob},#{income},#{officename},#{collegeuniversity},#{locality})")
+    void createUser(User user);
 
-    static String getUserForUserIdQuery(String userId){
-        StringBuilder sqlQueryBuilder = new StringBuilder();
+    @Select("SELECT * FROM tempuser WHERE userid = #{userid}")
+    User getUserForUserId(String userId);
 
-        sqlQueryBuilder.append("select user_id as userID, password, name from user_table where 1=1 ");
-        if(userId != null){
-            sqlQueryBuilder.append(" and userId = %s".formatted(userId));
-        }
+    @Select("SELECT userid FROM tempuser WHERE email = #{email}")
+    String settingID(@Param("email") String email);
 
-        return sqlQueryBuilder.toString();
-    }
+
+    @Update("UPDATE tempuser SET name = #{name}, password = #{password}, email = #{email}, locality = #{locality}, officename = #{officename}, collegeuniversity = #{collegeuniversity}, income = #{income}, isActive = #{isActive} WHERE userid = #{userid}")
+    void updateUser(User user);
+
+
+    @Update("UPDATE tempuser SET  isActive = #{isActive} WHERE userid = #{userid}")
+    void inactivatingUser(User user);
+
 }

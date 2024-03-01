@@ -4,14 +4,35 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.UUID;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Community {
-    private UUID communityId;
-    private String communityName;
+    private String communityid;
+    private String communityname;
+    private String commontag;
 
+    public String getCommunityid() {
+        return communityid;
+    }
 
+    public void setCommunityid(String communityid) {
+        this.communityid = communityid;
+    }
+
+    public String getCommunityname() {
+        return communityname;
+    }
+
+    public void setCommunityname(String communityname) {
+        this.communityname = communityname;
+    }
+
+    public String getCommontag() {
+        return commontag;
+    }
+
+    public void setCommontag(String commontag) {
+        this.commontag = commontag;
+    }
 }
