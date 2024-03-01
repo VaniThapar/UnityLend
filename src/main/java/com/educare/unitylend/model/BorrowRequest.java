@@ -12,7 +12,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BorrowRequest {
-    private UUID requestId;
+    private String requestId;
     private User borrower;
     private Community community;
     private String returnPeriod;

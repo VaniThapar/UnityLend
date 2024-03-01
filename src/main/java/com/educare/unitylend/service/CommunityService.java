@@ -10,4 +10,5 @@ public interface CommunityService {
     List<Community> getCommunities() throws ServiceException;
     String getCommunityName(String communityTag) throws ServiceException;
     void createCommunity(Community community) throws ServiceException;
+
 }
