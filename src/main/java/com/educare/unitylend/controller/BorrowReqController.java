@@ -28,7 +28,7 @@ public class BorrowReqController extends BaseController{
             List<BorrowRequest> borrowRequestList = borrowReqService.getBorrowRequests(userId);
             return borrowRequestList;
         } catch (ServiceException e) {
-            log.error("Error encountered in getting the borrow requests");
+            log.error("Error encountered in getting the borrow requests of user");
             throw new ControllerException("Error encountered in getting the borrow requests", e);
         }
     }
