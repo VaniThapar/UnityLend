@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Wallet {
+
     private String walletid;
     private User user;
     private Float balance = 0f;
