@@ -22,8 +22,9 @@ https://drive.google.com/file/d/1gyd7sokLba8Ai6vOULL_auioWAXFHsps/view?usp=drive
 
 ![UnityLend drawio](https://github.com/VaniThapar/UnityLend/assets/91086564/d81ee720-ae83-4ba6-810b-1676812c2d48)
 
-
-
+# Flow diagram for the lender
+Lucidchart Link:
+https://lucid.app/lucidspark/02f1d702-cd80-4a8a-83b8-afb84a234248/edit?beaconFlowId=7CC62F26EED5FE27&invitationId=inv_cfbfce09-e31e-43a0-b886-fc51112f9129&page=0_0#
 
 
 
