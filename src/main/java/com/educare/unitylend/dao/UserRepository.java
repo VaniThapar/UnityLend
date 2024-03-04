@@ -45,4 +45,7 @@ public interface UserRepository {
     @Update("UPDATE tempuser SET  isActive = #{isActive} WHERE userid = #{userid}")
     void inactivatingUser(User user);
 
+    @Select("SELECT income FROM tempuser WHERE userid = #{userid}")
+    Integer getIncome(@Param("userid") String userid);
+
 }
