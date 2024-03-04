@@ -24,7 +24,7 @@ public class CommunityController extends BaseController {
         try {
             List<Community> communityList = communityService.getCommunities();
 
-            if (communityList.isEmpty()) {
+            if (communityList == null || communityList.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No data found");
             }
 
@@ -36,8 +36,12 @@ public class CommunityController extends BaseController {
     }
 
     @GetMapping("get-community-by-tag")
-    public ResponseEntity<?> getCommunityWithTag(@RequestParam String commonTag) throws ControllerException {
+    public ResponseEntity<?> getCommunityWithTag(@RequestParam(required = false) String commonTag) throws ControllerException {
         try {
+            if (commonTag == null || commonTag.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("commonTag parameter is missing or empty");
+            }
+
             String communityName = communityService.getCommunityName(commonTag);
 
             if (communityName == null || communityName.isEmpty()) {
@@ -54,6 +58,10 @@ public class CommunityController extends BaseController {
     @PostMapping("/create-community")
     public ResponseEntity<String> createNewCommunity(@RequestBody Community community) throws ControllerException {
         try {
+            if (community == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Request body is null");
+            }
+
             communityService.createCommunity(community);
             return ResponseEntity.ok("success!!!");
         } catch (ServiceException e) {
@@ -61,4 +69,5 @@ public class CommunityController extends BaseController {
             throw new ControllerException("Error encountered in creating the community", e);
         }
     }
+
 }

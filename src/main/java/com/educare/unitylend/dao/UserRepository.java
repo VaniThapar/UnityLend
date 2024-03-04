@@ -41,7 +41,6 @@ public interface UserRepository {
     @Update("UPDATE tempuser SET name = #{name}, password = #{password}, email = #{email}, locality = #{locality}, officename = #{officename}, collegeuniversity = #{collegeuniversity}, income = #{income}, isActive = #{isActive} WHERE userid = #{userid}")
     void updateUser(User user);
 
-
     @Update("UPDATE tempuser SET  isActive = #{isActive} WHERE userid = #{userid}")
     void inactivatingUser(User user);
 
