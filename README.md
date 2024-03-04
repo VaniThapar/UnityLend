@@ -22,8 +22,9 @@ https://drive.google.com/file/d/1gyd7sokLba8Ai6vOULL_auioWAXFHsps/view?usp=drive
 
 ![UnityLend drawio](https://github.com/VaniThapar/UnityLend/assets/91086564/d81ee720-ae83-4ba6-810b-1676812c2d48)
 
-
-
+# Flow diagram for the lender
+Draw.io Link:
+https://app.diagrams.net/#G1dLFlWWprYTwwtwjXvi5WEJS94RS7x-uo#%7B%22pageId%22%3A%22W7Y_DPB_WjcdcxQGYy3G%22%7D
 
 
 
