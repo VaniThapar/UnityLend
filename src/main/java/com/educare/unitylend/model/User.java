@@ -21,15 +21,6 @@ public class User {
     private String officename;
     private String collegeuniversity;
     private String locality;
-    private boolean isActive;
-
-    public boolean isActive() {
-        return isActive;
-    }
-
-    public void setActive(boolean active) {
-        isActive = active;
-    }
 
     public Integer getIncome() {
         return income;
