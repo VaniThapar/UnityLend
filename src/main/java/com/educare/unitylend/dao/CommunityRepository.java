@@ -1,12 +1,10 @@
 package com.educare.unitylend.dao;
 
 import com.educare.unitylend.model.Community;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,23 +27,18 @@ public interface CommunityRepository {
     @Select("SELECT COUNT(*) > 0 FROM community WHERE commontag = #{commontag}")
     boolean existsByCommontag(String commontag);
 
-//    @Select("SELECT commontag FROM community WHERE commontag = #{commontag}")
-//    String findByCommontag(String commontag);
 
     @Select({
             "<script>",
-            "SELECT name, commontag FROM community WHERE name IN ",
+            "SELECT communityname, commontag FROM community",
+            "WHERE commontag IN ",
             "<foreach item='name' collection='names' open='(' separator=',' close=')'>",
             "#{name}",
             "</foreach>",
             "</script>"
     })
-    Map<String, String> findCommontagsByNames(
-            @Param("name1") String name1,
-            @Param("name2") String name2,
-            @Param("name3") String name3
-    );
-
+    @MapKey("commontag")
+    Map<String, String> findCommontagsByNames(@Param("names") List<String> names);
 
 
     @Select("SELECT communityid FROM community WHERE communityname = #{name}")
