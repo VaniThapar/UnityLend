@@ -18,18 +18,25 @@ import java.util.List;
 @RequestMapping("/usercommunity")
 public class UserCommunityController {
 
-private UserCommunityService usercommunityService;
+    private UserCommunityService usercommunityService;
+
     @GetMapping("/{userId}")
     public ResponseEntity<List<String>> getAllCommunities(@PathVariable String userId) throws ControllerException {
         try {
+            if (userId == null || userId.isEmpty()) {
+                return ResponseEntity.badRequest().body(List.of("User ID cannot be null or empty"));
+            }
+
             List<String> communityList = usercommunityService.getCommunitiesByUserId(userId);
+
+            if (communityList == null || communityList.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+
             return ResponseEntity.ok(communityList);
         } catch (Exception e) {
             log.error("Error encountered in getting the communities for user with ID: {}", userId, e);
             throw new ControllerException("Error encountered in getting the communities", e);
         }
     }
-
-
-
 }
