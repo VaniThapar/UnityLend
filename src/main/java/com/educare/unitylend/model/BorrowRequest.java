@@ -1,8 +1,6 @@
 package com.educare.unitylend.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -12,12 +10,27 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BorrowRequest {
-    private UUID requestId;
+    @Getter @Setter
+    private String requestId;
+
+    @Getter @Setter
     private User borrower;
+
+    @Getter @Setter
     private Community community;
-    private String returnPeriod;
+
+    @Getter private String returnPeriod;
+
+    @Getter @Setter
     private String status;
+
+    @Getter @Setter
     private LocalDateTime timestamp;
+
     private BigDecimal collectedAmount;
-    private BigDecimal targetAmount;
+    @Getter private BigDecimal targetAmount;
+
+    public String getBorrowerid() {
+        return borrower.getUserid();
+    }
 }
