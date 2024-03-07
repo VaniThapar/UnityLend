@@ -44,6 +44,10 @@ public class UserController extends BaseController{
     public ResponseEntity<String> createUser(@RequestBody User user) throws ControllerException {
         //Creating a new user with the user object
         try {
+            if (user == null || user.getUserid() == null || user.getUserid().isEmpty()) {
+                return ResponseEntity.badRequest().body("User ID cannot be null or empty");
+            }
+
             userService.createUser(user);
             return ResponseEntity.ok("success!!!");
         } catch (ServiceException e) {

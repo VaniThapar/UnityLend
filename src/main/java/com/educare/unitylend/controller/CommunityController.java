@@ -16,13 +16,11 @@ import java.util.List;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/community")
-
 public class CommunityController extends BaseController {
     CommunityService communityService;
 
     @GetMapping("all-communities")
     public ResponseEntity<?> getAllCommunities() throws ControllerException {
-        //Getting all the existing communities
         try {
             List<Community> communityList = communityService.getCommunities();
 

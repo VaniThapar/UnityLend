@@ -53,14 +53,9 @@ public class UserServiceImpl implements UserService {
 
 
     public void createUser(User newUser) throws ServiceException {
-        System.out.println(newUser);
        List<String> matchingCommontags = findMatchingCommontags(newUser);
-        System.out.println(newUser);
-        System.out.println(matchingCommontags);
-
         try {
             // Add any validation logic if needed before saving to the database
-
             for (String tag : matchingCommontags) {
                 if (!communityRepository.existsByCommontag(tag)) {
 
@@ -69,7 +64,7 @@ public class UserServiceImpl implements UserService {
 
                 }
 
-            userRepository.createUser(newUser);
+                userRepository.createUser(newUser);
             newUser.setUserid(userRepository.settingID(newUser.getEmail()));
             newUser.setBorrowingLimit(newUser.getIncome() / 2);
            settingUserRepoMapping(newUser);
@@ -99,23 +94,15 @@ public class UserServiceImpl implements UserService {
         String officenameCommontag = null;
         String collegeuniversityCommontag = null;
         String localityCommontag = null;
-        List<String> names=new ArrayList<>();
-        if (user.getOfficename() != null)  names.add(user.getOfficename());
 
-        if(user.getCollegeuniversity() != null) names.add(user.getCollegeuniversity());
-
-        if(user.getLocality() != null) names.add(user.getLocality());
-
-
-
-
-        Map<String, String> commontags = communityRepository.findCommontagsByNames(names);
+        if (user.getOfficename() != null || user.getCollegeuniversity() != null || user.getLocality() != null) {
+            Map<String, String> commontags = communityRepository.findCommontagsByNames(
+                    user.getOfficename(), user.getCollegeuniversity(), user.getLocality());
 
             officenameCommontag = commontags.get(user.getOfficename());
             collegeuniversityCommontag = commontags.get(user.getCollegeuniversity());
             localityCommontag = commontags.get(user.getLocality());
-
-        System.out.println(officenameCommontag);
+        }
         if (officenameCommontag == null && user.getOfficename() != null) {
             matchingCommontags.add(user.getOfficename());
         }
