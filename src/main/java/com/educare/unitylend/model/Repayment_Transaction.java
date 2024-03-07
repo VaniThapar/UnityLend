@@ -11,10 +11,10 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Repayment_Transaction {
-    private UUID RepayTransactionId;
-    private UUID PayerId;
-    private UUID PayeeId;
-    private UUID RequestId;
+    private String RepayTransactionId;
+    private String PayerId;
+    private String PayeeId;
+    private String RequestId;
     private Float Amount;
     private Date Timestamp;
 }

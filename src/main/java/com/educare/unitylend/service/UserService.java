@@ -13,8 +13,8 @@ public interface UserService {
      */
     List<User> getUsers() throws ServiceException;
 
-    void updateUser(User user) throws ServiceException;
-
+    void updateUser(User user,String userId) throws ServiceException;
+    boolean markUserAsInactive(String userId) throws ServiceException;
     void createUser(User user) throws ServiceException;
     /**
      * @param userId : Uniquely identifies a user

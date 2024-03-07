@@ -42,7 +42,7 @@ public class CommunityServiceImpl implements CommunityService {
     public void createCommunity(Community newCommunity) throws ServiceException {
 
         try {
-            if (!communityRepository.existsByCommontag(newCommunity.getCommontag())) {
+            if (!communityRepository.existsByCommontag(newCommunity.getCommonTag())) {
 
                 communityRepository.createCommunity(newCommunity);
             }

@@ -24,7 +24,7 @@ public class WalletController extends BaseController {
     @GetMapping("/get-user-info/{userId}")
 
     public Wallet getWalletInfo(@PathVariable String userId) throws ControllerException{
-
+        //Getting wallet information
         try {
             return walletService.getWalletInfo(userId);
         } catch (Exception e) {
@@ -36,7 +36,7 @@ public class WalletController extends BaseController {
     @PostMapping("/generate-wallet")
 
     public ResponseEntity<String> generateWallet(@RequestBody Wallet wallet) throws ControllerException {
-        // Generate the wallet
+        // Generating the wallet
         try {
             walletService.generateWallet(wallet);
             return ResponseEntity.ok("succcessfully created wallet!!!");
