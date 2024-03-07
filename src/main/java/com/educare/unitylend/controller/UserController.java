@@ -28,6 +28,7 @@ public class UserController extends BaseController{
     private UserCommunityRepository userCommunityRepository;
     @GetMapping("all-users")
     public ResponseEntity<?> getAllUsers() throws ControllerException {
+        //Getting all the users
         try {
             List<User> userList = userService.getUsers();
             if (userList.isEmpty()) {
@@ -41,6 +42,7 @@ public class UserController extends BaseController{
     }
     @PostMapping("/create-user")
     public ResponseEntity<String> createUser(@RequestBody User user) throws ControllerException {
+        //Creating a new user with the user object
         try {
             userService.createUser(user);
             return ResponseEntity.ok("success!!!");
@@ -53,6 +55,8 @@ public class UserController extends BaseController{
     @PutMapping("/{userId}")
     public ResponseEntity<String> updateUser(@PathVariable String userId, @RequestBody User updatedUser) throws ControllerException {
         //List<String> prevCommunities;
+
+        //Updating the user
 
         try {
             if (userId == null || userId.isEmpty() || updatedUser == null) {
@@ -73,6 +77,7 @@ public class UserController extends BaseController{
     }
     @GetMapping("/{userId}/get-info")
     public ResponseEntity<User> getUserByUserId(@PathVariable String userId) throws ControllerException {
+        //Getting user information for a given user by its userId
         try {
             if (userId == null || userId.isEmpty()) {
                 return ResponseEntity.badRequest().build();
@@ -93,6 +98,7 @@ public class UserController extends BaseController{
 
     @PutMapping("/{userId}/inactive")
     public ResponseEntity<String> deactivateUser(@PathVariable String userId) throws ControllerException{
+        //Deactivating the user
         try {
             if (userId == null || userId.isEmpty()) {
                 return ResponseEntity.badRequest().body("User ID cannot be null or empty");
