@@ -62,10 +62,8 @@ public class UserController extends BaseController{
             if (userId == null || userId.isEmpty() || updatedUser == null) {
                 return ResponseEntity.badRequest().body("User ID and updated user cannot be null or empty");
             }
-          //  prevCommunities = usercommunityService.getCommunitiesByUserId(userId);
-           // userCommunityRepository.deletePrevData(userId);
             updatedUser.setUserid(userId);
-        //System.out.println(prevCommunities);
+        //    System.out.println(updatedUser);
             userService.updateUser(updatedUser, userId);
             return ResponseEntity.ok("User updated successfully");
         }

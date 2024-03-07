@@ -16,7 +16,7 @@ public interface UserCommunityRepository {
     @Select("SELECT c.CommunityName FROM Community c JOIN UserCommunity uc ON c.CommunityId = uc.CommunityId WHERE uc.UserId = #{userId}")
     List<String> findCommunityNamesByUserId(@Param("userId") String userId);
 
-    @Delete("DELETE FROM usercommunityrepository WHERE userid = #{userId}")
+    @Delete("DELETE FROM usercommunity WHERE userid = #{userId}")
     void deletePrevData(@Param("userId") String userId);
 
 }

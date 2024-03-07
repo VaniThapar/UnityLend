@@ -44,4 +44,9 @@ public interface UserRepository {
     @Update("UPDATE tempuser SET  isActive = #{isActive} WHERE userid = #{userid}")
     void inactivatingUser(User user);
 
+
+    @Select("SELECT CONCAT(officename, ', ', collegeuniversity, ', ', locality) AS community FROM tempuser WHERE userid = #{userId}")
+    List<String> findCommunitiesByUserId(String userId);
+
+
 }
