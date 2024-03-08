@@ -9,5 +9,7 @@ public interface BorrowRequestService {
 
     List<String> getRequestedCommunitiesByUserId(String userId) throws ServiceException;
 
-    boolean raiseBorrowRequestForUserid(String userId, BorrowRequest borrowRequest) throws ServiceException;
+    boolean raiseBorrowRequestByUserId(String userId, BorrowRequest borrowRequest) throws ServiceException;
+
+    void createBorrowRequest(BorrowRequest borrowRequest) throws ServiceException;
 }

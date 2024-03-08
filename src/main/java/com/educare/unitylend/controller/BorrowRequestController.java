@@ -39,15 +39,16 @@ public class BorrowRequestController extends BaseController{
     @PostMapping("/request")
     public ResponseEntity<String> raiseBorrowRequest(@RequestBody BorrowRequest borrowRequest) throws ControllerException {
         try {
-            String userId = borrowRequest.getBorrowerid();
+            String userId = borrowRequest.getBorrowerId();
 
             if (userId == null || userId.isEmpty()) {
                 return ResponseEntity.badRequest().body("User ID cannot be null or empty");
             }
 
-            boolean isBorrowRequestSuccessful = borrowRequestService.raiseBorrowRequestForUserid(userId,borrowRequest);
+            boolean isBorrowRequestSuccessful = borrowRequestService.raiseBorrowRequestByUserId(userId,borrowRequest);
 
             if (isBorrowRequestSuccessful) {
+                borrowRequestService.createBorrowRequest(borrowRequest);
                 return ResponseEntity.ok("Raised Borrow Request");
             } else {
                 return ResponseEntity.ok("Cannot make borrow request as your EMI is greater than monthly salary");

@@ -21,11 +21,15 @@ public class BorrowRequestServiceImpl implements BorrowRequestService {
     private UserRepository userRepository;
     private BorrowRequestRepository borrowRequestRepository;
     public List<String> getRequestedCommunitiesByUserId(String userId) throws ServiceException{
-        List<String> communities=borrowRequestRepository.getBorrowRequestesByUserInCommunities(userId);
+        List<String> communities=borrowRequestRepository.getBorrowRequestByUserId(userId);
         System.out.println(communities);
         return communities;
     }
-    public boolean raiseBorrowRequestForUserid(String userId, BorrowRequest borrowRequest) throws ServiceException {
+
+    public void createBorrowRequest(BorrowRequest borrowRequest) {
+        borrowRequestRepository.createBorrowRequest(borrowRequest);
+    }
+    public boolean raiseBorrowRequestByUserId(String userId, BorrowRequest borrowRequest) throws ServiceException {
         try {
             // Assuming returnPeriod is in days
             BigDecimal monthlyInterestRate = new BigDecimal("50.0").divide(new BigDecimal(12 * 100), 10, RoundingMode.HALF_UP);

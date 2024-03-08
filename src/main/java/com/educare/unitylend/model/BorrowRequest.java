@@ -30,7 +30,7 @@ public class BorrowRequest {
     private BigDecimal collectedAmount;
     @Getter private BigDecimal targetAmount;
 
-    public String getBorrowerid() {
+    public String getBorrowerId() {
         return borrower.getUserid();
     }
 }

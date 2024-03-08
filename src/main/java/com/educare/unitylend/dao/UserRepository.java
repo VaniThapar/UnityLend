@@ -10,16 +10,7 @@ import java.util.List;
 @Repository
 public interface UserRepository {
 
-//    static String getUserForUserIdQuery(String userId){
-//        StringBuilder sqlQueryBuilder = new StringBuilder();
-//
-//        sqlQueryBuilder.append("select userid as userID, password, name,email,dob,income,officename,collegeuniversity,locality,isactive from User where 1=1 ");
-//        if(userId != null){
-//            sqlQueryBuilder.append(" and userId = %s".formatted(userId));
-//        }
-//
-//        return sqlQueryBuilder.toString();
-//    }
+
 
     @Select("select * from tempuser")
     List<User> getAllUsers();

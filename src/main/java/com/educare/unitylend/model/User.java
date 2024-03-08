@@ -11,15 +11,15 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
-    private String userid;
+    private String userId;
     private String password;
     private String name;
     private String email;
     private LocalDate dob;
     private Integer income;
     private Integer borrowingLimit;
-    private String officename;
-    private String collegeuniversity;
+    private String officeName;
+    private String collegeUniversity;
     private String locality;
     private boolean isActive;
 
@@ -36,15 +36,15 @@ public class User {
     }
 
     public String getOfficename() {
-        return officename;
+        return officeName;
     }
 
     public void setOfficename(String officename) {
-        this.officename = officename;
+        this.officeName = officename;
     }
 
     public String getCollegeuniversity() {
-        return collegeuniversity;
+        return collegeUniversity;
     }
 
     public String getPassword() {
@@ -64,11 +64,11 @@ public class User {
     }
 
     public void setCollegeuniversity(String collegeuniversity) {
-        this.collegeuniversity = collegeuniversity;
+        this.collegeUniversity = collegeuniversity;
     }
 
     public String getUserid() {
-        return userid;
+        return userId;
     }
 
     public void setPassword(String password) {
@@ -88,7 +88,7 @@ public class User {
     }
 
     public void setUserid(String userid) {
-        this.userid = userid;
+        this.userId = userid;
     }
 
     public String getLocality() {
