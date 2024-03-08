@@ -54,100 +54,67 @@ public class UserServiceImpl implements UserService {
 
     public void createUser(User newUser) throws ServiceException {
         System.out.println(newUser);
-       List<String> matchingCommontags = findMatchingCommontags(newUser);
+
         System.out.println(newUser);
-        System.out.println(matchingCommontags);
+
 
         try {
             // Add any validation logic if needed before saving to the database
 
-            for (String tag : matchingCommontags) {
+            List<String> tags = new ArrayList<>();
+            if (newUser.getOfficename() != null) tags.add(newUser.getOfficename());
+
+            if (newUser.getCollegeuniversity() != null) tags.add(newUser.getCollegeuniversity());
+
+            if (newUser.getLocality() != null) tags.add(newUser.getLocality());
+
+            for (String tag : tags) {
+
                 if (!communityRepository.existsByCommontag(tag)) {
-
+                    log.info("Creating community::", tag);
                     communityRepository.createCommunityUsingStrings(tag, tag);
-                    }
-
                 }
+            }
 
             userRepository.createUser(newUser);
             newUser.setUserid(userRepository.settingID(newUser.getEmail()));
             newUser.setBorrowingLimit(newUser.getIncome() / 2);
-           settingUserRepoMapping(newUser);
+            mapUserToCommunity(newUser.getUserid(), tags);
         } catch (Exception e) {
             log.error("Error encountered during user creation operation");
             throw new ServiceException("Error encountered during user creation operation", e);
         }
     }
-    private void settingUserRepoMapping(User newUser){
 
-        String collegeUni = newUser.getCollegeuniversity();
-        String office = newUser.getOfficename();
-        String locality = newUser.getLocality();
-        if (collegeUni != null) {
-            userCommunityRepository.createUserCommunityMapping(newUser.getUserid(), communityRepository.getCommunityIdByName(collegeUni));
-        }
-        if (office != null) {
-            userCommunityRepository.createUserCommunityMapping(newUser.getUserid(), communityRepository.getCommunityIdByName(office));
-        }
-        if (locality != null) {
-            userCommunityRepository.createUserCommunityMapping(newUser.getUserid(), communityRepository.getCommunityIdByName(locality));
-        }
+    private void mapUserToCommunity(String userId, List<String> tags) {
 
+        for (String tag : tags) {
+            userCommunityRepository.createUserCommunityMapping(userId, communityRepository.getCommunityIdByName(tag));
+        }
     }
-    private List<String> findMatchingCommontags(User user) {
-        List<String> matchingCommontags = new ArrayList<>();
-        String officenameCommontag = null;
-        String collegeuniversityCommontag = null;
-        String localityCommontag = null;
-        List<String> names=new ArrayList<>();
-        if (user.getOfficename() != null)  names.add(user.getOfficename());
 
-        if(user.getCollegeuniversity() != null) names.add(user.getCollegeuniversity());
-
-        if(user.getLocality() != null) names.add(user.getLocality());
-
-
-
-
-        Map<String, String> commontags = communityRepository.findCommontagsByNames(names);
-
-            officenameCommontag = commontags.get(user.getOfficename());
-            collegeuniversityCommontag = commontags.get(user.getCollegeuniversity());
-            localityCommontag = commontags.get(user.getLocality());
-
-        System.out.println(officenameCommontag);
-        if (officenameCommontag == null && user.getOfficename() != null) {
-            matchingCommontags.add(user.getOfficename());
-        }
-        if (collegeuniversityCommontag == null && user.getCollegeuniversity() != null) {
-            matchingCommontags.add(user.getCollegeuniversity());
-        }
-        if (localityCommontag == null && user.getLocality() != null) {
-            matchingCommontags.add(user.getLocality());
-        }
-
-
-        return matchingCommontags;
+    private void mapUserToCommunity(String userId, String tag) {
+        userCommunityRepository.createUserCommunityMapping(userId, communityRepository.getCommunityIdByName(tag));
     }
+
 
     public void updateUser(User user, String userId) throws ServiceException {
         List<String> updatedCommunities;
-        String[] communityy=new String[3];
+        String[] communityy = new String[3];
         try {
             userCommunityRepository.deletePrevData(userId);
             userRepository.updateUser(user);
             updatedCommunities = userRepository.findCommunitiesByUserId(userId);
-            for(String community:updatedCommunities){
-               communityy=community.split(", ");
+            for (String community : updatedCommunities) {
+                communityy = community.split(", ");
             }
-            for(int i=0;i<3;i++){
+            for (int i = 0; i < 3; i++) {
                 if (!communityRepository.existsByCommontag(communityy[i])) {
-                    communityRepository.createCommunityUsingStrings(communityy[i],communityy[i]);
+                    communityRepository.createCommunityUsingStrings(communityy[i], communityy[i]);
+                    mapUserToCommunity(user.getUserid(), communityy[i]);
                 }
             }
             user.setBorrowingLimit(user.getIncome() / 2);
-            settingUserRepoMapping(user);
-
 
 
         } catch (Exception e) {
