@@ -10,10 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import java.util.ArrayList;
 import java.util.List;
-
 
 @Slf4j
 @AllArgsConstructor
@@ -37,30 +35,43 @@ public class WalletServiceImpl implements WalletService{
 
     @Override
     public Wallet getWalletInfo(String userId) throws ServiceException {
-        Wallet wallet = walletRepository.getWalletInfo(userId);
-
-
-        User user = walletRepository.getUserIdWithWallet(wallet);
-        wallet.setUser(user);
-        return wallet;
+        try {
+            Wallet wallet = walletRepository.getWalletInfo(userId);
+            User user = walletRepository.getUserIdWithWallet(wallet);
+            wallet.setUser(user);
+            return wallet;
+        } catch (Exception e) {
+            log.error("Error encountered during wallet fetching operation");
+            throw new ServiceException("Error encountered during wallet fetch operation", e);
+        }
     }
 
 
     @Override
     public void generateWallet(String userId) throws ServiceException {
-        walletRepository.generateWalletInTable(userId);
-        Wallet wallet = walletRepository.getWalletInfo(userId);
-        User user = walletRepository.getUserIdWithWallet(wallet);
-        wallet.setUser(user);
+        try {
+            walletRepository.generateWalletInTable(userId);
+            Wallet wallet = walletRepository.getWalletInfo(userId);
+            User user = walletRepository.getUserIdWithWallet(wallet);
+            wallet.setUser(user);
+        } catch (Exception e) {
+            log.error("Error encountered during generate wallet operation");
+            throw new ServiceException("Error encountered during generation of wallet", e);
+        }
     }
 
 
     @Override
-    public Wallet getWalletById(String walletId) {
-        Wallet wallet = walletRepository.getWalletById(walletId);
-        User user = walletRepository.getUserIdWithWallet(wallet);
-        wallet.setUser(user);
-        return wallet;
+    public Wallet getWalletById(String walletId) throws ServiceException{
+        try {
+            Wallet wallet = walletRepository.getWalletById(walletId);
+            User user = walletRepository.getUserIdWithWallet(wallet);
+            wallet.setUser(user);
+            return wallet;
+        } catch (Exception e) {
+            log.error("Error encountered during wallet fetching operation");
+            throw new ServiceException("Error encountered during wallet fetch operation", e);
+        }
     }
 
 
