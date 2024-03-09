@@ -100,4 +100,14 @@ public class BorrowServiceImpl implements BorrowReqService {
             throw new ServiceException("Error encountered during boolean check", e);
         }
     }
+
+    public boolean userExists(String userId) throws ServiceException{
+        try{
+            boolean flag = borrowReqRepository.userExistsR(userId);
+            return flag;
+        }catch(Exception e){
+            log.error("Error encountered during boolean check.");
+            throw new ServiceException("Error encountered during boolean check", e);
+        }
+    }
 }

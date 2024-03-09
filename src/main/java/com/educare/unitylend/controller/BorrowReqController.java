@@ -24,12 +24,12 @@ public class BorrowReqController extends BaseController{
     @GetMapping("/{userId}")
     public ResponseEntity<?> getAllRequests(@PathVariable String userId) {
         try {
-            List<BorrowRequest> borrowRequestList = borrowReqService.getBorrowRequests(userId);
-            if (borrowRequestList.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No borrow requests found for user: " + userId);
-            } else {
-                return ResponseEntity.ok(borrowRequestList);
+            boolean isUserexists=borrowReqService.userExists(userId);
+            if (!isUserexists) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User does not exist.");
             }
+            List<BorrowRequest> borrowRequestList = borrowReqService.getBorrowRequests(userId);
+            return ResponseEntity.ok(borrowRequestList);
         } catch (ServiceException e) {
             log.error("Error encountered in validating the user", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error encountered in validating the user");
@@ -75,10 +75,15 @@ public class BorrowReqController extends BaseController{
     ) throws ControllerException {
         try {
             List<BorrowRequest> borrowRequestListByAmount = borrowReqService.getRequestsByCommunityAndAmount(userId, amount);
-            return borrowRequestListByAmount;
+            if (borrowRequestListByAmount.isEmpty()) {
+                String message = "No borrow requests found with amount greater than " + amount;
+                return (List<BorrowRequest>) ResponseEntity.status(HttpStatus.NO_CONTENT).body(message);
+            }
+            return ResponseEntity.ok(borrowRequestListByAmount).getBody();
         } catch (Exception e) {
             log.error("Error encountered in getting the borrow requests filtered by amount", e);
-            throw new ControllerException("Error encountered in getting the borrow requests filtered by amount", e);
+            String errorMessage = "Error encountered in getting the borrow requests filtered by amount: " + e.getMessage();
+            return (List<BorrowRequest>) ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
         }
     }
 

@@ -13,6 +13,7 @@ public interface BorrowReqService {
     List<BorrowRequest> getRequestsByCommunityAndAmount(String userId, double amount) throws ServiceException;
     List<BorrowRequest> getBorrowRequestsByCommunityId(String communityId) throws ServiceException;
     List<BorrowRequest> getBorrowRequestsOfCommunityByAmount(String communityId, double amount) throws ServiceException;
+    boolean userExists(String userId) throws ServiceException;
     boolean hasPendingRequests(String userId) throws ServiceException;
     boolean isUserPartOfCommunity(String userId, String communityId) throws ServiceException;
     boolean isUserPartOfAnyCommunity(String userId) throws ServiceException;
