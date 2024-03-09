@@ -71,4 +71,33 @@ public class BorrowServiceImpl implements BorrowReqService {
             throw new ServiceException("Error encountered during filtering Borrow request of community.", e);
         }
     }
+
+    @Override
+    public boolean hasPendingRequests(String userId) throws ServiceException{
+        try{
+            boolean flag = borrowReqRepository.hasPendingRequestsR(userId);
+            return flag;
+        }catch(Exception e){
+            log.error("Error encountered during boolean check.");
+            throw new ServiceException("Error encountered during boolean check", e);
+        }
+    }
+    public boolean isUserPartOfCommunity(String userId, String communityId) throws ServiceException{
+        try{
+            boolean flag = borrowReqRepository.isUserPartOfCommunityR(userId,communityId);
+            return flag;
+        }catch(Exception e){
+            log.error("Error encountered during boolean check.");
+            throw new ServiceException("Error encountered during boolean check", e);
+        }
+    }
+    public boolean isUserPartOfAnyCommunity(String userId) throws ServiceException{
+        try{
+            boolean flag = borrowReqRepository.isUserPartOfAnyCommunityR(userId);
+            return flag;
+        }catch(Exception e){
+            log.error("Error encountered during boolean check.");
+            throw new ServiceException("Error encountered during boolean check", e);
+        }
+    }
 }
