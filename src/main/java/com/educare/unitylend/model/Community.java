@@ -8,31 +8,31 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Community {
-    private String communityid;
-    private String communityname;
-    private String commontag;
+    private String communityId;
+    private String communityName;
+    private String commonTag;
 
-    public String getCommunityid() {
-        return communityid;
+    public String getCommunityId() {
+        return communityId;
     }
 
-    public void setCommunityid(String communityid) {
-        this.communityid = communityid;
+    public void setCommunityId(String communityId) {
+        this.communityId = communityId;
     }
 
-    public String getCommunityname() {
-        return communityname;
+    public String getCommunityName() {
+        return communityName;
     }
 
-    public void setCommunityname(String communityname) {
-        this.communityname = communityname;
+    public void setCommunityName(String communityName) {
+        this.communityName = communityName;
     }
 
-    public String getCommontag() {
-        return commontag;
+    public String getCommonTag() {
+        return commonTag;
     }
 
-    public void setCommontag(String commontag) {
-        this.commontag = commontag;
+    public void setCommonTag(String commonTag) {
+        this.commonTag = commonTag;
     }
 }

@@ -11,84 +11,88 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
-    private String userid;
+    private String userId;
     private String password;
     private String name;
     private String email;
     private LocalDate dob;
     private Integer income;
     private Integer borrowingLimit;
-    private String officename;
-    private String collegeuniversity;
+    private String officeName;
+    private String collegeUniversity;
     private String locality;
     private boolean isActive;
 
-    public boolean isActive() {
-        return isActive;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setActive(boolean active) {
-        isActive = active;
-    }
-
-    public Integer getIncome() {
-        return income;
-    }
-
-    public String getOfficename() {
-        return officename;
-    }
-
-    public void setOfficename(String officename) {
-        this.officename = officename;
-    }
-
-    public String getCollegeuniversity() {
-        return collegeuniversity;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public LocalDate getDob() {
-        return dob;
-    }
-
-    public void setCollegeuniversity(String collegeuniversity) {
-        this.collegeuniversity = collegeuniversity;
-    }
-
-    public String getUserid() {
-        return userid;
-    }
-
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public LocalDate getDob() {
+        return dob;
     }
 
     public void setDob(LocalDate dob) {
         this.dob = dob;
     }
 
-    public void setUserid(String userid) {
-        this.userid = userid;
+    public Integer getIncome() {
+        return income;
+    }
+
+    public void setIncome(Integer income) {
+        this.income = income;
+    }
+
+    public Integer getBorrowingLimit() {
+        return borrowingLimit;
+    }
+
+    public void setBorrowingLimit(Integer borrowingLimit) {
+        this.borrowingLimit = borrowingLimit;
+    }
+
+    public String getOfficenName() {
+        return officeName;
+    }
+
+    public void setOfficename(String officeName) {
+        this.officeName = officeName;
+    }
+
+    public String getCollegeuniversity() {
+        return collegeUniversity;
+    }
+
+    public void setCollegeuniversity(String collegeUniversity) {
+        this.collegeUniversity = collegeUniversity;
     }
 
     public String getLocality() {
@@ -99,19 +103,12 @@ public class User {
         this.locality = locality;
     }
 
-    public void setIncome(Integer income) {
-        // System.out.println(income);
-        this.income = income;
+    public boolean isActive() {
+        return isActive;
     }
 
-    public Integer getBorrowingLimit() {
-        return borrowingLimit;
+    public void setActive(boolean active) {
+        isActive = active;
     }
-
-    public void setBorrowingLimit(Integer borrowingLimit) {
-        this.borrowingLimit = borrowingLimit;
-        //   System.out.println(borrowingLimit);
-    }
-
-
 }
+

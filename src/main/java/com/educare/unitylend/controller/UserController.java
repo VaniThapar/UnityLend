@@ -2,10 +2,7 @@ package com.educare.unitylend.controller;
 
 import com.educare.unitylend.Exception.ControllerException;
 import com.educare.unitylend.Exception.ServiceException;
-import com.educare.unitylend.dao.UserCommunityRepository;
-import com.educare.unitylend.dao.UserRepository;
 import com.educare.unitylend.model.User;
-import com.educare.unitylend.service.UserCommunityService;
 import com.educare.unitylend.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,11 +20,9 @@ import java.util.List;
 public class UserController extends BaseController{
 
     UserService userService;
-    private UserCommunityService usercommunityService;
-    private UserRepository userRepository;
-    private UserCommunityRepository userCommunityRepository;
     @GetMapping("all-users")
     public ResponseEntity<?> getAllUsers() throws ControllerException {
+        //Getting all the users
         try {
             List<User> userList = userService.getUsers();
             if (userList.isEmpty()) {
@@ -41,6 +36,7 @@ public class UserController extends BaseController{
     }
     @PostMapping("/create-user")
     public ResponseEntity<String> createUser(@RequestBody User user) throws ControllerException {
+        //Creating a new user with the user object
         try {
             userService.createUser(user);
             return ResponseEntity.ok("success!!!");
@@ -50,16 +46,17 @@ public class UserController extends BaseController{
         }
     }
 
-    @PutMapping("/{userId}")
+    @PutMapping("/update-info/{userId}")
     public ResponseEntity<String> updateUser(@PathVariable String userId, @RequestBody User updatedUser) throws ControllerException {
-        //List<String> prevCommunities;
+
+
+        //Updating the user
 
         try {
             if (userId == null || userId.isEmpty() || updatedUser == null) {
                 return ResponseEntity.badRequest().body("User ID and updated user cannot be null or empty");
             }
-            updatedUser.setUserid(userId);
-        //    System.out.println(updatedUser);
+            updatedUser.setUserId(userId);
             userService.updateUser(updatedUser, userId);
             return ResponseEntity.ok("User updated successfully");
         }
@@ -71,8 +68,10 @@ public class UserController extends BaseController{
             throw new ControllerException("Error encountered in getting the communities", e);
         }
     }
-    @GetMapping("/{userId}/get-info")
+
+    @GetMapping("/get-info/{userId}")
     public ResponseEntity<User> getUserByUserId(@PathVariable String userId) throws ControllerException {
+        //Getting user information for a given user by its userId
         try {
             if (userId == null || userId.isEmpty()) {
                 return ResponseEntity.badRequest().build();
@@ -91,8 +90,9 @@ public class UserController extends BaseController{
         }
     }
 
-    @PutMapping("/{userId}/inactive")
+    @PutMapping("/inactive/{userId}")
     public ResponseEntity<String> deactivateUser(@PathVariable String userId) throws ControllerException{
+        //Deactivating the user
         try {
             if (userId == null || userId.isEmpty()) {
                 return ResponseEntity.badRequest().body("User ID cannot be null or empty");

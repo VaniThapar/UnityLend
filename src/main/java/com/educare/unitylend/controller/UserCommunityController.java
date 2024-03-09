@@ -20,8 +20,9 @@ public class UserCommunityController {
 
     private UserCommunityService usercommunityService;
 
-    @GetMapping("/{userId}")
+    @GetMapping("/get-communities/{userId}")
     public ResponseEntity<List<String>> getAllCommunities(@PathVariable String userId) throws ControllerException {
+        //Getting all communities for a given user
         try {
             if (userId == null || userId.isEmpty()) {
                 return ResponseEntity.badRequest().body(List.of("User ID cannot be null or empty"));

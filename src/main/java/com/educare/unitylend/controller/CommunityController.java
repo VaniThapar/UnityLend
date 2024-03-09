@@ -39,6 +39,7 @@ public class CommunityController extends BaseController {
 
     @GetMapping("get-community-by-tag")
     public ResponseEntity<?> getCommunityWithTag(@RequestParam(required = false) String commonTag) throws ControllerException {
+        //Getting all communities with the given common tag
         try {
             if (commonTag == null || commonTag.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("commonTag parameter is missing or empty");
@@ -59,6 +60,7 @@ public class CommunityController extends BaseController {
 
     @PostMapping("/create-community")
     public ResponseEntity<String> createNewCommunity(@RequestBody Community community) throws ControllerException {
+        //Creating a new community with community object
         try {
             if (community == null) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Request body is null");
