@@ -25,6 +25,17 @@ public interface BorrowReqRepository {
             @Param("userId") String userId,
             @Param("amount") double amount
     );
+
+    @Select(SELECT_REQUESTS_BY_COMMUNITY_ID)
+    List<BorrowRequest> getAllRequestsByCommunityId(
+            @Param("communityId") String communityId
+    );
+
+    @Select(SELECT_REQUESTS_OF_COMMID_BY_AMOUNT)
+    List<BorrowRequest> getAllRequestsOfCommunityByAmount(
+            @Param("communityId") String communityId,
+            @Param("amount") double amount
+    );
     static final String SELECT_REQUESTS_FOR_USER = "SELECT * FROM borrow_request WHERE communityid IN " +
             "(SELECT communityid FROM usercommunity WHERE userid = #{userId})";
 
@@ -38,4 +49,10 @@ public interface BorrowReqRepository {
                     "WHERE br.communityid IN (" +
                     "   SELECT communityid FROM usercommunity WHERE userid = #{userId}" +
                     ") AND br.targetamount >= #{amount}";
+
+    static final String SELECT_REQUESTS_BY_COMMUNITY_ID =
+            "SELECT * FROM borrow_request WHERE communityid = #{communityId}";
+
+    static final String SELECT_REQUESTS_OF_COMMID_BY_AMOUNT=
+            "SELECT * FROM borrow_request WHERE communityid = #{communityId} AND targetamount >= #{amount}";
 }

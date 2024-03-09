@@ -9,6 +9,8 @@ import com.educare.unitylend.service.BorrowReqService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,7 +34,6 @@ public class BorrowReqController extends BaseController{
             throw new ControllerException("Error encountered in getting the borrow requests", e);
         }
     }
-//    new
     @GetMapping("/{userId}/{communityId}")
     public List<BorrowRequest> getRequestsForUserAndCommunity(
             @PathVariable String userId,
@@ -60,5 +61,32 @@ public class BorrowReqController extends BaseController{
             throw new ControllerException("Error encountered in getting the borrow requests filtered by amount", e);
         }
     }
-//    new ends
+
+    @GetMapping("/community/{communityId}")
+    public List<BorrowRequest> getBorrowRequestByCommunityId(
+            @PathVariable String communityId
+    ) throws ControllerException {
+        try {
+            List<BorrowRequest> borrowRequestListByCommunityId = borrowReqService.getBorrowRequestsByCommunityId(communityId);
+            return borrowRequestListByCommunityId;
+        } catch (Exception e) {
+            log.error("Error encountered in getting the borrow requests by community Ids!", e);
+            throw new ControllerException("Error encountered in getting the borrow requests by commmunity Ids!", e);
+        }
+    }
+
+    @GetMapping("/community/{communityId}/target-amount/{amount}")
+    public List<BorrowRequest> getRequestsForCommunityByAmount(
+            @PathVariable String communityId,
+            @PathVariable double amount
+    ) throws ControllerException{
+        try{
+            List<BorrowRequest> borrowRequestListOfCommunityIdByAmount = borrowReqService.getBorrowRequestsOfCommunityByAmount(communityId,amount);
+            return borrowRequestListOfCommunityIdByAmount;
+        }catch (Exception e){
+            log.error("Error encountered in getting the borrow requests of community Ids filtered by amount!", e);
+            throw new ControllerException("Error encountered in getting the borrow requests of commmunity Ids filtered by amount!", e);
+        }
+    }
+
 }

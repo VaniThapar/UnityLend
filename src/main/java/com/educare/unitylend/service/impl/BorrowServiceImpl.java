@@ -49,4 +49,26 @@ public class BorrowServiceImpl implements BorrowReqService {
             throw new ServiceException("Error encountered during Borrow request filtered by amount fetch operation", e);
         }
     }
+
+    @Override
+    public List<BorrowRequest> getBorrowRequestsByCommunityId(String communityId) throws ServiceException{
+        try{
+            List<BorrowRequest> borrowRequestListByCommunityId = borrowReqRepository.getAllRequestsByCommunityId(communityId);
+            return borrowRequestListByCommunityId;
+        } catch(Exception e){
+            log.error("Error encountered during Borrow request according to community ids operation");
+            throw new ServiceException("Error encountered during Borrow request according to community id operation", e);
+        }
+    }
+
+    @Override
+    public List<BorrowRequest> getBorrowRequestsOfCommunityByAmount(String communityId, double amount) throws ServiceException{
+        try{
+            List<BorrowRequest> borrowRequestOfCommunityNyAmount = borrowReqRepository.getAllRequestsOfCommunityByAmount(communityId,amount);
+            return borrowRequestOfCommunityNyAmount;
+        } catch(Exception e){
+            log.error("Error encountered during filtering Borrow request of community.");
+            throw new ServiceException("Error encountered during filtering Borrow request of community.", e);
+        }
+    }
 }
