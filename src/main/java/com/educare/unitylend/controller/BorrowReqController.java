@@ -69,21 +69,21 @@ public class BorrowReqController extends BaseController{
     }
 
     @GetMapping("/user/{userId}/target-amount/{amount}")
-    public List<BorrowRequest> getRequestsForUserAndCommunity(
+    public ResponseEntity<?> getRequestsForUserAndCommunity(
             @PathVariable String userId,
             @PathVariable double amount
     ) throws ControllerException {
-        try {
+        try
+        {
             List<BorrowRequest> borrowRequestListByAmount = borrowReqService.getRequestsByCommunityAndAmount(userId, amount);
-            if (borrowRequestListByAmount.isEmpty()) {
-                String message = "No borrow requests found with amount greater than " + amount;
-                return (List<BorrowRequest>) ResponseEntity.status(HttpStatus.NO_CONTENT).body(message);
+            if(borrowRequestListByAmount == null | borrowRequestListByAmount.isEmpty()){
+                System.out.println("The requests with target amount greater than given amount does not exist!");
+                return ResponseEntity.notFound().build();
             }
-            return ResponseEntity.ok(borrowRequestListByAmount).getBody();
+            return ResponseEntity.ok(borrowRequestListByAmount);
         } catch (Exception e) {
             log.error("Error encountered in getting the borrow requests filtered by amount", e);
-            String errorMessage = "Error encountered in getting the borrow requests filtered by amount: " + e.getMessage();
-            return (List<BorrowRequest>) ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error encountered in getting the borrow requests filtered by amount");
         }
     }
 
