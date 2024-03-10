@@ -110,4 +110,14 @@ public class BorrowServiceImpl implements BorrowReqService {
             throw new ServiceException("Error encountered during boolean check", e);
         }
     }
+
+    public boolean communityExists(String communityId) throws ServiceException{
+        try{
+            boolean flag = borrowReqRepository.communityExistsR(communityId);
+            return flag;
+        }catch(Exception e){
+            log.error("Error encountered during boolean check.");
+            throw new ServiceException("Error encountered during boolean check", e);
+        }
+    }
 }

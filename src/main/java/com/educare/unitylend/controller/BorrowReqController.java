@@ -88,30 +88,36 @@ public class BorrowReqController extends BaseController{
     }
 
     @GetMapping("/community/{communityId}")
-    public List<BorrowRequest> getBorrowRequestByCommunityId(
-            @PathVariable String communityId
-    ) throws ControllerException {
+    public ResponseEntity<?> getBorrowRequestsByCommunityId(@PathVariable String communityId) {
         try {
-            List<BorrowRequest> borrowRequestListByCommunityId = borrowReqService.getBorrowRequestsByCommunityId(communityId);
-            return borrowRequestListByCommunityId;
-        } catch (Exception e) {
-            log.error("Error encountered in getting the borrow requests by community Ids!", e);
-            throw new ControllerException("Error encountered in getting the borrow requests by commmunity Ids!", e);
+            boolean isCommunityexists=borrowReqService.communityExists(communityId);
+            if (!isCommunityexists) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Community does not exist.");
+            }
+            List<BorrowRequest> borrowRequestList = borrowReqService.getBorrowRequestsByCommunityId(communityId);
+            return ResponseEntity.ok(borrowRequestList);
+        } catch (ServiceException e) {
+            log.error("Error encountered in validating the user", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error encountered in validating the community");
         }
     }
 
     @GetMapping("/community/{communityId}/target-amount/{amount}")
-    public List<BorrowRequest> getRequestsForCommunityByAmount(
+    public ResponseEntity<?> getRequestsForCommunityByAmount(
             @PathVariable String communityId,
             @PathVariable double amount
-    ) throws ControllerException{
-        try{
+    ) throws ControllerException {
+        try
+        {
             List<BorrowRequest> borrowRequestListOfCommunityIdByAmount = borrowReqService.getBorrowRequestsOfCommunityByAmount(communityId,amount);
-            return borrowRequestListOfCommunityIdByAmount;
-        }catch (Exception e){
-            log.error("Error encountered in getting the borrow requests of community Ids filtered by amount!", e);
-            throw new ControllerException("Error encountered in getting the borrow requests of commmunity Ids filtered by amount!", e);
+            if(borrowRequestListOfCommunityIdByAmount == null | borrowRequestListOfCommunityIdByAmount.isEmpty()){
+                System.out.println("The requests of community with target amount greater than given amount does not exist!");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Community borrow requests with target amount greater than given amount does not exist.");
+            }
+            return ResponseEntity.ok(borrowRequestListOfCommunityIdByAmount);
+        } catch (Exception e) {
+            log.error("Error encountered in getting the borrow requests of community filtered by amount", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error encountered in getting the borrow requests of community filtered by amount");
         }
     }
-
 }

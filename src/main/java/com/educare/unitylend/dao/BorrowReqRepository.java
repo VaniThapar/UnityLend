@@ -48,6 +48,9 @@ public interface BorrowReqRepository {
 
     @Select("SELECT COUNT(*) > 0 FROM tempuser WHERE userid = #{userId}")
     boolean userExistsR(@Param("userId") String userId);
+
+    @Select("SELECT COUNT(*) > 0 FROM community WHERE communityid = #{communityId}")
+    boolean communityExistsR(@Param("communityId") String communityId);
     static final String SELECT_REQUESTS_FOR_USER = "SELECT * FROM borrow_request WHERE communityid IN " +
             "(SELECT communityid FROM usercommunity WHERE userid = #{userId})";
 
