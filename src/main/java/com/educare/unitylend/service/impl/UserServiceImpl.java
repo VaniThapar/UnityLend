@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
             List<String> commonTags = new ArrayList<>();
             if (newUser.getOfficeName() != null) commonTags.add(newUser.getOfficeName());
 
-            if (newUser.getCollegeuniversity() != null) commonTags.add(newUser.getCollegeuniversity());
+            if (newUser.getCollegeUniversity() != null) commonTags.add(newUser.getCollegeUniversity());
 
             if (newUser.getLocality() != null) commonTags.add(newUser.getLocality());
 

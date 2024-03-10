@@ -1359,7 +1359,7 @@ ALTER TABLE tempuser
     ADD COLUMN isActive BOOLEAN DEFAULT true;
 
 ALTER TABLE community
-    ADD COLUMN communitytype VARCHAR(255); -- Specify the desired length for VARCHAR
+    ADD COLUMN communitytype VARCHAR(255);
 
 
 
