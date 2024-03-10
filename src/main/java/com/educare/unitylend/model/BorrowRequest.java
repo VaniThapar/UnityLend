@@ -6,13 +6,12 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class BorrowRequest {
-    private UUID requestId;
+    private String requestId;
     private User borrower;
     private Community community;
     private String returnPeriod;
