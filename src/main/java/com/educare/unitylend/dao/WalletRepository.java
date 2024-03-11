@@ -46,8 +46,8 @@ public interface WalletRepository {
         StringBuilder sqlQueryBuilder = new StringBuilder();
 
         sqlQueryBuilder.append("SELECT u.* FROM tempuser u WHERE u.userid = (SELECT userid FROM wallet WHERE walletid = ");
-        if (ex != null && ex.getWalletid() != null) {
-            sqlQueryBuilder.append("'").append(ex.getWalletid()).append("'");
+        if (ex != null && ex.getWalletId() != null) {
+            sqlQueryBuilder.append("'").append(ex.getWalletId()).append("'");
         } else {
             sqlQueryBuilder.append("NULL");
         }
