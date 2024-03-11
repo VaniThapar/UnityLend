@@ -41,13 +41,13 @@ public class WalletController extends BaseController {
 
 
     @GetMapping("/get-wallet-info/{userId}")
-    public ResponseEntity<Wallet> getWalletInfo(@PathVariable String userId) throws ControllerException {
+    public ResponseEntity<Wallet> getWalletInfoByUserId(@PathVariable String userId) throws ControllerException {
         try {
             if (userId == null || userId.isEmpty()) {
                 return ResponseEntity.badRequest().body(null);
             }
 
-            Wallet currentWallet = walletService.getWalletInfo(userId);
+            Wallet currentWallet = walletService.getWalletByUserId(userId);
 
             if (currentWallet == null) {
                 return ResponseEntity.notFound().build();
@@ -62,15 +62,16 @@ public class WalletController extends BaseController {
 
 
     @GetMapping("get-wallet/{walletId}")
-    public Wallet getWalletById(@PathVariable String walletId) throws ControllerException {
+    public Wallet getWalletInfoByWalletId(@PathVariable String walletId) throws ControllerException {
         try {
             if (walletId == null || walletId.isEmpty()) {
                 return null;
             }
 
-            Wallet currentWallet = walletService.getWalletById(walletId);
+            Wallet currentWallet = walletService.getWalletByWalletId(walletId);
 
             if (currentWallet == null) {
+                log.info("Wallet not found");
                 return null;
             }
 
@@ -81,7 +82,7 @@ public class WalletController extends BaseController {
         }
     }
 
-    @PostMapping("/{walletId}/addAmount")
+    @PostMapping("/addAmount/{walletId}")
     public ResponseEntity<String> addAmountToWallet(@PathVariable String walletId, @RequestParam Float amount) throws ControllerException {
         try {
             if (walletId == null || walletId.isEmpty()) {

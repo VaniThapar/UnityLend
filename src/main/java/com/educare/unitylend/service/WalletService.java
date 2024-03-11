@@ -7,13 +7,13 @@ import java.util.List;
 
 public interface WalletService {
 
-    Wallet getWalletInfo(String userId) throws ServiceException;
+    Wallet getWalletByUserId(String userId) throws ServiceException;
 
     void generateWallet(String userId) throws ServiceException;
 
     List<Wallet> getWallets() throws ServiceException;
 
-    Wallet getWalletById(String walletId) throws ServiceException;
+    Wallet getWalletByWalletId(String walletId) throws ServiceException;
 
     void addAmountToWallet(String walletId, Float amount) throws ServiceException;
 

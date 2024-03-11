@@ -34,7 +34,7 @@ public class WalletServiceImpl implements WalletService{
 
 
     @Override
-    public Wallet getWalletInfo(String userId) throws ServiceException {
+    public Wallet getWalletByUserId(String userId) throws ServiceException {
         try {
             Wallet wallet = walletRepository.getWalletInfo(userId);
             User user = walletRepository.getUserIdWithWallet(wallet);
@@ -62,7 +62,7 @@ public class WalletServiceImpl implements WalletService{
 
 
     @Override
-    public Wallet getWalletById(String walletId) throws ServiceException{
+    public Wallet getWalletByWalletId(String walletId) throws ServiceException{
         try {
             Wallet wallet = walletRepository.getWalletById(walletId);
             User user = walletRepository.getUserIdWithWallet(wallet);
