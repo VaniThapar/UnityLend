@@ -5,5 +5,6 @@ import org.springframework.stereotype.Repository;
 
 @Mapper
 @Repository
-public interface CommunityRepository {
+public interface BorrowRequestRepository {
+
 }
