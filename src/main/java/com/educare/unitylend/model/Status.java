@@ -7,9 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Community {
-    private String communityId;
-    private String communityName;
-    private String communityTag;
-    private String communityDetail;
+public class Status {
+    private Integer statusCode;
+    private String statusName;
 }

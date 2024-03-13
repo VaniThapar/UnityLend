@@ -1,12 +1,13 @@
-package com.educare.unitylend.service.impl;
+package com.educare.unitylend.service.implOld;
 
 import com.educare.unitylend.Exception.ServiceException;
-import com.educare.unitylend.dao.LendingTransactionRepository;
+import com.educare.unitylend.dao.BorrowRequestRepository;
+import com.educare.unitylend.dao.LendTransactionRepository;
 import com.educare.unitylend.dao.UserRepository;
 import com.educare.unitylend.model.BorrowRequest;
-import com.educare.unitylend.model.LendingTransaction;
+import com.educare.unitylend.model.LendTransaction;
 import com.educare.unitylend.model.User;
-import com.educare.unitylend.service.LendingTransactionService;
+import com.educare.unitylend.service.LendTransactionService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,23 +17,23 @@ import java.util.List;
 @Slf4j
 @AllArgsConstructor
 @Service
-public class LendingTransactionServiceImpl implements LendingTransactionService {
+public class LendTransactionServiceImpl implements LendTransactionService {
 
-    UserRepository userRepository;
-    LendingTransactionRepository lendingTransactionRepository;
-
+    private UserRepository userRepository;
+    private LendTransactionRepository lendingTransactionRepository;
+    private BorrowRequestRepository borrowRequestRepository;
 
     @Override
-    public LendingTransaction getTransactionInfo(String transactionId) throws ServiceException {
+    public LendTransaction getTransactionInfo(String transactionId) throws ServiceException {
         try {
-            LendingTransaction transaction = lendingTransactionRepository.getTransactionById(transactionId);
+            LendTransaction transaction = lendingTransactionRepository.getTransactionById(transactionId);
             String lenderId = lendingTransactionRepository.getLenderId(transactionId);
             String requestId = lendingTransactionRepository.getRequestId(transactionId);
 
             User lender = userRepository.getUserForUserId(lenderId);
-//                BorrowRequest request = borrowRequestRepository.getBorrowRequest(transactionId);
+            BorrowRequest request = borrowRequestRepository.getBorrowRequestByRequestId(requestId);
             transaction.setLender(lender);
-//            transaction.setBorrowRequest(request);
+            transaction.setBorrowRequest(request);
             log.info("Transaction " + transaction);
             return transaction;
         } catch (Exception e) {
@@ -42,19 +43,18 @@ public class LendingTransactionServiceImpl implements LendingTransactionService 
     }
 
     @Override
-    public List<LendingTransaction> getTransactionsByUserId(String userId) throws ServiceException {
+    public List<LendTransaction> getTransactionsByUserId(String userId) throws ServiceException {
         try {
-            List<LendingTransaction> transactions = lendingTransactionRepository.getTransactionByUserId(userId);
-            log.info("Transaction list " + transactions);
-            for (LendingTransaction transaction : transactions) {
+            List<LendTransaction> transactions = lendingTransactionRepository.getTransactionByUserId(userId);
+            for (LendTransaction transaction : transactions) {
                 String transactionId = transaction.getLendTransactionId();
                 String lenderId = lendingTransactionRepository.getLenderId(transactionId);
                 String requestId = lendingTransactionRepository.getRequestId(transactionId);
 
                 User lender = userRepository.getUserForUserId(lenderId);
-//                BorrowRequest request = borrowRequestRepository.getBorrowRequest(transactionId);
+                BorrowRequest request = borrowRequestRepository.getBorrowRequestByRequestId(transactionId);
                 transaction.setLender(lender);
-//                transaction.setBorrowRequest(request);
+                transaction.setBorrowRequest(request);
             }
             return transactions;
         } catch (Exception e) {
@@ -64,19 +64,19 @@ public class LendingTransactionServiceImpl implements LendingTransactionService 
     }
 
     @Override
-    public List<LendingTransaction> getTransactionsBetweenPayerAndPayee(String payerId, String payeeId) throws ServiceException {
+    public List<LendTransaction> getTransactionsBetweenPayerAndPayee(String payerId, String payeeId) throws ServiceException {
         try {
-            List<LendingTransaction> transactions = lendingTransactionRepository.getTransactionsBetweenPayerAndPayee(payerId, payeeId);
+            List<LendTransaction> transactions = lendingTransactionRepository.getTransactionsBetweenPayerAndPayee(payerId, payeeId);
             log.info("Transaction list " + transactions);
-            for (LendingTransaction transaction : transactions) {
+            for (LendTransaction transaction : transactions) {
                 String transactionId = transaction.getLendTransactionId();
                 String lenderId = lendingTransactionRepository.getLenderId(transactionId);
                 String requestId = lendingTransactionRepository.getRequestId(transactionId);
 
                 User lender = userRepository.getUserForUserId(lenderId);
-//                BorrowRequest request = borrowRequestRepository.getBorrowRequest(transactionId);
+                BorrowRequest request = borrowRequestRepository.getBorrowRequestByRequestId(transactionId);
                 transaction.setLender(lender);
-//                transaction.setBorrowRequest(request);
+                transaction.setBorrowRequest(request);
             }
             return transactions;
         } catch (Exception e) {

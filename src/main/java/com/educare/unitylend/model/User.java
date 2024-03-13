@@ -4,7 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Map;
 
 
 @Data
@@ -15,12 +17,9 @@ public class User {
     private String password;
     private String name;
     private String email;
+    private String contactNo;
     private LocalDate dob;
-    private Integer income;
-    private Integer borrowingLimit;
-    private String officeName;
-    private String collegeUniversity;
-    private String locality;
-    private boolean isActive;
+    private BigDecimal income;
+    private Map<String,String> communityDetails;
 }
 

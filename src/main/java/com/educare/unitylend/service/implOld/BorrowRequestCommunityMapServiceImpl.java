@@ -1,10 +1,10 @@
-package com.educare.unitylend.service.impl;
+package com.educare.unitylend.service.implOld;
 
 import com.educare.unitylend.Exception.ServiceException;
-import com.educare.unitylend.dao.BorrowRequestCommunityRepository;
+import com.educare.unitylend.dao.BorrowRequestCommunityMapRepository;
 import com.educare.unitylend.model.BorrowRequest;
 import com.educare.unitylend.model.Community;
-import com.educare.unitylend.service.BorrowRequestCommunityService;
+import com.educare.unitylend.service.BorrowRequestCommunityMapService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,13 +14,13 @@ import java.util.List;
 @AllArgsConstructor
 @Service
 
-public class BorrowRequestCommunityServiceImpl implements BorrowRequestCommunityService {
+public class BorrowRequestCommunityMapServiceImpl implements BorrowRequestCommunityMapService {
 
-    BorrowRequestCommunityRepository borrowRequestCommunityRepository;
+    BorrowRequestCommunityMapRepository borrowRequestCommunityMapRepository;
     @Override
     public List<Community> getCommunitiesByRequestId(String requestId) throws ServiceException {
         try{
-            List<Community>communities = borrowRequestCommunityRepository.getCommunitiesByRequestId(requestId);
+            List<Community>communities = borrowRequestCommunityMapRepository.getCommunitiesByRequestId(requestId);
             return communities;
         }
         catch(Exception e){
@@ -32,7 +32,7 @@ public class BorrowRequestCommunityServiceImpl implements BorrowRequestCommunity
     @Override
     public List<BorrowRequest> getRequestsByCommunityId(String communityId) throws ServiceException {
         try{
-            List<BorrowRequest>requests = borrowRequestCommunityRepository.getRequestsByCommunityId(communityId);
+            List<BorrowRequest>requests = borrowRequestCommunityMapRepository.getRequestsByCommunityId(communityId);
             return requests;
         }
         catch(Exception e){

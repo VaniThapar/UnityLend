@@ -14,21 +14,18 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class BorrowRequest {
-    private String requestId;
+    private String borrowRequestId;
     private User borrower;
-    private List<String> communityIds;
-    private Integer returnPeriod;
-    private String status;
-    private LocalDateTime timestamp;
-    private BigDecimal collectedAmount;
-    private BigDecimal requestedAmount;
+    private Integer returnPeriodDays;
     private BigDecimal monthlyInterestRate;
-
-    public String getBorrowerId() {
-        return (borrower != null) ? borrower.getUserId() : null;
-    }
-
-
+    private Status borrowStatus;
+    private BigDecimal requestedAmount;
+    private BigDecimal collectedAmount;
+    private Boolean isDefaulted;
+    private BigDecimal defaultFine;
+    private  Integer defaultCount;
+    private LocalDateTime createdAt;
+    private LocalDateTime lastModifiedAt;
+    private List<String> communityIds;
 }

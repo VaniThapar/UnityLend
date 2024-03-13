@@ -16,62 +16,6 @@ import java.util.List;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/community")
-
 public class CommunityController extends BaseController {
-    CommunityService communityService;
-
-    @GetMapping("all-communities")
-    public ResponseEntity<?> getAllCommunities() throws ControllerException {
-        //Getting all the existing communities
-        try {
-            List<Community> communityList = communityService.getCommunities();
-
-            if (communityList == null || communityList.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No data found");
-            }
-
-            return ResponseEntity.ok(communityList);
-        } catch (ServiceException e) {
-            log.error("Error encountered in getting the communities", e);
-            throw new ControllerException("Error encountered in getting the communities", e);
-        }
-    }
-
-    @GetMapping("get-community-by-tag")
-    public ResponseEntity<?> getCommunityWithTag(@RequestParam(required = false) String commonTag) throws ControllerException {
-        //Getting all communities with the given common tag
-        try {
-            if (commonTag == null || commonTag.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("commonTag parameter is missing or empty");
-            }
-
-            String communityName = communityService.getCommunityName(commonTag);
-
-            if (communityName == null || communityName.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No data found");
-            }
-
-            return ResponseEntity.ok(communityName);
-        } catch (ServiceException e) {
-            log.error("Error encountered in getting the community by tag", e);
-            throw new ControllerException("Error encountered in getting the community by tag", e);
-        }
-    }
-
-    @PostMapping("/create-community")
-    public ResponseEntity<String> createNewCommunity(@RequestBody Community community) throws ControllerException {
-        //Creating a new community with community object
-        try {
-            if (community == null) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Request body is null");
-            }
-
-            communityService.createCommunity(community);
-            return ResponseEntity.ok("success!!!");
-        } catch (ServiceException e) {
-            log.error("Error encountered in creating the community", e);
-            throw new ControllerException("Error encountered in creating the community", e);
-        }
-    }
 
 }
