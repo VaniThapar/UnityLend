@@ -1,6 +1,7 @@
 package com.educare.unitylend.controller;
 
 import com.educare.unitylend.Exception.ControllerException;
+import com.educare.unitylend.Exception.ServiceException;
 import com.educare.unitylend.service.UserCommunityService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +21,7 @@ public class UserCommunityController {
 
     private UserCommunityService usercommunityService;
 
-    @GetMapping("/{userId}")
+    @GetMapping("/get-communities/{userId}")
     public ResponseEntity<List<String>> getAllCommunities(@PathVariable String userId) throws ControllerException {
         //Getting all communities for a given user
         try {
@@ -35,7 +36,7 @@ public class UserCommunityController {
             }
 
             return ResponseEntity.ok(communityList);
-        } catch (Exception e) {
+        } catch (ServiceException e) {
             log.error("Error encountered in getting the communities for user with ID: {}", userId, e);
             throw new ControllerException("Error encountered in getting the communities", e);
         }

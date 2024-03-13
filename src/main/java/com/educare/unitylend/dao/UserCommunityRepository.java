@@ -9,14 +9,45 @@ import java.util.List;
 @Mapper
 @Repository
 public interface UserCommunityRepository {
-    @Insert("INSERT INTO usercommunity (userid, communityid) VALUES (#{userid}, #{communityid})")
-    void createUserCommunityMapping(@Param("userid") String userId, @Param("communityid") String communityId);
-
-
-    @Select("SELECT c.CommunityName FROM Community c JOIN UserCommunity uc ON c.CommunityId = uc.CommunityId WHERE uc.UserId = #{userId}")
+    @Select({
+            "<script>",
+            "SELECT c.CommunityName FROM Community c",
+            "JOIN UserCommunity uc ON c.CommunityId = uc.CommunityId",
+            "WHERE 1=1",
+            "<if test='userId != null'>",
+            "AND uc.UserId = #{userId}",
+            "</if>",
+            "</script>"
+    })
     List<String> findCommunityNamesByUserId(@Param("userId") String userId);
 
-    @Delete("DELETE FROM usercommunity WHERE userid = #{userId}")
+    @Insert({
+            "<script>",
+            "INSERT INTO usercommunity (userid, communityid)",
+            "VALUES",
+            "(",
+            "<if test='userId != null'>",
+            "#{userId}, #{communityId}",
+            "</if>",
+            ")",
+            "</script>"
+    })
+    void createUserCommunityMapping(
+            @Param("userId") String userId,
+            @Param("communityId") String communityId
+    );
+
+
+    @Delete({
+            "<script>",
+            "DELETE FROM usercommunity",
+            "WHERE 1=1",
+            "<if test='userId != null'>",
+            "AND userid = #{userId}",
+            "</if>",
+            "</script>"
+    })
     void deletePrevData(@Param("userId") String userId);
+
 
 }

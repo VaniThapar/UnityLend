@@ -13,13 +13,23 @@ public interface UserService {
      */
     List<User> getUsers() throws ServiceException;
 
+    /**
+     * update the user infomation {@link User}
+     *
+     * @throws ServiceException : Throws if any exception occurs
+     */
     void updateUser(User user,String userId) throws ServiceException;
     boolean markUserAsInactive(String userId) throws ServiceException;
-    void createUser(User user) throws ServiceException;
+
     /**
-     * @param userId : Uniquely identifies a user
-     * @return Object of {@link User} for the given parameter
-     * @throws ServiceException :Throws if any exception occurs
+     * create the user {@link User}
+     * @throws ServiceException : Throws if any exception occurs
+     */
+    void createUser(User user) throws ServiceException;
+
+    /**
+     * @return the User using userId
+     * @throws ServiceException : Throws if any exception occurs
      */
     User getUserByUserId(String userId) throws ServiceException;
 }

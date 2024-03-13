@@ -11,20 +11,4 @@ public class Community {
     private String communityId;
     private String communityName;
     private String commonTag;
-
-   public String getCommunityName() {
-        return communityName;
-    }
-
-    public void setCommunityName(String communityName) {
-        this.communityName = communityName;
-    }
-
-    public String getCommonTag() {
-        return commonTag;
-    }
-
-    public void setCommonTag(String commonTag) {
-        this.commonTag = commonTag;
-    }
 }

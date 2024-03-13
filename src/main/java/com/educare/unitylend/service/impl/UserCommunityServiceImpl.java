@@ -2,9 +2,7 @@ package com.educare.unitylend.service.impl;
 
 import com.educare.unitylend.Exception.ServiceException;
 import com.educare.unitylend.dao.UserCommunityRepository;
-import com.educare.unitylend.model.User;
 import com.educare.unitylend.service.UserCommunityService;
-import com.educare.unitylend.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

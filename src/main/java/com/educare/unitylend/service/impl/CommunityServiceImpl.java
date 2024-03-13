@@ -43,8 +43,8 @@ public class CommunityServiceImpl implements CommunityService {
 
         try {
             if (!communityRepository.existsByCommontag(newCommunity.getCommonTag())) {
-
                 communityRepository.createCommunity(newCommunity);
+                newCommunity.setCommunityId(communityRepository.getCommunityIdByName(newCommunity.getCommonTag()));
             }
 
 

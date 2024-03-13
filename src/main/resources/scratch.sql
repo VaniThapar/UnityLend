@@ -1355,4 +1355,11 @@ FROM
 
 alter table "TempUser" rename to "tempuser";
 
+ALTER TABLE tempuser
+    ADD COLUMN isActive BOOLEAN DEFAULT true;
+
+ALTER TABLE community
+    ADD COLUMN communitytype VARCHAR(255);
+
+
 
