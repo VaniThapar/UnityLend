@@ -17,15 +17,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/community")
 public class CommunityController extends BaseController {
-    @GetMapping
-    public void createCommunity() throws ControllerException {
-    }
 
-    @GetMapping
-    public void deleteCommunity() throws ControllerException {
-    }
-
-    @GetMapping
-    public void getAllCommunities() throws ControllerException {
+    //Returns the list of all the available communities
+    @GetMapping("/get-all-communities")
+    public ResponseEntity<List<Community>> getAllCommunities() throws ControllerException {
+        return null;
     }
 }

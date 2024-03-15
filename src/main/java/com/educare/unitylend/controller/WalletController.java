@@ -1,6 +1,7 @@
 package com.educare.unitylend.controller;
 
 import com.educare.unitylend.Exception.ControllerException;
+import com.educare.unitylend.Exception.ServiceException;
 import com.educare.unitylend.model.Wallet;
 import com.educare.unitylend.service.WalletService;
 import lombok.AllArgsConstructor;
@@ -19,36 +20,43 @@ import java.util.List;
 @RestController
 @RequestMapping("/wallet")
 public class WalletController extends BaseController {
-    @GetMapping()
-    public void getAllWallets() throws ControllerException {
+    private final WalletService walletService;
+
+    //returns the list of all the wallets
+     @GetMapping("/get-all-wallets")
+    public ResponseEntity<List<Wallet>> getAllWallets() throws ControllerException, ServiceException {
+        List<Wallet> wallets = walletService.getAllWallets();
+        return ResponseEntity.ok().body(wallets);
     }
 
-    @GetMapping()
-    public void getWalletForUserId() throws ControllerException {
+    @GetMapping("/wallet-for-userid/{userId}")
+    public ResponseEntity<Wallet> getWalletForUserId(@PathVariable String userId) throws ControllerException, ServiceException {
+        Wallet wallet = walletService.getWalletForUserId(userId);
+        return ResponseEntity.ok().body(wallet);
     }
 
-    @GetMapping()
-    public void getWalletForId() throws ControllerException {
+    @GetMapping("/wallet-for-walletid/{walletId}")
+    public ResponseEntity<Wallet> getWalletForWalletId(@PathVariable String walletId) throws ControllerException, ServiceException {
+        Wallet wallet = walletService.getWalletForId(walletId);
+        return ResponseEntity.ok().body(wallet);
     }
 
-    @GetMapping()
-    public void createWallet() throws ControllerException {
+    @GetMapping("/add-amount/{walletId}")
+    public ResponseEntity<Boolean> addAmount(@PathVariable String walletId, @RequestParam Float amount) throws ControllerException, ServiceException {
+        boolean success = walletService.addAmount(walletId, amount);
+        return ResponseEntity.ok().body(success);
     }
 
-    @GetMapping()
-    public void createUserWalletMap() throws ControllerException {
+    @GetMapping("/deduct-amount/{walletId}")
+    public ResponseEntity<Boolean> deductAmount(@PathVariable String walletId, @RequestParam Float amount) throws ControllerException, ServiceException {
+        boolean success = walletService.deductAmount(walletId, amount);
+        return ResponseEntity.ok().body(success);
     }
 
-    @GetMapping()
-    public void addAmount() throws ControllerException {
-    }
-
-    @GetMapping()
-    public void deductAmount() throws ControllerException {
-    }
-
-    @GetMapping()
-    public void getWalletAmount() throws ControllerException {
+    @GetMapping("/get-wallet-balance/{walletId}")
+    public ResponseEntity<Float> getWalletBalance(@PathVariable String userId) throws ControllerException, ServiceException {
+        Float amount = walletService.getWalletBalance(userId);
+        return ResponseEntity.ok().body(amount);
     }
 
 }

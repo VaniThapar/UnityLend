@@ -4,10 +4,8 @@ import com.educare.unitylend.Exception.ControllerException;
 import com.educare.unitylend.model.RepaymentTransaction;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @AllArgsConstructor
@@ -20,19 +18,24 @@ public class RepaymentTransactionController extends BaseController{
      * @throws ControllerException : Exception to be thrown from controller in case of any exception
      */
 
-    @PostMapping
-    public void createRepaymentTransaction() throws ControllerException {
+
+    @GetMapping("/make-repayment/{payerId}/{payeeId}/{amount}")
+    public ResponseEntity<Boolean> createRepaymentTransaction(@PathVariable String payerId, @PathVariable String payeeId, @PathVariable String requestId, @PathVariable Float amount) throws ControllerException {
+        return null;
     }
 
-    @GetMapping
-    public void getTransactionsForPayerId() throws ControllerException {
+    @GetMapping("/repayment-details-for-payerid/{payerId}")
+    public ResponseEntity<RepaymentTransaction> getTransactionsForPayerId(@PathVariable String payerId) throws ControllerException {
+        return null;
     }
 
-    @GetMapping
-    public void getTransactionForPayerIdAndPayeeId() throws ControllerException {
+    @GetMapping("/repayment-between-payerid-and-payeeid/{payerId}/{payeeId}")
+    public ResponseEntity<RepaymentTransaction> getTransactionForPayerIdAndPayeeId() throws ControllerException {
+        return null;
     }
 
-    @GetMapping
-    public void getTransactionsForTransactionId() throws ControllerException {
+    @GetMapping("repayment-for-transactionid/{transactionId}")
+    public ResponseEntity<RepaymentTransaction> getTransactionsForTransactionId(@PathVariable String transactionId) throws ControllerException {
+        return null;
     }
 }

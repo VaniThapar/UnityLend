@@ -21,5 +21,5 @@ public interface WalletService {
 
     boolean deductAmount(String walletId, Float amount) throws ServiceException;
 
-    Float getWalletAmount(String userId) throws ServiceException;
+    Float getWalletBalance(String userId) throws ServiceException;
 }

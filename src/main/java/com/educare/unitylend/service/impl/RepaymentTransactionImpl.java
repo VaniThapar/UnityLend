@@ -1,7 +1,7 @@
 package com.educare.unitylend.service.impl;
 
 import com.educare.unitylend.Exception.ServiceException;
-import com.educare.unitylend.dao.RepaymentTransactionRepository;
+import com.educare.unitylend.dao.RepaymentRepository;
 import com.educare.unitylend.model.RepaymentTransaction;
 import com.educare.unitylend.service.RepaymentTransactionService;
 import lombok.AllArgsConstructor;

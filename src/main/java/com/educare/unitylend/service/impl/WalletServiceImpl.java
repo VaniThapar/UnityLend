@@ -49,7 +49,7 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public Float getWalletAmount(String userId) throws ServiceException {
+    public Float getWalletBalance(String userId) throws ServiceException {
         return null;
     }
 }
