@@ -18,4 +18,15 @@ import java.util.List;
 @RequestMapping("/community")
 public class CommunityController extends BaseController {
 
+    /**
+     * API endpoint for retrieving all communities.
+     *
+     * @return ResponseEntity<List<Community>> The list of all communities.
+     * @throws ControllerException If an error occurs during the community retrieval process.
+     */
+    @GetMapping("/get-all-communities")
+    public ResponseEntity<List<Community>> getAllCommunities() throws ControllerException {
+        return null;
+    }
+
 }
