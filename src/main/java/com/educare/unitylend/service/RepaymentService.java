@@ -1,5 +1,4 @@
 package com.educare.unitylend.service;
 
-public interface CommunityService {
-
+public interface RepaymentService {
 }

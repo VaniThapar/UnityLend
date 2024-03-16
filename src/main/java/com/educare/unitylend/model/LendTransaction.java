@@ -6,17 +6,14 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LendingHistory {
+public class LendTransaction {
     private String lendTransactionId;
-    private User lender;
-    private User borrower;
+    private Transaction transaction;
     private BorrowRequest borrowRequest;
-    private BigDecimal amount;
-    private LocalDateTime timestamp;
-
+    private LocalDateTime createdAt;
+    private LocalDateTime lastUpdatedAt;
 }
