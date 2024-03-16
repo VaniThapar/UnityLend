@@ -1,3 +1,7 @@
+# <div align="center">Welcome to UnityLend</div>
+
+UnityLend is a groundbreaking platform designed to foster financial cooperation and empowerment within communities. Key features include registration, creation, and joining of community channels, transparent borrowing processes, and a hassle-free repayment system. UnityLend not only addresses immediate financial needs but also cultivates a sense of trust and collaboration among community members.
+
 # Project Requirements
 The software requirements for the application can be accessed through [Unity_Lend_Project_Requirements](https://github.com/VaniThapar/UnityLend/files/14396972/unity_lend.docx).
 
@@ -13,7 +17,7 @@ Follow these steps to set up and run the project locally.
 git clone https://github.com/VaniThapar/UnityLend.git
 ```
 ### 2. Install and Set Up PostgreSQL
-1. You can download and install PostgreSQL from the [official website](https://www.postgresql.org/). For steps of installation follow this document [Installation Steps]([MySQLWindows.docx](https://github.com/VaniThapar/UnityLend/files/14361101/MySQLWindows.docx)).
+1. You can download and install PostgreSQL from the [official website](https://www.postgresql.org/). For steps of installation follow this document [Installation Steps](https://github.com/VaniThapar/UnityLend/files/14361101/MySQLWindows.docx).
 2. After installing PostgreSQL, open a terminal or command prompt and enter the following command to create a new database
 ```bash
 createdb your_database
@@ -46,9 +50,9 @@ mvn spring-boot:run
 Once the application is running, Tomcat server starts running at http://localhost:8085.
 
 # Class Diagram
-The class diagram can be accessed at [Unity_Lend_Class_Diagram](https://lucid.app/lucidchart/39966a62-7f72-496b-9ed5-c1dac1ad927d/edit?viewport_loc=-399%2C-176%2C3186%2C1446%2CHWEp-vi-RSFO&invitationId=inv_48100e8f-d365-4ba3-a794-3cf28767bf10).
+The class diagram can be accessed at [Unity_Lend_Class_Diagram](https://drive.google.com/file/d/1etFI_mWnXqV1lAzYVuepEDqdyavemlht/view).
 
-# E R Diagram:
+# E R Diagram
 The ER diagram can be accessed at [Unity_Lend_ER_Diagram](https://drive.google.com/file/d/1gyd7sokLba8Ai6vOULL_auioWAXFHsps/view?usp=drive_link).
 
 # Flow diagram for the lender
