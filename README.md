@@ -53,10 +53,12 @@ Once the application is running, Tomcat server starts running at http://localhos
 The class diagram can be accessed at [Unity_Lend_Class_Diagram](https://drive.google.com/file/d/1etFI_mWnXqV1lAzYVuepEDqdyavemlht/view).
 
 # E R Diagram
-The ER diagram can be accessed at [Unity_Lend_ER_Diagram](https://drive.google.com/file/d/1gyd7sokLba8Ai6vOULL_auioWAXFHsps/view?usp=drive_link).
+
+The ER diagram can be accessed at [Unity_Lend_EER_Diagram](https://github.com/VaniThapar/UnityLend/files/14627912/Unity-Lend-EER.pdf)
 
 # Flow diagram for the lender
 The Flow diagram demonstrating the operations of a lender can be accessed at [Flow_Diagra_For_Lender](https://app.diagrams.net/#G1dLFlWWprYTwwtwjXvi5WEJS94RS7x-uo#%7B%22pageId%22%3A%22W7Y_DPB_WjcdcxQGYy3G%22%7D).
 
 # Flow diagram for raising a borrow request
 The Flow diagram demonstrating the steps of raising a borrow request can be accessed at [Flow_Diagram_For_Raising_Request](https://drive.google.com/file/d/1pA5A4blyuBDjGBg7mWg6v0XT-DEOwUn8/view?usp=sharing).
+
