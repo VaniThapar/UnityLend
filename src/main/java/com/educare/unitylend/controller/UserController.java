@@ -2,6 +2,7 @@ package com.educare.unitylend.controller;
 
 import com.educare.unitylend.Exception.ControllerException;
 import com.educare.unitylend.Exception.ControllerException;
+import com.educare.unitylend.Exception.ServiceException;
 import com.educare.unitylend.model.User;
 import com.educare.unitylend.service.UserService;
 import lombok.AllArgsConstructor;
@@ -17,7 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/user")
-public class UserController extends BaseController{
+public class UserController extends BaseController {
 
     private UserService userService;
 
@@ -29,8 +30,23 @@ public class UserController extends BaseController{
      * @throws ControllerException If an error occurs during the user creation process.
      */
     @PostMapping("/create-user")
-    ResponseEntity<Boolean> createUser(@RequestBody User user) throws ControllerException {
-        return null;
+    ResponseEntity<String> createUser(@RequestBody User user) throws ControllerException {
+        try {
+
+            if (user == null) {
+                return ResponseEntity.badRequest().body("User cannot be null");
+            }
+            Boolean isCreated = userService.createUser(user);
+            if (!isCreated) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("User could not be created");
+            }
+            return ResponseEntity.ok("User created successfully");
+
+
+        } catch (ServiceException e) {
+            log.error("Error in user creation");
+            throw new ControllerException("Error in user creation", e);
+        }
     }
 
 
@@ -42,8 +58,24 @@ public class UserController extends BaseController{
      * @throws ControllerException If an error occurs during the user update process.
      */
     @PutMapping("/update-user-details")
-    ResponseEntity<Boolean> updateUserDetails(@RequestBody User user) throws ControllerException {
-        return null;
+    ResponseEntity<String> updateUserDetails(@RequestBody User user) throws ControllerException {
+
+        try {
+            if (user == null) {
+                ResponseEntity.badRequest().body("User cannot be null");
+            }
+            Boolean isUpdated = userService.updateUserDetails(user);
+            if (!isUpdated) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("User could not be updated");
+            }
+            return ResponseEntity.ok("User updated successfully");
+
+        } catch (ServiceException e) {
+            log.error("Error encountered in user updation");
+            throw new ControllerException("Error encountered in user updation", e);
+        }
+
+
     }
 
     /**
@@ -54,8 +86,20 @@ public class UserController extends BaseController{
      * @throws ControllerException If an error occurs during the user retrieval process.
      */
     @GetMapping("/get-user-by-user-id/{userId}")
-    ResponseEntity<User> getUserForUserId(String userId) throws ControllerException {
-        return null;
+    ResponseEntity<User> getUserForUserId(@PathVariable String userId) throws ControllerException {
+       try{
+           if(userId==null || userId.isEmpty()){
+               log.error("User id cannot be null");
+               return ResponseEntity.badRequest().body(null);
+           }
+           User requiredUser=userService.getUserForUserId(userId);
+           log.info("User :: "+requiredUser);
+           return ResponseEntity.ok(requiredUser);
+       }
+       catch (ServiceException e){
+           log.error("Error encountered in getting user by user id");
+           throw new ControllerException("Error encountered in getting user by user id",e);
+       }
     }
 
 
@@ -67,20 +111,45 @@ public class UserController extends BaseController{
      * @throws ControllerException If an error occurs during the user deletion process.
      */
     @DeleteMapping("/delete-user-by-user-id/{userId}")
-    ResponseEntity<Boolean> deleteUser(String userId) throws ControllerException {
-        return null;
+    ResponseEntity<String> deleteUser(@PathVariable String userId) throws ControllerException {
+        try{
+            if(userId==null || userId.isEmpty()){
+                return ResponseEntity.badRequest().body("User id cannot be null");
+            }
+            Boolean isDeleted=userService.deleteUser(userId);
+            if(!isDeleted){
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("User could not be deleted");
+            }
+            return ResponseEntity.ok("User deleted successfully");
+        }
+        catch(ServiceException e){
+            log.error("Error encountered in user deletion");
+            throw new ControllerException("Error encountered in user deletion",e);
+        }
     }
 
 
     /*For Administration Purposes*/
+
     /**
      * API endpoint for retrieving all users.
      *
-     * @return ResponseEntity<List<User>> The list of all users.
+     * @return ResponseEntity<List < User>> The list of all users.
      * @throws ControllerException If an error occurs during the user retrieval process.
      */
     @GetMapping("/get-all-users")
     ResponseEntity<List<User>> getAllUsers() throws ControllerException {
-        return null;
+        try{
+            List<User>userList=userService.getAllUsers();
+            if(userList.isEmpty()){
+                return ResponseEntity.noContent().build();
+            }
+            log.info("Userlist:: "+userList);
+            return ResponseEntity.ok(userList);
+        }
+        catch(ServiceException e){
+            log.error("Error encountered in getting all users");
+            throw new ControllerException("Error encountered in getting all users",e);
+        }
     }
 }

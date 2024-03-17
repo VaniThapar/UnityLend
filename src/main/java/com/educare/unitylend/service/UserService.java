@@ -10,4 +10,5 @@ public interface UserService {
     User getUserForUserId(String userId) throws ServiceException;
     Boolean deleteUser(String userId) throws ServiceException;
     List<User> getAllUsers() throws ServiceException;
+    User getUserByWalletId(String walletId) throws ServiceException;
 }

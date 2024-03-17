@@ -6,6 +6,7 @@ import com.educare.unitylend.model.Community;
 import com.educare.unitylend.service.CommunityService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,18 +16,17 @@ import java.util.List;
 @Service
 public class CommunityServiceImpl implements CommunityService {
 
-    @Override
-    public boolean createCommunity() throws ServiceException {
-        return false;
-    }
-
-    @Override
-    public boolean deleteCommunity(String communityId) throws ServiceException {
-        return false;
-    }
-
+    private CommunityRepository communityRepository;
     @Override
     public List<Community> getAllCommunities() throws ServiceException {
-        return null;
+        try{
+            List<Community>communityList=communityRepository.getAllCommunities();
+            log.info("community List:: "+communityList);
+            return communityList;
+        }
+        catch(Exception e){
+            log.error("Error encountered in fetching all communities");
+            throw new ServiceException("Error encountered in fetching all communities",e);
+        }
     }
 }

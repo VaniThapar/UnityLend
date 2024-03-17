@@ -12,5 +12,5 @@ import java.util.UUID;
 public class Wallet {
     private String walletId;
     private User user;
-    private BigDecimal balance;
+    private Float balance;
 }

@@ -6,7 +6,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class UnitylendApplication {
 
     public static void main(String[] args) {
-
         SpringApplication.run(UnitylendApplication.class, args);
     }
 

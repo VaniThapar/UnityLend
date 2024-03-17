@@ -4,6 +4,7 @@ package com.educare.unitylend.service;
 import com.educare.unitylend.Exception.ServiceException;
 import com.educare.unitylend.model.Wallet;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface WalletService {
@@ -11,15 +12,13 @@ public interface WalletService {
 
     Wallet getWalletForUserId(String userId) throws ServiceException;
 
-    Wallet getWalletForId(String walletId) throws ServiceException;
+    Wallet getWalletForWalletId(String walletId) throws ServiceException;
 
-    String createWallet(String userId) throws ServiceException;
+//    Boolean createUserWalletMap(String userId) throws ServiceException;
 
-    boolean createUserWalletMap(String userId) throws ServiceException;
+    Boolean addAmount(String walletId, BigDecimal amount) throws ServiceException;
 
-    boolean addAmount(String walletId, Float amount) throws ServiceException;
+    Boolean deductAmount(String walletId, BigDecimal amount) throws ServiceException;
 
-    boolean deductAmount(String walletId, Float amount) throws ServiceException;
-
-    Float getWalletBalance(String userId) throws ServiceException;
+    BigDecimal getWalletBalance(String userId) throws ServiceException;
 }
