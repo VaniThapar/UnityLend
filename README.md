@@ -17,7 +17,7 @@ Follow these steps to set up and run the project locally.
 git clone https://github.com/VaniThapar/UnityLend.git
 ```
 ### 2. Install and Set Up PostgreSQL
-1. You can download and install PostgreSQL from the [official website](https://www.postgresql.org/). For steps of installation follow this document [Installation Steps](https://github.com/VaniThapar/UnityLend/files/14361101/MySQLWindows.docx).
+1. You can download and install PostgreSQL from the [official website](https://www.postgresql.org/). For steps of installation follow this document [PostgreSQL_Installation_Steps.docx](https://github.com/VaniThapar/UnityLend/files/14628883/PostgreSQL_Installation_Steps.docx).
 2. After installing PostgreSQL, open a terminal or command prompt and enter the following command to create a new database
 ```bash
 createdb your_database
@@ -57,8 +57,9 @@ The class diagram can be accessed at [Unity_Lend_Class_Diagram](https://drive.go
 The ER diagram can be accessed at [Unity_Lend_EER_Diagram](https://github.com/VaniThapar/UnityLend/files/14627912/Unity-Lend-EER.pdf)
 
 # Flow diagram for the lender
-The Flow diagram demonstrating the operations of a lender can be accessed at [Flow_Diagra_For_Lender](https://app.diagrams.net/#G1dLFlWWprYTwwtwjXvi5WEJS94RS7x-uo#%7B%22pageId%22%3A%22W7Y_DPB_WjcdcxQGYy3G%22%7D).
+The Flow diagram demonstrating the operations of a lender can be accessed at [Flow_Diagram_For_Lender](https://app.diagrams.net/#G1dLFlWWprYTwwtwjXvi5WEJS94RS7x-uo#%7B%22pageId%22%3A%22W7Y_DPB_WjcdcxQGYy3G%22%7D).
 
 # Flow diagram for raising a borrow request
 The Flow diagram demonstrating the steps of raising a borrow request can be accessed at [Flow_Diagram_For_Raising_Request](https://drive.google.com/file/d/1pA5A4blyuBDjGBg7mWg6v0XT-DEOwUn8/view?usp=sharing).
+
 
