@@ -7,6 +7,7 @@ import com.educare.unitylend.service.BorrowRequestCommunityMapService;
 import com.educare.unitylend.service.BorrowRequestService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,8 +31,24 @@ public class BorrowRequestController extends BaseController {
      * @throws ControllerException If an error occurs during the borrow request creation process.
      */
     @PostMapping("/create-borrow-request")
-    ResponseEntity<Boolean> createBorrowRequest(@RequestBody BorrowRequest borrowRequest) throws ControllerException {
-        return null;
+    ResponseEntity<Boolean> createBorrowRequest(@RequestBody BorrowRequest borrowRequest) throws ControllerException{
+        try {
+//            String userId = borrowRequest.getBorrower().getUserId();
+//            if (userId == null || userId.isEmpty()) {
+//                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(false);
+//            }
+            System.out.println(borrowRequest);
+            boolean isBorrowRequestValid = borrowRequestService.validateBorrowRequest(borrowRequest);
+            if (isBorrowRequestValid) {
+                borrowRequestService.createBorrowRequest(borrowRequest);
+                return ResponseEntity.ok(true);
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(false);
+            }
+        } catch (Exception e) {
+            log.error("Error encountered in raising borrow request for user with ID: {}", borrowRequest.getBorrower(), e);
+            throw new ControllerException("Error encountered in raising the borrow requests", e);
+        }
     }
 
 

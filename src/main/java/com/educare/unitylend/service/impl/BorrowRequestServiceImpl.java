@@ -1,6 +1,8 @@
 package com.educare.unitylend.service.impl;
 
 import com.educare.unitylend.Exception.ServiceException;
+import com.educare.unitylend.dao.BorrowRequestCommunityMapRepository;
+import com.educare.unitylend.dao.BorrowRequestRepository;
 import com.educare.unitylend.model.BorrowRequest;
 import com.educare.unitylend.model.Status;
 import com.educare.unitylend.service.BorrowRequestService;
@@ -16,9 +18,16 @@ import java.util.List;
 @Service
 public class BorrowRequestServiceImpl implements BorrowRequestService {
 
+    private BorrowRequestRepository borrowRequestRepository;
+    private BorrowRequestCommunityMapRepository borrowRequestCommunityMapRepository;
     @Override
     public List<BorrowRequest> getAllBorrowRequests() throws ServiceException {
         return null;
+    }
+
+    @Override
+    public boolean validateBorrowRequest(BorrowRequest borrowRequest){
+        return true;
     }
 
     @Override
@@ -28,7 +37,14 @@ public class BorrowRequestServiceImpl implements BorrowRequestService {
 
     @Override
     public Boolean createBorrowRequest(BorrowRequest borrowRequest) throws ServiceException {
-        return false;
+        Boolean flag = borrowRequestRepository.createBorrowRequest(borrowRequest,borrowRequest.getBorrower().getUserId(),borrowRequest.getBorrowStatus().getStatusCode());
+
+        String requestId = borrowRequest.getBorrowRequestId();
+        System.out.println(requestId);
+        List<String> communityId = borrowRequest.getCommunityIds();
+
+        borrowRequestCommunityMapRepository.createBorrowRequestCommunityMapping(requestId,communityId);
+        return flag;
     }
 
     @Override
