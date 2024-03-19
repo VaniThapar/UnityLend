@@ -103,15 +103,13 @@ public class UserServiceImpl implements UserService {
     }
 
     void handleWalletCreation(String userId){
-        Wallet wallet=null;
         try{
-            wallet=walletRepository.generateWallet(userId);
+            walletRepository.generateWallet(userId);
             log.info("Wallet for user generated successfully");
         }
         catch (Exception e){
             log.error("Error encountered in wallet generation for user");
         }
-        log.info("Wallet details:: "+wallet);
     }
 
     void handleCommunityCreationForUser(Map<String, String> communityDetails, String userId) {

@@ -124,6 +124,13 @@ public class WalletController extends BaseController {
                 return ResponseEntity.badRequest().body(null);
             }
 
+            Wallet wallet=walletService.getWalletForWalletId(walletId);
+            BigDecimal balance=wallet.getBalance();
+
+            if(balance.compareTo(amount)<0){
+                return ResponseEntity.badRequest().body("Insufficient balance! Cannot deduct given amount");
+            }
+
             Boolean isDeducted = walletService.deductAmount(walletId,amount);
             if(!isDeducted){
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Amount could not be deducted from the wallet");

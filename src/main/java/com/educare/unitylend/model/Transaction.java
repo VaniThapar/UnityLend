@@ -19,5 +19,4 @@ public class Transaction {
     private LocalDateTime lastUpdatedTime;
     private LocalDateTime transactionTime;
 
-
 }
