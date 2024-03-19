@@ -16,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 public class BorrowRequest {
     private String borrowRequestId;
-    private User borrower;
+    private String borrower_id;
     private Integer returnPeriodDays;
     private BigDecimal monthlyInterestRate;
     private Status borrowStatus;
@@ -28,4 +28,6 @@ public class BorrowRequest {
     private LocalDateTime createdAt;
     private LocalDateTime lastModifiedAt;
     private List<String> communityIds;
+
+
 }

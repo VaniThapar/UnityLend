@@ -1,7 +1,7 @@
 package com.educare.unitylend.service.impl;
 
 import com.educare.unitylend.Exception.ServiceException;
-import com.educare.unitylend.dao.UserCommunityRepository;
+import com.educare.unitylend.dao.UserCommunityMapRepository;
 import com.educare.unitylend.model.User;
 import com.educare.unitylend.service.UserCommunityService;
 import com.educare.unitylend.service.UserService;
@@ -15,12 +15,12 @@ import java.util.List;
 @AllArgsConstructor
 @Service
 public class UserCommunityServiceImpl implements UserCommunityService {
-    private UserCommunityRepository userCommunityRepository;
+    private UserCommunityMapRepository userCommunityRepository;
     public List<String> getCommunitiesByUserId(String userId) throws ServiceException{
-        try {
-            List<String> communityNames = userCommunityRepository.findCommunityNamesByUserId(userId);
+        try { return null;
+          //  List<String> communityNames = userCommunityRepository.findCommunityNamesByUserId(userId);
             //  log.info("communityNames: ", communityNames);
-            return communityNames;
+            //return communityNames;
         } catch (Exception e) {
             log.error("Error encountered during community fetching operation for user with ID: {}", userId, e);
             throw new ServiceException("Error encountered during community fetch operation", e);
