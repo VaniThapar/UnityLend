@@ -39,7 +39,8 @@ public class BorrowRequestController extends BaseController {
             }
             System.out.println(borrowRequest);
             boolean isBorrowRequestValid = borrowRequestService.validateBorrowRequest(borrowRequest);
-            if (isBorrowRequestValid) {
+            boolean UserPartOfCommunity = borrowRequestService.isUserPartOfCommunity(borrowRequest);
+            if (isBorrowRequestValid && UserPartOfCommunity) {
                 borrowRequestService.createBorrowRequest(borrowRequest);
                 return ResponseEntity.ok(true);
             } else {

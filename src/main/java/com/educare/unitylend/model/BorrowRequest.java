@@ -122,7 +122,7 @@ public class BorrowRequest {
 //  private Boolean isDefaulted;
     private BigDecimal defaultFine;
     private Integer defaultCount;
-//    private LocalDateTime createdAt;
-//    private LocalDateTime lastModifiedAt;
+//  private LocalDateTime createdAt;
+//  private LocalDateTime lastModifiedAt;
     private List<String> communityIds;
 }
