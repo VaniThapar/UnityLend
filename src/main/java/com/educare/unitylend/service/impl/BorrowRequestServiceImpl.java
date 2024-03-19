@@ -27,7 +27,13 @@ public class BorrowRequestServiceImpl implements BorrowRequestService {
 
     @Override
     public boolean validateBorrowRequest(BorrowRequest borrowRequest){
-        return true;
+        Integer tenure = borrowRequest.getReturnPeriodDays();
+        BigDecimal monthlyIncome = borrowRequest.getBorrower().getIncome();
+        BigDecimal borrowedAmount = borrowRequest.getRequestedAmount();
+        BigDecimal monthlyEMI = borrowedAmount.divide(BigDecimal.valueOf(tenure));
+        BigDecimal limitMoney = monthlyIncome.divide(BigDecimal.valueOf(2));
+        boolean isWithinLimit = monthlyEMI.compareTo(limitMoney) <= 0;
+        return isWithinLimit;
     }
 
     @Override

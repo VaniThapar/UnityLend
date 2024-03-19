@@ -33,10 +33,10 @@ public class BorrowRequestController extends BaseController {
     @PostMapping("/create-borrow-request")
     ResponseEntity<Boolean> createBorrowRequest(@RequestBody BorrowRequest borrowRequest) throws ControllerException{
         try {
-//            String userId = borrowRequest.getBorrower().getUserId();
-//            if (userId == null || userId.isEmpty()) {
-//                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(false);
-//            }
+            String userId = borrowRequest.getBorrower().getUserId();
+            if (userId == null || userId.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(false);
+            }
             System.out.println(borrowRequest);
             boolean isBorrowRequestValid = borrowRequestService.validateBorrowRequest(borrowRequest);
             if (isBorrowRequestValid) {
