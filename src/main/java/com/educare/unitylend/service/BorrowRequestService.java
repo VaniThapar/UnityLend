@@ -13,8 +13,8 @@ public interface BorrowRequestService {
     List<BorrowRequest> getBorrowRequestForCommunity(String communityId) throws ServiceException;
     Boolean updateEMIDefaults() throws ServiceException;
     Boolean updateBorrowRequestStatus(Status status) throws ServiceException;
-    List<BorrowRequest> getBorrowRequestsInCommunityLessThanAmount(BigDecimal maxAmount) throws ServiceException;
-    List<BorrowRequest> getBorrowRequestsInCommunityGreaterThanAmount(BigDecimal minAmount) throws ServiceException;
-    List<BorrowRequest> getBorrowRequestsInCommunityInRange(BigDecimal minAmount, BigDecimal maxAmount) throws ServiceException;
+    List<BorrowRequest> getBorrowRequestsInCommunityLessThanAmount(BigDecimal maxAmount, String communityId) throws ServiceException;
+    List<BorrowRequest> getBorrowRequestsInCommunityGreaterThanAmount(BigDecimal minAmount, String communityId) throws ServiceException;
+    List<BorrowRequest> getBorrowRequestsInCommunityInRange(BigDecimal minAmount, BigDecimal maxAmount, String communityId) throws ServiceException;
     List<BorrowRequest> getAllBorrowRequests() throws ServiceException;
 }

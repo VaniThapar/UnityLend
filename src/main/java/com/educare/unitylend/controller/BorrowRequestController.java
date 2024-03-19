@@ -56,14 +56,14 @@ public class BorrowRequestController extends BaseController {
      * @throws ControllerException If an error occurs during the borrow request retrieval process.
      */
     @GetMapping("/get-borrow-request-by-community-id/{communityId}")
-    ResponseEntity<List<BorrowRequest>> getBorrowRequestForCommunity(@PathVariable String communityId) throws ControllerException {
+    ResponseEntity<List<BorrowRequest>> getBorrowRequestForCommunity() throws ControllerException {
         return null;
     }
 
 
     /**
      * API endpoint for retrieving borrow requests in a community within an amount range.
-     *
+     *@PathVariable String communityId
      * @param minAmount   The minimum amount of the borrow requests.
      * @param maxAmount   The maximum amount of the borrow requests.
      * @param lessThan    Flag indicating if the amount should be less than maxAmount.
@@ -71,44 +71,47 @@ public class BorrowRequestController extends BaseController {
      * @return ResponseEntity<List<BorrowRequest>> The list of borrow requests in the community within the specified amount range.
      * @throws ControllerException If an error occurs during the borrow request retrieval process.
      */
-    @GetMapping("/get-borrow-request-in-community-by-amount")
+    @PostMapping("/get-borrow-request-in-community-by-amount/{communityId}")
     ResponseEntity<List<BorrowRequest>> getBorrowRequestsInCommunityInAmountRange(
             @RequestParam(value = "minAmount", required = false) BigDecimal minAmount,
-            @RequestParam(value = "maxAmount", required = false) BigDecimal maxAmount,
+            @RequestParam(value = "maxAmount", required = true) BigDecimal maxAmount,
             @RequestParam(value = "lessThan", required = false, defaultValue = "false") boolean lessThan,
-            @RequestParam(value = "greaterThan", required = false, defaultValue = "true") boolean greaterThan
+            @RequestParam(value = "greaterThan", required = false, defaultValue = "true") boolean greaterThan,
+            @PathVariable String communityId
     ) throws ControllerException {
         try{
+            log.info("minAmount: {}", minAmount);
+            log.info("maxAmount: {}", maxAmount);
+            log.info("lessThan: {}", lessThan);
+            log.info("greaterThan: {}", greaterThan);
+            log.info("communityId: {}", communityId);
             List<BorrowRequest> borrowRequests = new ArrayList<>();
-
             if (minAmount != null && maxAmount != null) {
-                if (minAmount.compareTo(maxAmount) >= 0) {
+                if (minAmount.compareTo(maxAmount) > 0) {
                     log.error("minAmount is greater than maxAmount which is not permissible");
                     return ResponseEntity.badRequest().body(borrowRequests);
                 }
             }
-
             else if(minAmount==null && maxAmount==null){
                 log.error("Both minAmount and maxAmount are empty");
                 return ResponseEntity.badRequest().body(borrowRequests);
             }
-
             if(lessThan && greaterThan){
+                log.error("Inaccurate Constrains");
                 return ResponseEntity.badRequest().body(borrowRequests);
             }
             else if(lessThan){
-                borrowRequests=borrowRequestService.getBorrowRequestsInCommunityLessThanAmount(maxAmount);
+                borrowRequests=borrowRequestService.getBorrowRequestsInCommunityLessThanAmount(maxAmount, communityId);
             }
             else if(greaterThan){
-                borrowRequests=borrowRequestService.getBorrowRequestsInCommunityGreaterThanAmount(minAmount);
+                borrowRequests=borrowRequestService.getBorrowRequestsInCommunityGreaterThanAmount(minAmount, communityId);
             }
             else{
-                borrowRequests=borrowRequestService.getBorrowRequestsInCommunityInRange(minAmount,maxAmount);
+                borrowRequests=borrowRequestService.getBorrowRequestsInCommunityInRange(minAmount,maxAmount, communityId);
             }
-
+//            log.info(borrowRequests);
             return ResponseEntity.ok(borrowRequests);
         }
-
         catch(ServiceException e){
             log.error("Error in filtering borrow requests based on amount");
             throw new ControllerException("Error in filtering borrow requests based on amount",e);
