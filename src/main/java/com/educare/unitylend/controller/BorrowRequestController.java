@@ -27,7 +27,7 @@ public class BorrowRequestController extends BaseController {
      * API endpoint for creating a new borrow request.
      *
      * @param borrowRequest The borrow request object containing borrow request details to be created.
-     * @return ResponseEntity<Boolean> Indicating success or failure of the borrow request creation process.
+     * @return ResponseEntity<?> Indicating success or failure of the borrow request creation process.
      * @throws ControllerException If an error occurs during the borrow request creation process.
      */
     @PostMapping("/create-borrow-request")
@@ -35,7 +35,10 @@ public class BorrowRequestController extends BaseController {
         try {
             String userId = borrowRequest.getBorrower().getUserId();
             if (userId == null || userId.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(false);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User Id cannot be empty.");
+            }
+            if(borrowRequestService.isAnythingNull(borrowRequest)){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("One of the required fields is empty!");
             }
             if(borrowRequestService.isBorrowRequestPending(borrowRequest)){
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Pending borrow requests found....complete previous borrow requests to raise a new one!");

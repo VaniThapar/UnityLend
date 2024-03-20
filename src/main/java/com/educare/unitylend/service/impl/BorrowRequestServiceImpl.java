@@ -1,5 +1,6 @@
 package com.educare.unitylend.service.impl;
 
+import com.educare.unitylend.Exception.ControllerException;
 import com.educare.unitylend.Exception.ServiceException;
 import com.educare.unitylend.dao.BorrowRequestCommunityMapRepository;
 import com.educare.unitylend.dao.BorrowRequestRepository;
@@ -30,9 +31,15 @@ public class BorrowRequestServiceImpl implements BorrowRequestService {
     public List<BorrowRequest> getAllBorrowRequests() throws ServiceException {
         return null;
     }
-
+    /**
+     * Validating a borrow request on the basis of the monthly income of the borrower and his monthly emi he has to pay
+     *
+     * @param borrowRequest The borrow request object containing borrow request details to be created.
+     * @return boolean Indicating whether the request is validated based on above parameters or not
+     * @throws ServiceException If an error occurs during the validation of borrow request.
+     */
     @Override
-    public boolean validateBorrowRequest(BorrowRequest borrowRequest){
+    public boolean validateBorrowRequest(BorrowRequest borrowRequest) throws ServiceException{
         Integer tenure = borrowRequest.getReturnPeriodDays();
         BigDecimal monthlyIncome = borrowRequest.getBorrower().getIncome();
         BigDecimal borrowedAmount = borrowRequest.getRequestedAmount();
@@ -42,8 +49,15 @@ public class BorrowRequestServiceImpl implements BorrowRequestService {
         return isWithinLimit;
     }
 
+    /**
+     * Checking whether the borrower is a part of the community he wants to send the borrow request to
+     *
+     * @param borrowRequest The borrow request object containing borrow request details to be created.
+     * @return boolean Indicating whether the borrower is a part of the community he wants to send borrow request to or not
+     * @throws ServiceException If an error occurs during the check.
+     */
     @Override
-    public boolean isUserPartOfCommunity(BorrowRequest borrowRequest){
+    public boolean isUserPartOfCommunity(BorrowRequest borrowRequest) throws ServiceException{
         List<String> requestedCommunityIds = borrowRequest.getCommunityIds();
         Map<String, String> borrowerCommunities = borrowRequest.getBorrower().getCommunityDetails();
         for (String requestedCommunityId : requestedCommunityIds) {
@@ -54,10 +68,31 @@ public class BorrowRequestServiceImpl implements BorrowRequestService {
         }
         return true;
     }
+
+    /**
+     * Checking whether the borrower has any pending borrow request or not. If yes, he cannot raise a new request
+     *
+     * @param borrowRequest The borrow request object containing borrow request details to be created.
+     * @return boolean Indicating whether the borrower has a previous pending request or not
+     * @throws ServiceException If an error occurs during the check.
+     */
     @Override
-    public boolean isBorrowRequestPending(BorrowRequest borrowRequest){
+    public boolean isBorrowRequestPending(BorrowRequest borrowRequest) throws ServiceException{
         String borrowerId = borrowRequest.getBorrower().getUserId();
         if(borrowRequestRepository.isRequestPending(borrowerId)) return true;
+        return false;
+    }
+
+    /**
+     * Checking whether the borrower has sent a null field which is required while adding the borrow request to the database
+     *
+     * @param borrowRequest The borrow request object containing borrow request details to be created.
+     * @return boolean Indicating whether the borrower has any null required fields
+     * @throws ServiceException If an error occurs during the check.
+     */
+    @Override
+    public boolean isAnythingNull(BorrowRequest borrowRequest) throws ServiceException{
+        if(borrowRequest.getBorrower().getUserId() == null || borrowRequest.getBorrower().getPassword() == null || borrowRequest.getBorrower().getIncome() == null || borrowRequest.getBorrower().getCommunityDetails() == null ||borrowRequest.getReturnPeriodDays() == null || borrowRequest.getMonthlyInterestRate() == null || borrowRequest.getRequestedAmount() == null || borrowRequest.getCommunityIds() == null) return true;
         return false;
     }
 
@@ -69,7 +104,7 @@ public class BorrowRequestServiceImpl implements BorrowRequestService {
     @Override
     public Boolean createBorrowRequest(BorrowRequest borrowRequest) throws ServiceException {
 
-        Boolean flag = borrowRequestRepository.createBorrowRequest(borrowRequest,borrowRequest.getBorrower().getUserId(),borrowRequest.getBorrowStatus().getStatusCode());
+        Boolean flag = borrowRequestRepository.createBorrowRequest(borrowRequest,borrowRequest.getBorrower().getUserId());
 
         String requestId = borrowRequest.getBorrowRequestId();
         System.out.println(requestId);
