@@ -1,10 +1,7 @@
 package com.educare.unitylend.dao;
 
 import com.educare.unitylend.model.BorrowRequest;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
 @Mapper
@@ -14,5 +11,10 @@ public interface BorrowRequestRepository {
             "VALUES (uuid_generate_v4(), #{userId}, #{borrowRequest.returnPeriodDays}, #{borrowRequest.monthlyInterestRate}, #{status}, #{borrowRequest.requestedAmount}, #{borrowRequest.collectedAmount}, #{borrowRequest.defaultFine}, #{borrowRequest.defaultCount})")
     @Options(useGeneratedKeys = true, keyProperty = "borrowRequest.borrowRequestId")
     Boolean createBorrowRequest(@Param("borrowRequest") BorrowRequest borrowRequest, @Param("userId") String userId, @Param("status") Integer status);
+
+    @Select("SELECT CASE WHEN COUNT(*) > 0 THEN TRUE ELSE FALSE END " +
+            "FROM borrow_request " +
+            "WHERE borrower_id = #{userId} AND borrow_status = 1")
+    Boolean isRequestPending(@Param("userId") String userId);
 
 }

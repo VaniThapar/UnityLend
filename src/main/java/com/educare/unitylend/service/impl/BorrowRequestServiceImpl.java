@@ -54,6 +54,12 @@ public class BorrowRequestServiceImpl implements BorrowRequestService {
         }
         return true;
     }
+    @Override
+    public boolean isBorrowRequestPending(BorrowRequest borrowRequest){
+        String borrowerId = borrowRequest.getBorrower().getUserId();
+        if(borrowRequestRepository.isRequestPending(borrowerId)) return true;
+        return false;
+    }
 
     @Override
     public List<BorrowRequest> getBorrowRequestForUserId(String userId) throws ServiceException {

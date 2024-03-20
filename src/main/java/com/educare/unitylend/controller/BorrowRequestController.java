@@ -31,11 +31,14 @@ public class BorrowRequestController extends BaseController {
      * @throws ControllerException If an error occurs during the borrow request creation process.
      */
     @PostMapping("/create-borrow-request")
-    ResponseEntity<Boolean> createBorrowRequest(@RequestBody BorrowRequest borrowRequest) throws ControllerException{
+    ResponseEntity<?> createBorrowRequest(@RequestBody BorrowRequest borrowRequest) throws ControllerException{
         try {
             String userId = borrowRequest.getBorrower().getUserId();
             if (userId == null || userId.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(false);
+            }
+            if(borrowRequestService.isBorrowRequestPending(borrowRequest)){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Pending borrow requests found....complete previous borrow requests to raise a new one!");
             }
             System.out.println(borrowRequest);
             boolean isBorrowRequestValid = borrowRequestService.validateBorrowRequest(borrowRequest);
