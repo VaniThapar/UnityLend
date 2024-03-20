@@ -27,6 +27,7 @@ public class BorrowRequestController extends BaseController {
      * API endpoint for creating a new borrow request.
      *
      * @param borrowRequest The borrow request object containing borrow request details to be created.
+     * Required field to create a borrow request: {"borrower": {userId, password, income, communityDetails}, returnPeriodMonth, monthlyInterestRate, requestedAmount, communityIds}
      * @return ResponseEntity<?> Indicating success or failure of the borrow request creation process.
      * @throws ControllerException If an error occurs during the borrow request creation process.
      */
@@ -40,17 +41,19 @@ public class BorrowRequestController extends BaseController {
             if(borrowRequestService.isAnythingNull(borrowRequest)){
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("One of the required fields is empty!");
             }
+            if(!borrowRequestService.isPasswordCorrect(borrowRequest)){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password incorrect");
+            }
             if(borrowRequestService.isBorrowRequestPending(borrowRequest)){
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Pending borrow requests found....complete previous borrow requests to raise a new one!");
             }
-            System.out.println(borrowRequest);
             boolean isBorrowRequestValid = borrowRequestService.validateBorrowRequest(borrowRequest);
             boolean UserPartOfCommunity = borrowRequestService.isUserPartOfCommunity(borrowRequest);
             if (isBorrowRequestValid && UserPartOfCommunity) {
                 borrowRequestService.createBorrowRequest(borrowRequest);
                 return ResponseEntity.ok(true);
             } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(false);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Either you are not a part of the community or you do not satisfy the income-emi constraint.");
             }
         } catch (Exception e) {
             log.error("Error encountered in raising borrow request for user with ID: {}", borrowRequest.getBorrower(), e);

@@ -40,13 +40,18 @@ public class BorrowRequestServiceImpl implements BorrowRequestService {
      */
     @Override
     public boolean validateBorrowRequest(BorrowRequest borrowRequest) throws ServiceException{
-        Integer tenure = borrowRequest.getReturnPeriodDays();
-        BigDecimal monthlyIncome = borrowRequest.getBorrower().getIncome();
-        BigDecimal borrowedAmount = borrowRequest.getRequestedAmount();
-        BigDecimal monthlyEMI = borrowedAmount.divide(BigDecimal.valueOf(tenure));
-        BigDecimal limitMoney = monthlyIncome.divide(BigDecimal.valueOf(2));
-        boolean isWithinLimit = monthlyEMI.compareTo(limitMoney) <= 0;
-        return isWithinLimit;
+        try{
+            Integer tenure = borrowRequest.getReturnPeriodMonth();
+            BigDecimal monthlyIncome = borrowRequest.getBorrower().getIncome();
+            BigDecimal borrowedAmount = borrowRequest.getRequestedAmount();
+            BigDecimal monthlyEMI = borrowedAmount.divide(BigDecimal.valueOf(tenure));
+            BigDecimal limitMoney = monthlyIncome.divide(BigDecimal.valueOf(2));
+            boolean isWithinLimit = monthlyEMI.compareTo(limitMoney) <= 0;
+            return isWithinLimit;
+        }
+        catch(Exception e){
+            throw new ServiceException("Error validating borrow requests: " + e.getMessage(), e);
+        }
     }
 
     /**
@@ -58,15 +63,20 @@ public class BorrowRequestServiceImpl implements BorrowRequestService {
      */
     @Override
     public boolean isUserPartOfCommunity(BorrowRequest borrowRequest) throws ServiceException{
-        List<String> requestedCommunityIds = borrowRequest.getCommunityIds();
-        Map<String, String> borrowerCommunities = borrowRequest.getBorrower().getCommunityDetails();
-        for (String requestedCommunityId : requestedCommunityIds) {
-            String requestedCommunityName = communityRepository.getCommunityName(requestedCommunityId);
-            if (!borrowerCommunities.containsValue(requestedCommunityName)) {
-                return false;
+        try{
+            List<String> requestedCommunityIds = borrowRequest.getCommunityIds();
+            Map<String, String> borrowerCommunities = borrowRequest.getBorrower().getCommunityDetails();
+            for (String requestedCommunityId : requestedCommunityIds) {
+                String requestedCommunityName = communityRepository.getCommunityName(requestedCommunityId);
+                if (!borrowerCommunities.containsValue(requestedCommunityName)) {
+                    return false;
+                }
             }
+            return true;
         }
-        return true;
+        catch(Exception e){
+            throw new ServiceException("Error verifying borrower's communities: " + e.getMessage(), e);
+        }
     }
 
     /**
@@ -78,9 +88,14 @@ public class BorrowRequestServiceImpl implements BorrowRequestService {
      */
     @Override
     public boolean isBorrowRequestPending(BorrowRequest borrowRequest) throws ServiceException{
-        String borrowerId = borrowRequest.getBorrower().getUserId();
-        if(borrowRequestRepository.isRequestPending(borrowerId)) return true;
-        return false;
+        try{
+            String borrowerId = borrowRequest.getBorrower().getUserId();
+            if(borrowRequestRepository.isRequestPending(borrowerId)) return true;
+            return false;
+        }
+        catch(Exception e){
+            throw new ServiceException("Error checking pending requests: " + e.getMessage(), e);
+        }
     }
 
     /**
@@ -92,8 +107,32 @@ public class BorrowRequestServiceImpl implements BorrowRequestService {
      */
     @Override
     public boolean isAnythingNull(BorrowRequest borrowRequest) throws ServiceException{
-        if(borrowRequest.getBorrower().getUserId() == null || borrowRequest.getBorrower().getPassword() == null || borrowRequest.getBorrower().getIncome() == null || borrowRequest.getBorrower().getCommunityDetails() == null ||borrowRequest.getReturnPeriodDays() == null || borrowRequest.getMonthlyInterestRate() == null || borrowRequest.getRequestedAmount() == null || borrowRequest.getCommunityIds() == null) return true;
-        return false;
+        try{
+            if(borrowRequest.getBorrower().getUserId() == null || borrowRequest.getBorrower().getPassword() == null || borrowRequest.getBorrower().getIncome() == null || borrowRequest.getBorrower().getCommunityDetails() == null ||borrowRequest.getReturnPeriodMonth() == null || borrowRequest.getMonthlyInterestRate() == null || borrowRequest.getRequestedAmount() == null || borrowRequest.getCommunityIds() == null) return true;
+            return false;
+        }
+        catch(Exception e){
+            throw new ServiceException("Error checking null conditions: " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Checking whether the borrower has entered the correct password
+     * @param borrowRequest The borrow request object containing borrow request details to be created.
+     * @return boolean Indicating whether the entered password is correct or not
+     * @throws ServiceException If an error occurs during the check.
+     */
+    @Override
+    public boolean isPasswordCorrect(BorrowRequest borrowRequest) throws ServiceException{
+        try{
+            String passwordProvided = borrowRequest.getBorrower().getPassword();
+            String userId = borrowRequest.getBorrower().getUserId();
+            if(borrowRequestRepository.checkPassword(passwordProvided, userId)) return true;
+            return false;
+        }
+        catch(Exception e){
+            throw new ServiceException("Error checking password: " + e.getMessage(), e);
+        }
     }
 
     @Override
@@ -104,14 +143,18 @@ public class BorrowRequestServiceImpl implements BorrowRequestService {
     @Override
     public Boolean createBorrowRequest(BorrowRequest borrowRequest) throws ServiceException {
 
-        Boolean flag = borrowRequestRepository.createBorrowRequest(borrowRequest,borrowRequest.getBorrower().getUserId());
+        try{
+            Boolean flag = borrowRequestRepository.createBorrowRequest(borrowRequest,borrowRequest.getBorrower().getUserId());
 
-        String requestId = borrowRequest.getBorrowRequestId();
-        System.out.println(requestId);
-        List<String> communityId = borrowRequest.getCommunityIds();
+            String requestId = borrowRequest.getBorrowRequestId();
+            List<String> communityId = borrowRequest.getCommunityIds();
 
-        borrowRequestCommunityMapRepository.createBorrowRequestCommunityMapping(requestId,communityId);
-        return flag;
+            borrowRequestCommunityMapRepository.createBorrowRequestCommunityMapping(requestId,communityId);
+            return flag;
+        }
+        catch(Exception e){
+            throw new ServiceException("Error creating requests in implementation layer: " + e.getMessage(), e);
+        }
     }
 
     @Override

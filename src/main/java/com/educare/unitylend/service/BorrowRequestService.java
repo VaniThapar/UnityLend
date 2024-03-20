@@ -15,6 +15,7 @@ public interface BorrowRequestService {
     boolean isUserPartOfCommunity(BorrowRequest borrowRequest) throws ServiceException;
     boolean isBorrowRequestPending(BorrowRequest borrowRequest) throws ServiceException;
     boolean isAnythingNull(BorrowRequest borrowRequest) throws ServiceException;
+    boolean isPasswordCorrect(BorrowRequest borrowRequest) throws ServiceException;
     List<BorrowRequest> getBorrowRequestForUserId(String userId) throws ServiceException;
     List<BorrowRequest> getBorrowRequestForCommunity(String communityId) throws ServiceException;
     Boolean updateEMIDefaults() throws ServiceException;
