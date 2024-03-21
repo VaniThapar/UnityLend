@@ -1,5 +1,5 @@
-package com.educare.unitylend.service;
-
-public interface LendTransactionService {
-
-}
+//package com.educare.unitylend.service;
+//
+//public interface LendTransactionService {
+//
+//}

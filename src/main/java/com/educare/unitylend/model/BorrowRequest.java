@@ -17,14 +17,14 @@ import java.util.List;
 public class BorrowRequest {
     private String borrowRequestId;
     private User borrower;
-    private Integer returnPeriodDays;
+    private Integer returnPeriodMonth;
     private BigDecimal monthlyInterestRate;
     private Status borrowStatus;
     private BigDecimal requestedAmount;
     private BigDecimal collectedAmount;
     private Boolean isDefaulted;
     private BigDecimal defaultFine;
-    private  Integer defaultCount;
+    private Integer defaultCount;
     private LocalDateTime createdAt;
     private LocalDateTime lastModifiedAt;
     private List<String> communityIds;

@@ -7,6 +7,7 @@ import com.educare.unitylend.service.BorrowRequestCommunityMapService;
 import com.educare.unitylend.service.BorrowRequestService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,12 +27,38 @@ public class BorrowRequestController extends BaseController {
      * API endpoint for creating a new borrow request.
      *
      * @param borrowRequest The borrow request object containing borrow request details to be created.
-     * @return ResponseEntity<Boolean> Indicating success or failure of the borrow request creation process.
+     * Required field to create a borrow request: {"borrower": {userId, password, income, communityDetails}, returnPeriodMonth, monthlyInterestRate, requestedAmount, communityIds}
+     * @return ResponseEntity<?> Indicating success or failure of the borrow request creation process.
      * @throws ControllerException If an error occurs during the borrow request creation process.
      */
     @PostMapping("/create-borrow-request")
-    ResponseEntity<Boolean> createBorrowRequest(@RequestBody BorrowRequest borrowRequest) throws ControllerException {
-        return null;
+    ResponseEntity<?> createBorrowRequest(@RequestBody BorrowRequest borrowRequest) throws ControllerException{
+        try {
+            String userId = borrowRequest.getBorrower().getUserId();
+            if (userId == null || userId.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User Id cannot be empty.");
+            }
+            if(borrowRequestService.isAnythingNull(borrowRequest)){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("One of the required fields is empty!");
+            }
+            if(!borrowRequestService.isPasswordCorrect(borrowRequest)){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password incorrect");
+            }
+            if(borrowRequestService.isBorrowRequestPending(borrowRequest)){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Pending borrow requests found....complete previous borrow requests to raise a new one!");
+            }
+            boolean isBorrowRequestValid = borrowRequestService.validateBorrowRequest(borrowRequest);
+            boolean UserPartOfCommunity = borrowRequestService.isUserPartOfCommunity(borrowRequest);
+            if (isBorrowRequestValid && UserPartOfCommunity) {
+                borrowRequestService.createBorrowRequest(borrowRequest);
+                return ResponseEntity.ok(true);
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Either you are not a part of the community or you do not satisfy the income-emi constraint.");
+            }
+        } catch (Exception e) {
+            log.error("Error encountered in raising borrow request for user with ID: {}", borrowRequest.getBorrower(), e);
+            throw new ControllerException("Error encountered in raising the borrow requests", e);
+        }
     }
 
 

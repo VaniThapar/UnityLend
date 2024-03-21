@@ -3,7 +3,7 @@
 //import com.educare.unitylend.Exception.ServiceException;
 //import com.educare.unitylend.model.RepaymentTransaction;
 //
-//public interface RepaymentService {
+//public interface RepaymentTransactionService {
 //    boolean createRepaymentTransaction(String PayerId, String PayeeId, String requestId, Float amount) throws ServiceException;
 //
 //    RepaymentTransaction getTransactionsForPayerId(String payeeId) throws ServiceException;
