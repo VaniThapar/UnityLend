@@ -21,7 +21,15 @@ public class LendTransactionController extends BaseController {
 
     private LendTransactionService lendTransactionService;
 
-
+    /**
+     * Initiates a lending transaction.
+     *
+     * @param lenderId        The ID of the lender initiating the transaction.
+     * @param borrowRequestId The ID of the borrowing request for which the transaction is initiated.
+     * @param amount          The amount to be lent in the transaction.
+     * @return ResponseEntity<String> A response entity indicating the status of the transaction.
+     * @throws ControllerException If an error occurs during the lending transaction initiation process.
+     */
     @PostMapping("/lend")
     public ResponseEntity<String> initiateLendTransaction(
             @RequestParam String lenderId,
@@ -35,7 +43,7 @@ public class LendTransactionController extends BaseController {
             }
             Boolean isLendSuccessful = lendTransactionService.initiateLendTransaction(lenderId, borrowRequestId, amount);
 
-            if(!isLendSuccessful){
+            if (!isLendSuccessful) {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Lend transaction was unsuccessful");
             }
 
@@ -46,33 +54,46 @@ public class LendTransactionController extends BaseController {
         }
     }
 
-    @GetMapping("/get-lend-transaction-info/{transactionId}")
-    public ResponseEntity<LendTransaction> getLendTransactionInfo(@PathVariable String transactionId) throws ControllerException {
-        //Getting lending transaction info by its transactionId
+
+    /**
+     * Retrieves information about a lend transaction based on the provided ID.
+     *
+     * @param lendTransactionId The ID of the lend transaction to retrieve information for.
+     * @return ResponseEntity<LendTransaction> A response entity containing the lend transaction information.
+     * @throws ControllerException If an error occurs while retrieving the lend transaction information.
+     */
+    @GetMapping("/get-lend-transaction-info/{lendTransactionId}")
+    public ResponseEntity<LendTransaction> getLendTransactionInfo(@PathVariable String lendTransactionId) throws ControllerException {
         try {
-            if (transactionId == null || transactionId.isEmpty()) {
-                log.error("Transaction Id can not be null");
+            if (lendTransactionId == null || lendTransactionId.isEmpty()) {
+                log.error("LendTransaction Id is null");
                 return ResponseEntity.badRequest().body(null);
             }
-            LendTransaction lendTransaction = lendTransactionService.getLendTransactionInfo(transactionId);
+            LendTransaction lendTransaction = lendTransactionService.getLendTransactionInfo(lendTransactionId);
             if (lendTransaction == null) {
-                log.error("No transaction found with given transaction id");
+                log.error("No lend transaction found with given transaction id");
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
             }
             return ResponseEntity.ok(lendTransaction);
         } catch (Exception e) {
-            log.error("Error encountered in getting the transaction info for the given id", e);
-            throw new ControllerException("Error encountered in getting the transaction info for the given id", e);
+            log.error("Error encountered in getting the lend transaction info for the given id", e);
+            throw new ControllerException("Error encountered in getting the lend transaction info for the given id", e);
         }
     }
 
 
+    /**
+     * Retrieves all lend transactions associated with a user based on the provided user ID.
+     *
+     * @param userId The ID of the user to retrieve lend transactions for.
+     * @return ResponseEntity<List < LendTransaction>> A response entity containing a list of lend transactions.
+     * @throws ControllerException If an error occurs while retrieving the lend transactions.
+     */
     @GetMapping("/get-all-lend-transactions-by-user/{userId}")
     public ResponseEntity<List<LendTransaction>> getAllLendTransactionsByUserId(@PathVariable String userId) throws ControllerException {
-        //Getting all the lending transactions made by user
         try {
             if (userId == null || userId.isEmpty()) {
-                log.error("User id can not be null");
+                log.error("User id is null");
                 return ResponseEntity.badRequest().body(null);
             }
             List<LendTransaction> lendTransactionsList = lendTransactionService.getLendTransactionsByUserId(userId);
@@ -88,29 +109,12 @@ public class LendTransactionController extends BaseController {
     }
 
 
-//    @GetMapping("/get-all-lend-transactions/{payerId}/{payeeId}")
-//    public ResponseEntity<List<LendTransaction>> getAllLendTransactionsBetweenPayerAndPayee(@PathVariable String payerId, @PathVariable String payeeId) throws ControllerException {
-//        //Getting all lending transaction between a payer and payee
-//        try {
-//            if (payerId == null || payerId.isEmpty()) {
-//                log.error("Payer Id cannot be null");
-//                return ResponseEntity.badRequest().body(null);
-//            }
-//
-//            if (payeeId == null || payeeId.isEmpty()) {
-//                log.error("Payee Id cannot be null");
-//                return ResponseEntity.badRequest().body(null);
-//            }
-//            List<LendTransaction> lendTransactionsList = lendTransactionService.getTransactionsBetweenPayerAndPayee(payerId, payeeId);
-//            if (lendTransactionsList.isEmpty()) {
-//                return ResponseEntity.noContent().build();
-//            }
-//            return ResponseEntity.ok(lendTransactionsList);
-//        } catch (Exception e) {
-//            log.error("Error encountered in getting the transactions between payer and payee", e);
-//            throw new ControllerException("Error encountered in getting the transactions between payer and payee", e);
-//        }
-//    }
+    /**
+     * Retrieves all lend transactions.
+     *
+     * @return ResponseEntity<List < LendTransaction>> A response entity containing a list of all lend transactions.
+     * @throws ControllerException If an error occurs while retrieving the lend transactions.
+     */
 
     /*For Administration Purposes*/
     @GetMapping("/get-all-lend-transactions")

@@ -7,6 +7,9 @@ import com.educare.unitylend.model.Status;
 import java.math.BigDecimal;
 import java.util.List;
 
+/**
+ * Interface for managing borrow requests within the system
+ */
 public interface BorrowRequestService {
     Boolean createBorrowRequest(BorrowRequest borrowRequest) throws ServiceException;
 
@@ -16,7 +19,7 @@ public interface BorrowRequestService {
 
     Boolean updateEMIDefaults() throws ServiceException;
 
-    Boolean updateBorrowRequestStatus(Status status) throws ServiceException;
+    Boolean updateBorrowRequestStatus(BorrowRequest borrowRequest,Status status) throws ServiceException;
 
     List<BorrowRequest> getBorrowRequestsInCommunityLessThanAmount(BigDecimal maxAmount) throws ServiceException;
 

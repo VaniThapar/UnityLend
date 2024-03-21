@@ -13,18 +13,48 @@ import java.math.BigDecimal;
 @Repository
 public interface BorrowRequestRepository {
 
-    @Select("SELECT borrow_request_id as borrowRequestId,return_period_days as returnPeriodDays, collected_amount as collectedAmount,requested_amount as requestedAmount, monthly_interest_rate as monthlyInterestRate, " +
-            "is_defaulted as isDefaulted, default_fine as defaultFine, default_count as defaultCount,created_at " +
-            "as createdAt, last_modified_at as lastModifiedAt FROM borrow_request where borrow_request_id=#{requestId}")
+
+    @Select({
+            "<script>",
+            "SELECT borrow_request_id AS borrowRequestId, return_period_months AS returnPeriodMonths, collected_amount AS collectedAmount, requested_amount AS requestedAmount, ",
+            "       monthly_interest_rate AS monthlyInterestRate, is_defaulted AS isDefaulted, default_fine AS defaultFine, default_count AS defaultCount, created_at AS createdAt, ",
+            "       last_modified_at AS lastModifiedAt FROM borrow_request WHERE 1=1",
+            "<if test='requestId != null'>",
+            "       AND borrow_request_id = #{requestId}",
+            "</if>",
+            "</script>"
+    })
     BorrowRequest getBorrowRequestByRequestId(@Param("requestId") String requestId);
 
-    @Select("Select borrower_id from borrow_request where borrow_request_id=#{requestId}")
+
+    @Select({
+            "<script>",
+            "SELECT borrower_id FROM borrow_request WHERE 1=1",
+            "<if test='requestId != null'>",
+            "   AND borrow_request_id = #{requestId}",
+            "</if>",
+            "</script>"
+    })
     String getUserIdByRequestId(@Param("requestId") String requestId);
 
-    @Update("Update borrow_request set collected_amount=collected_amount+#{amount} where borrow_request_id=#{borrowRequestId}")
+    @Update({"<script>",
+            "UPDATE borrow_request",
+            "SET collected_amount = collected_amount + #{amount}",
+            "WHERE borrow_request_id = #{borrowRequestId}",
+            "<if test='borrowRequestId != null and amount != null'>",
+            "</if>",
+            "</script>"})
     Integer updateCollectedAmount(@Param("borrowRequestId") String borrowRequestId, @Param("amount") BigDecimal amount);
 
-    @Select("Select count(*)>0 from borrow_request where borrow_request_id=#{borrowRequestId} AND " +
-            "collected_amount+#{amount}<=requested_amount")
+    @Select("SELECT COUNT(*) > 0 FROM borrow_request WHERE borrow_request_id = #{borrowRequestId} AND collected_amount + #{amount} <= requested_amount")
     Boolean isLendAmountValid(@Param("borrowRequestId") String borrowRequestId, @Param("amount") BigDecimal amount);
+
+    @Update({"<script>",
+            "UPDATE borrow_request SET borrow_status = #{code} WHERE borrow_request_id = #{borrowRequestId}",
+            "<if test='code != null and borrowRequestId != null'>",
+            "</if>",
+            "</script>"})
+    void updateStatusOfBorrowRequest(@Param("code") Integer code, @Param("borrowRequestId") String borrowRequestId);
+
+
 }

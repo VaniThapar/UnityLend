@@ -8,7 +8,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Map;
 
-
+/**
+ * Represents a User registered in the system
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

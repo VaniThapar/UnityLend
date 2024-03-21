@@ -13,30 +13,35 @@ import java.util.List;
 @Repository
 public interface LendTransactionRepository {
 
-
-    @Select("Select lend_transaction_id as lendTransactionId,created_at as createdAt,last_updated_at as lastUpdatedAt from lend_transaction " +
-            "where lend_transaction_id = #{lendTransactionId}")
+    @Select("SELECT lend_transaction_id AS lendTransactionId, created_at AS createdAt, last_updated_at AS lastUpdatedAt " +
+            "FROM lend_transaction " +
+            "WHERE lend_transaction_id = #{lendTransactionId}")
     LendTransaction getLendTransactionById(@Param("lendTransactionId") String lendTransactionId);
 
-    @Select("Select lend_transaction_id as lendTransactionId,created_at as createdAt,last_updated_at as lastUpdatedAt from lend_transaction " +
-            "where transaction_id in (select transaction_id from transaction where sender_id=#{userId})")
+    @Select("SELECT lend_transaction_id AS lendTransactionId, created_at AS createdAt, last_updated_at AS lastUpdatedAt " +
+            "FROM lend_transaction " +
+            "WHERE transaction_id IN (SELECT transaction_id FROM transaction WHERE sender_id = #{userId})")
     List<LendTransaction> getLendTransactionsByUserId(@Param("userId") String userId);
 
-
-//    @Select("Select lend_transaction as lendTransactionId,created_at as createdAt,last_updated_at as lastUpdatedAt from lend_transaction " +
-//            "where transaction_id in (select transaction_id from transaction where sender_id=#{payerId} AND receiver_id=#{payeeId})")
-//    List<LendTransaction> getLendTransactionsBetweenPayerAndPayee(@Param("payerId") String payerId, @Param("payeeId") String payeeId);
-
-    @Select("Select borrow_request_id from lend_transaction where lend_transaction_id=#{lendTransactionId}")
+    @Select("SELECT borrow_request_id FROM lend_transaction WHERE lend_transaction_id = #{lendTransactionId}")
     String getBorrowRequestId(@Param("lendTransactionId") String lendTransactionId);
 
-    @Select("Select transaction_id from lend_transaction where lend_transaction_id=#{lendTransactionId}")
+    @Select("SELECT transaction_id FROM lend_transaction WHERE lend_transaction_id = #{lendTransactionId}")
     String getTransactionId(@Param("lendTransactionId") String lendTransactionId);
 
-    @Select("Select lend_transaction_id as lendTransactionId,created_at as createdAt,last_updated_at as lastUpdatedAt from lend_transaction")
+    @Select("SELECT lend_transaction_id AS lendTransactionId, created_at AS createdAt, last_updated_at AS lastUpdatedAt FROM lend_transaction")
     List<LendTransaction> getAllLendTransactions();
+    
+    @Insert({"<script>",
+            "INSERT INTO lend_transaction (lend_transaction_id, transaction_id, borrow_request_id)",
+            "VALUES",
+            "<if test='transactionId != null and borrowRequestId != null'>",
+            "(uuid_generate_v4(), #{transactionId}, #{borrowRequestId})",
+            "</if>",
+            "</script>"})
+    Integer insertLendTransaction(@Param("transactionId") String transactionId, @Param("borrowRequestId") String borrowRequestId);
 
-    @Insert("Insert into lend_transaction(lend_transaction_id,transaction_id,borrow_request_id,created_at,last_updated_at)" +
-            " values (uuid_generate_v4(),#{transactionId},#{borrowRequestId},NOW(),NOW())")
-    Integer insertLendTransaction(@Param("transactionId") String transactionId,@Param("borrowRequestId") String borrowRequestId);
+    @Select("Select count(*)>0 from lend_transaction where transaction_id in (select transaction_id from transaction where sender_id=#{lenderId}) " +
+            "AND borrow_request_id=#{borrowRequestId}")
+    Boolean hasLent(@Param("lenderId") String lenderId,@Param("borrowRequestId") String borrowRequestId);
 }

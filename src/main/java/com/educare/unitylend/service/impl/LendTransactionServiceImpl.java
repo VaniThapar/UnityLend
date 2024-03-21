@@ -25,15 +25,19 @@ public class LendTransactionServiceImpl implements LendTransactionService {
     private WalletService walletService;
 
 
+    /**
+
+     Retrieves information about a lend transaction based on the provided lend transaction ID.
+     @param lendTransactionId The ID of the lend transaction to retrieve information for.
+     @return The lend transaction object containing information about the transaction.
+     @throws ServiceException if an error occurs during the retrieval process.
+     */
     @Override
     public LendTransaction getLendTransactionInfo(String lendTransactionId) throws ServiceException {
         try {
-            log.info("lend transaction info:: " + lendTransactionId);
             LendTransaction lendTransaction = lendTransactionRepository.getLendTransactionById(lendTransactionId);
-
             setParametersOfLendTransaction(lendTransaction);
 
-            log.info("Lend Transaction:: " + lendTransaction);
             return lendTransaction;
         } catch (Exception e) {
             log.error("Error encountered while fetching transaction with given id");
@@ -41,13 +45,20 @@ public class LendTransactionServiceImpl implements LendTransactionService {
         }
     }
 
+
+    /**
+     * Retrieves a list of lend transactions associated with a given user ID.
+     *
+     * @param userId The ID of the user for which to retrieve lend transactions.
+     * @return A list of lend transaction objects associated with the user.
+     * @throws ServiceException if an error occurs during the retrieval process.
+     */
     @Override
     public List<LendTransaction> getLendTransactionsByUserId(String userId) throws ServiceException {
         try {
             List<LendTransaction> lendTransactions = lendTransactionRepository.getLendTransactionsByUserId(userId);
             setParametersOfLendTransaction(lendTransactions);
 
-            log.info("Transaction list:: " + lendTransactions);
             return lendTransactions;
         } catch (Exception e) {
             log.error("Error encountered during fetching transactions");
@@ -55,28 +66,19 @@ public class LendTransactionServiceImpl implements LendTransactionService {
         }
     }
 
-//    @Override
-//    public List<LendTransaction> getTransactionsBetweenPayerAndPayee(String payerId, String payeeId) throws ServiceException {
-//        try {
-//            List<LendTransaction> lendTransactions = lendTransactionRepository.getLendTransactionsBetweenPayerAndPayee(payerId, payeeId);
-//            setParametersOfLendTransaction(lendTransactions);
-//
-//            log.info("Transaction list:: " + lendTransactions);
-//            return lendTransactions;
-//        } catch (Exception e) {
-//            log.error("Error encountered during fetching transactions between payer and payee");
-//            throw new ServiceException("Error encountered during fetching transactions between payer and payee", e);
-//        }
-//    }
 
+    /**
+     * Retrieves a list of all lend transactions.
+     *
+     * @return A list of all lend transactions.
+     * @throws ServiceException if an error occurs during the retrieval process.
+     */
     @Override
     public List<LendTransaction> getAllLendTransactions() throws ServiceException {
         try {
             List<LendTransaction> lendTransactions = lendTransactionRepository.getAllLendTransactions();
-
             setParametersOfLendTransaction(lendTransactions);
 
-            log.info("Transaction list:: " + lendTransactions);
             return lendTransactions;
         } catch (Exception e) {
             log.error("Error encountered during fetching all lend transactions");
@@ -84,22 +86,33 @@ public class LendTransactionServiceImpl implements LendTransactionService {
         }
     }
 
+    /**
+     * Initiates a lend transaction between a lender and a borrower for a specified amount.
+     *
+     * @param lenderId The ID of the lender initiating the transaction.
+     * @param borrowRequestId The ID of the borrow request for which the transaction is initiated.
+     * @param amount The amount to be lent in the transaction.
+     * @return {@code true} if the lend transaction is successfully initiated; {@code false} otherwise.
+     * @throws ServiceException if an error occurs during the initiation process.
+     */
     @Override
     public Boolean initiateLendTransaction(String lenderId, String borrowRequestId, BigDecimal amount) throws ServiceException {
         try {
 
             Boolean isLendPossible=borrowRequestService.isLendAmountValid(borrowRequestId,amount);
             if(!isLendPossible){
+                log.error("Amount that is being lent is more than what is required");
+                return false;
+            }
+            Boolean hasLent=lendTransactionRepository.hasLent(lenderId,borrowRequestId);
+            if(hasLent){
+                log.error("Cannot Lend! Given Lender has already lent to this borrow request.");
                 return false;
             }
 
             BorrowRequest borrowRequest = borrowRequestService.getBorrowRequestByRequestId(borrowRequestId);
             User borrower = borrowRequest.getBorrower();
             String borrowerId = borrower.getUserId();
-
-            log.info("borrow req:: " + borrowRequest);
-            log.info("borrower:: " + borrower);
-            log.info("borrower id:: " + borrowerId);
 
             Boolean isDebitedFromLender = handleDebitFromLender(lenderId, amount);
             Boolean isCreditedToBorrower = handleCreditToBorrower(borrowerId, amount);
@@ -108,18 +121,12 @@ public class LendTransactionServiceImpl implements LendTransactionService {
                 return false;
             }
 
-
             Boolean isInsertionInTransactionSuccessful = transactionService.initiateTransaction(lenderId, borrowerId, amount);
             String transactionId = transactionService.getLatestTranscationId();
-            log.info("transaction id:: " + transactionId);
             Integer rowsAffectedInInsertionInLendTransactionSuccessful = lendTransactionRepository.insertLendTransaction(transactionId,
                     borrowRequestId);
 
             Boolean isBorrowRequestUpdated = borrowRequestService.updateCollectedAmount(borrowRequestId, amount);
-
-            log.info("rowsAffectedInInsertionInLendTransactionSuccessful:: " + rowsAffectedInInsertionInLendTransactionSuccessful);
-            log.info("isInsertionInTransactionSuccessful:: " + isInsertionInTransactionSuccessful);
-            log.info("isBorrowRequestUpdated:: "+isBorrowRequestUpdated);
 
             return isInsertionInTransactionSuccessful && isBorrowRequestUpdated &&
                     rowsAffectedInInsertionInLendTransactionSuccessful > 0;
@@ -129,12 +136,18 @@ public class LendTransactionServiceImpl implements LendTransactionService {
         }
     }
 
+
+    /**
+     * Handles the debit operation from the lender's wallet.
+     *
+     * @param lenderId The ID of the lender from whose wallet the amount is to be deducted.
+     * @param amount The amount to be deducted from the lender's wallet.
+     * @return {@code true} if the debit operation is successful; {@code false} otherwise.
+     */
     private Boolean handleDebitFromLender(String lenderId, BigDecimal amount) {
         try {
-            log.info("lender id:: " + lenderId);
             Wallet wallet = walletService.getWalletForUserId(lenderId);
             String walletId = wallet.getWalletId();
-            log.info("wallet id:: " + walletId);
             walletService.deductAmount(walletId, amount);
             return true;
         } catch (ServiceException e) {
@@ -143,36 +156,42 @@ public class LendTransactionServiceImpl implements LendTransactionService {
         }
     }
 
+
+    /**
+     * Handles the credit operation to the borrower's wallet.
+     *
+     * @param borrowerId The ID of the borrower to whose wallet the amount is to be credited.
+     * @param amount The amount to be credited to the borrower's wallet.
+     * @return {@code true} if the credit operation is successful; {@code false} otherwise.
+     */
     private Boolean handleCreditToBorrower(String borrowerId, BigDecimal amount) {
         try {
-            log.info("borrower id:: " + borrowerId);
             Wallet wallet = walletService.getWalletForUserId(borrowerId);
             String walletId = wallet.getWalletId();
-            log.info("wallet id:: " + walletId);
             walletService.addAmount(walletId, amount);
             return true;
         } catch (ServiceException e) {
             log.error("Error encountered in crediting money to borrower's wallet");
             return false;
-
         }
     }
 
+
+    /**
+     * Sets parameters of lend transactions by populating each lend transaction object with related
+     * borrow request and transaction details.
+     *
+     * @param lendTransactions The list of lend transactions to set parameters for.
+     */
     private void setParametersOfLendTransaction(List<LendTransaction> lendTransactions) {
         try {
             for (LendTransaction lendTransaction : lendTransactions) {
                 String lendTransactionId = lendTransaction.getLendTransactionId();
                 String borrowRequestId = lendTransactionRepository.getBorrowRequestId(lendTransactionId);
                 String transactionId = lendTransactionRepository.getTransactionId(lendTransactionId);
-                log.info("lend transaction id:: " + lendTransactionId);
-                log.info("borrow req id:: " + borrowRequestId);
-                log.info("transaction id:: " + transactionId);
 
                 BorrowRequest borrowRequest = borrowRequestService.getBorrowRequestByRequestId(borrowRequestId);
                 Transaction transaction = transactionService.getTransactionByTransactionId(transactionId);
-
-                log.info("borr req:: " + borrowRequest);
-                log.info("transaction:: " + transaction);
 
                 lendTransaction.setBorrowRequest(borrowRequest);
                 lendTransaction.setTransaction(transaction);
@@ -182,6 +201,13 @@ public class LendTransactionServiceImpl implements LendTransactionService {
         }
     }
 
+
+    /**
+     * Sets parameters of a lend transaction by populating the lend transaction object with related
+     * borrow request and transaction details.
+     *
+     * @param lendTransaction The lend transaction object to set parameters for.
+     */
     private void setParametersOfLendTransaction(LendTransaction lendTransaction) {
         try {
             String lendTransactionId = lendTransaction.getLendTransactionId();

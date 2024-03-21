@@ -30,26 +30,25 @@ public class UserServiceImpl implements UserService {
     private UserCommunityMapRepository userCommunityMapRepository;
     private CommunityRepository communityRepository;
     private WalletRepository walletRepository;
+
+    /**
+     * Creates a new user with the provided details.
+     *
+     * @param user The user object containing the details of the user to be created.
+     * @return True if the user creation is successful, false otherwise.
+     * @throws ServiceException If an error occurs during user creation.
+     */
     @Override
     public Boolean createUser(User user) throws ServiceException {
         try {
             Map<String, String> communityDetails = user.getCommunityDetails();
-            log.info("communityDetails:: "+communityDetails);
-
-
             String communityDetailsJson = objectMapper.writeValueAsString(communityDetails);
             user.setCommunityDetailsJson(communityDetailsJson);
 
-            log.info("communityDetailsJson:: "+communityDetailsJson);
             int rowsAffected = userRepository.createUser(user);
             String userId=user.getUserId();
-
-            log.info("userId:: "+userId);
-            log.info("count:: "+rowsAffected);
-
             handleCommunityCreationForUser(communityDetails, userId);
             handleWalletCreation(userId);
-
 
             return rowsAffected > 0;
         } catch (JsonProcessingException e) {
@@ -58,23 +57,24 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+
+    /**
+     * Updates the details of an existing user.
+     *
+     * @param user The user object containing the updated details.
+     * @return True if the user details are successfully updated, false otherwise.
+     * @throws ServiceException If an error occurs during user details update.
+     */
     @Override
     public Boolean updateUserDetails(User user) throws ServiceException {
         try {
             String userId = user.getUserId();
-            log.info("user id:: "+userId);
             User formerUser=userRepository.getUserForUserId(userId);
-            log.info("user:: "+formerUser);
             String formerCommunityDetailsJson=formerUser.getCommunityDetailsJson();
-
 
             Map<String, String> formerCommunityDetails = objectMapper.readValue(formerCommunityDetailsJson, new TypeReference<Map<String, String>>() {
             });
-            log.info("former community details:: "+formerCommunityDetails);
-
             Map<String, String> updatedCommunityDetails = user.getCommunityDetails();
-            log.info("updated community details:: "+updatedCommunityDetails);
-
             String communityDetailsJson = objectMapper.writeValueAsString(updatedCommunityDetails);
             user.setCommunityDetailsJson(communityDetailsJson);
 
@@ -89,11 +89,18 @@ public class UserServiceImpl implements UserService {
             return rowsAffected > 0;
 
         } catch (Exception e) {
-            log.error("Error encountered in user updation");
-            throw new ServiceException("Error encountered in user updation", e);
+            log.error("Error encountered in updating user");
+            throw new ServiceException("Error encountered in updating user", e);
         }
     }
 
+
+    /**
+     * Maps a user to a community.
+     *
+     * @param userId The ID of the user to be mapped.
+     * @param communityId The ID of the community to which the user will be mapped.
+     */
     void mapUserToCommunity(String userId, String communityId) {
         try {
             userCommunityMapRepository.createMapping(userId, communityId);
@@ -102,6 +109,12 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+
+    /**
+     * Handles the creation of a wallet for a user.
+     *
+     * @param userId The ID of the user for whom the wallet will be generated.
+     */
     void handleWalletCreation(String userId){
         try{
             walletRepository.generateWallet(userId);
@@ -112,6 +125,14 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+
+    /**
+     * Handles the creation of communities for a user based on the provided community details.
+     * If a community does not exist, it will be created.
+     *
+     * @param communityDetails A map containing community tags as keys and community names as values.
+     * @param userId The ID of the user for whom communities will be created.
+     */
     void handleCommunityCreationForUser(Map<String, String> communityDetails, String userId) {
         for (String communityTag : communityDetails.keySet()) {
             String communityName = communityDetails.get(communityTag);
@@ -120,13 +141,19 @@ public class UserServiceImpl implements UserService {
                 communityRepository.createCommunity(communityTag, communityName);
             }
             Community community = communityRepository.findByCommunityTagAndCommunityName(communityTag, communityName);
-            log.info("community:: "+community);
             String communityId=community.getCommunityId();
-            log.info("community id:: "+communityId);
             mapUserToCommunity(userId, communityId);
         }
     }
 
+
+    /**
+     * Retrieves the user details for the given user ID.
+     *
+     * @param userId The ID of the user to retrieve.
+     * @return The user object corresponding to the provided user ID.
+     * @throws ServiceException If an error occurs while retrieving the user details.
+     */
     @Override
     public User getUserForUserId(String userId) throws ServiceException {
         try {
@@ -143,6 +170,14 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+
+    /**
+     * Deletes the user corresponding to the provided user ID.
+     *
+     * @param userId The ID of the user to be deleted.
+     * @return True if the user was successfully deleted, otherwise false.
+     * @throws ServiceException If an error occurs while deleting the user.
+     */
     @Override
     public Boolean deleteUser(String userId) throws ServiceException {
         try {
@@ -154,6 +189,13 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+
+    /**
+     * Retrieves a list of all users.
+     *
+     * @return A list containing all users.
+     * @throws ServiceException If an error occurs while retrieving the users.
+     */
     @Override
     public List<User> getAllUsers() throws ServiceException {
         try {
@@ -172,6 +214,12 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    /**
+     * Retrieves a list of all users along with their community details.
+     *
+     * @return A list containing all users with their community details.
+     * @throws ServiceException If an error occurs while retrieving the users.
+     */
     @Override
     public User getUserByWalletId(String walletId) throws ServiceException {
         try{

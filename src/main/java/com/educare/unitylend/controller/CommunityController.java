@@ -24,15 +24,11 @@ public class CommunityController extends BaseController {
     private UserCommunityMapService userCommunityMapService;
 
 
-
-
     /**
      * API endpoint for retrieving the communities associated with a specific user.
      *
      * @param userId The unique identifier of the user.
-     * @return ResponseEntity containing a list of Community objects if communities are found,
-     *         ResponseEntity with HTTP status 404 if no communities are found for the user,
-     *         or ResponseEntity with HTTP status 400 if the userId is null or empty.
+     * @return ResponseEntity containing a list of Community objects if communities are found
      * @throws ControllerException if an error occurs during the retrieval process.
      */
     @GetMapping("/get-communities-by-user-id/{userId}")
@@ -40,7 +36,7 @@ public class CommunityController extends BaseController {
         try {
 
             if (userId == null || userId.isEmpty()) {
-                log.error("User id cannot be null");
+                log.error("User id is null");
                 return ResponseEntity.badRequest().body(null);
             }
 

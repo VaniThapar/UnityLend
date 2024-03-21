@@ -8,13 +8,17 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Represents a borrowing request made by a user.
+ */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class BorrowRequest {
     private String borrowRequestId;
     private User borrower;
-    private Integer returnPeriodDays;
+    private Integer returnPeriodMonths;
     private BigDecimal monthlyInterestRate;
     private Status borrowStatus;
     private BigDecimal requestedAmount;

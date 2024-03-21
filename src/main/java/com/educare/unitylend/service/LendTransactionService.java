@@ -6,6 +6,9 @@ import com.educare.unitylend.model.LendTransaction;
 import java.math.BigDecimal;
 import java.util.List;
 
+/**
+ * Interface for managing Lend Transactions within the system
+ */
 public interface LendTransactionService {
 
     LendTransaction getLendTransactionInfo(String transactionId) throws ServiceException;

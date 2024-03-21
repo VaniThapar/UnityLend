@@ -20,11 +20,16 @@ public class WalletServiceImpl implements WalletService {
     private WalletRepository walletRepository;
     private UserService userService;
 
+    /**
+     * Retrieves a list of all wallets along with their associated users.
+     *
+     * @return A list containing all wallets with their associated users.
+     * @throws ServiceException If an error occurs while retrieving the wallets.
+     */
     @Override
     public List<Wallet> getAllWallets() throws ServiceException {
         try {
             List<Wallet> walletList = walletRepository.getAllWallets();
-            log.info("wallet list:: " + walletList);
 
             for (Wallet wallet : walletList) {
                 User user = userService.getUserByWalletId(wallet.getWalletId());
@@ -38,6 +43,14 @@ public class WalletServiceImpl implements WalletService {
         }
     }
 
+
+    /**
+     * Retrieves the wallet associated with the specified user ID.
+     *
+     * @param userId The ID of the user.
+     * @return The wallet associated with the specified user ID.
+     * @throws ServiceException If an error occurs while retrieving the wallet.
+     */
     @Override
     public Wallet getWalletForUserId(String userId) throws ServiceException {
         try {
@@ -51,6 +64,14 @@ public class WalletServiceImpl implements WalletService {
         }
     }
 
+
+    /**
+     * Retrieves the wallet associated with the specified wallet ID.
+     *
+     * @param walletId The ID of the wallet.
+     * @return The wallet associated with the specified wallet ID.
+     * @throws ServiceException If an error occurs while retrieving the wallet.
+     */
     @Override
     public Wallet getWalletForWalletId(String walletId) throws ServiceException {
         try {
@@ -64,6 +85,16 @@ public class WalletServiceImpl implements WalletService {
         }
     }
 
+
+    /**
+     * Adds the specified amount to the wallet associated with the given wallet ID.
+     *
+     * @param walletId The ID of the wallet.
+     * @param amount The amount to add to the wallet.
+     * @return True if the amount was successfully added to the wallet, false otherwise.
+     * @throws ServiceException If an error occurs while adding the amount to the wallet.
+     */
+
     @Override
     public Boolean addAmount(String walletId, BigDecimal amount) throws ServiceException {
         try {
@@ -75,9 +106,25 @@ public class WalletServiceImpl implements WalletService {
         }
     }
 
+
+/**
+ * Deducts the specified amount from the wallet associated with the given wallet ID.
+ *
+ * @param walletId The ID of the wallet.
+ * @param amount The amount to deduct from the wallet.
+ * @return True if the amount was successfully deducted from the wallet, false otherwise.
+ * @throws ServiceException If an error occurs while deducting the amount from the wallet.
+ */
+
     @Override
     public Boolean deductAmount(String walletId, BigDecimal amount) throws ServiceException {
         try {
+            Wallet wallet=getWalletForWalletId(walletId);
+            BigDecimal balance=wallet.getBalance();
+            if(balance.compareTo(amount)<0){
+                log.error("Insufficient Balance! Cannot deduct from wallet");
+                throw new Exception("Insufficient Balance! Cannot deduct from wallet");
+            }
             Boolean isDeducted = walletRepository.deductAmount(walletId, amount);
             return isDeducted;
         } catch (Exception e) {
@@ -86,11 +133,18 @@ public class WalletServiceImpl implements WalletService {
         }
     }
 
+    /**
+     * Retrieves the balance of the wallet associated with the given user ID.
+     *
+     * @param userId The ID of the user whose wallet balance is to be retrieved.
+     * @return The balance of the wallet associated with the specified user ID.
+     * @throws ServiceException If an error occurs while retrieving the wallet balance.
+     */
+
     @Override
     public BigDecimal getWalletBalance(String userId) throws ServiceException {
         try {
             BigDecimal balance = walletRepository.getWalletBalance(userId);
-            log.info("balance:: " + balance);
             return balance;
         } catch (Exception e) {
             log.error("Error encountered in getting wallet balance");

@@ -6,6 +6,10 @@ import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
+/**
+ * Interface for managing communities within the interface
+ */
+
 public interface CommunityService {
 
     List<Community> getAllCommunities() throws ServiceException;

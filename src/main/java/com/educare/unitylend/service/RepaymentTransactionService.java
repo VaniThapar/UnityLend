@@ -1,14 +1,23 @@
 package com.educare.unitylend.service;
 
 import com.educare.unitylend.Exception.ServiceException;
+import com.educare.unitylend.model.LendTransaction;
 import com.educare.unitylend.model.RepaymentTransaction;
 
+import java.math.BigDecimal;
+import java.util.List;
+
+/**
+ * Interface for managing the Repayment transactions within the system
+ */
 public interface RepaymentTransactionService {
-    boolean createRepaymentTransaction(String PayerId, String PayeeId, String requestId, Float amount) throws ServiceException;
+    Boolean initiateRepaymentTransaction(String borrowerRequestId) throws ServiceException;
 
-    RepaymentTransaction getTransactionsForPayerId(String payeeId) throws ServiceException;
+    Boolean repayDefaultEMI(String borrowerRequestId) throws ServiceException;
 
-    RepaymentTransaction getTransactionForPayerIdAndPayeeId(String payerId, String payeeId) throws ServiceException;
+    List<RepaymentTransaction> getRepaymentTransactionsByUserId(String userId) throws ServiceException;
 
-    RepaymentTransaction getTransactionsForTransactionId(String transactionId) throws ServiceException;
+    RepaymentTransaction getRepaymentTransactionInfo(String repaymentTransactionId) throws ServiceException;
+
+    List<RepaymentTransaction> getAllRepaymentTransactions() throws ServiceException;
 }

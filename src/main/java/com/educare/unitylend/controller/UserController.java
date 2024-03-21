@@ -34,18 +34,16 @@ public class UserController extends BaseController {
         try {
 
             if (user == null) {
-                return ResponseEntity.badRequest().body("User cannot be null");
+                return ResponseEntity.badRequest().body("User is null");
             }
             Boolean isCreated = userService.createUser(user);
             if (!isCreated) {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("User could not be created");
             }
             return ResponseEntity.ok("User created successfully");
-
-
         } catch (ServiceException e) {
-            log.error("Error in user creation");
-            throw new ControllerException("Error in user creation", e);
+            log.error("Error encountered in user creation");
+            throw new ControllerException("Error encountered in user creation", e);
         }
     }
 
@@ -62,17 +60,16 @@ public class UserController extends BaseController {
 
         try {
             if (user == null) {
-                ResponseEntity.badRequest().body("User cannot be null");
+                ResponseEntity.badRequest().body("User is null");
             }
             Boolean isUpdated = userService.updateUserDetails(user);
             if (!isUpdated) {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("User could not be updated");
             }
             return ResponseEntity.ok("User updated successfully");
-
         } catch (ServiceException e) {
-            log.error("Error encountered in user updation");
-            throw new ControllerException("Error encountered in user updation", e);
+            log.error("Error encountered in updating user");
+            throw new ControllerException("Error encountered in updating user", e);
         }
 
 
@@ -89,11 +86,10 @@ public class UserController extends BaseController {
     ResponseEntity<User> getUserForUserId(@PathVariable String userId) throws ControllerException {
        try{
            if(userId==null || userId.isEmpty()){
-               log.error("User id cannot be null");
+               log.error("User id is null");
                return ResponseEntity.badRequest().body(null);
            }
            User requiredUser=userService.getUserForUserId(userId);
-           log.info("User :: "+requiredUser);
            return ResponseEntity.ok(requiredUser);
        }
        catch (ServiceException e){
@@ -114,7 +110,7 @@ public class UserController extends BaseController {
     ResponseEntity<String> deleteUser(@PathVariable String userId) throws ControllerException {
         try{
             if(userId==null || userId.isEmpty()){
-                return ResponseEntity.badRequest().body("User id cannot be null");
+                return ResponseEntity.badRequest().body("User id is null");
             }
             Boolean isDeleted=userService.deleteUser(userId);
             if(!isDeleted){
@@ -144,7 +140,6 @@ public class UserController extends BaseController {
             if(userList.isEmpty()){
                 return ResponseEntity.noContent().build();
             }
-            log.info("Userlist:: "+userList);
             return ResponseEntity.ok(userList);
         }
         catch(ServiceException e){

@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+/**
+ * Represents a Transaction between two users
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

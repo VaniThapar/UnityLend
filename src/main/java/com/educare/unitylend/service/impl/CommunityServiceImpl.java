@@ -14,14 +14,22 @@ import java.util.List;
 @Slf4j
 @AllArgsConstructor
 @Service
+
 public class CommunityServiceImpl implements CommunityService {
 
     private CommunityRepository communityRepository;
+
+    /**
+     * Retrieves a list of all communities from the database.
+     *
+     * @return List of Community objects representing all communities.
+     * @throws ServiceException if an error occurs while fetching the communities.
+     */
     @Override
     public List<Community> getAllCommunities() throws ServiceException {
         try{
             List<Community>communityList=communityRepository.getAllCommunities();
-            log.info("community List:: "+communityList);
+            log.info("community List: "+communityList);
             return communityList;
         }
         catch(Exception e){

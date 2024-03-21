@@ -95,7 +95,6 @@ public class WalletController extends BaseController {
                 log.error("Wallet id cannot be null");
                 return ResponseEntity.badRequest().body(null);
             }
-
             Boolean isAdded = walletService.addAmount(walletId, amount);
             if(!isAdded){
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Amount could not be added to the wallet");
@@ -123,14 +122,6 @@ public class WalletController extends BaseController {
                 log.error("Wallet id cannot be null");
                 return ResponseEntity.badRequest().body(null);
             }
-
-            Wallet wallet=walletService.getWalletForWalletId(walletId);
-            BigDecimal balance=wallet.getBalance();
-
-            if(balance.compareTo(amount)<0){
-                return ResponseEntity.badRequest().body("Insufficient balance! Cannot deduct given amount");
-            }
-
             Boolean isDeducted = walletService.deductAmount(walletId,amount);
             if(!isDeducted){
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Amount could not be deducted from the wallet");
@@ -158,7 +149,6 @@ public class WalletController extends BaseController {
                 log.error("Wallet id cannot be null");
                 return ResponseEntity.badRequest().body(null);
             }
-
             BigDecimal balance = walletService.getWalletBalance(walletId);
             return ResponseEntity.ok().body("Wallet Balance is : "+balance);
         }
