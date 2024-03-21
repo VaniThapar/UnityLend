@@ -17,7 +17,7 @@ import java.util.List;
 public class BorrowRequest {
     private String borrowRequestId;
     private User borrower;
-    private Integer returnPeriodMonth;
+    private Integer returnPeriodMonths;
     private BigDecimal monthlyInterestRate;
     private Status borrowStatus;
     private BigDecimal requestedAmount;

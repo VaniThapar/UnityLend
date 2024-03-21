@@ -1,12 +1,10 @@
 package com.educare.unitylend.service.impl;
 
 import com.educare.unitylend.Exception.ServiceException;
-import com.educare.unitylend.dao.BorrowRequestCommunityMapRepository;
-import com.educare.unitylend.dao.BorrowRequestRepository;
-import com.educare.unitylend.dao.UserCommunityMapRepository;
-import com.educare.unitylend.dao.UserRepository;
+import com.educare.unitylend.dao.*;
 import com.educare.unitylend.model.BorrowRequest;
 import com.educare.unitylend.model.Community;
+import com.educare.unitylend.model.Status;
 import com.educare.unitylend.model.User;
 import com.educare.unitylend.service.BorrowRequestCommunityMapService;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -26,13 +24,20 @@ public class BorrowRequestCommunityMapServiceImpl  implements BorrowRequestCommu
     private BorrowRequestCommunityMapRepository borrowRequestCommunityMapRepository;
     private BorrowRequestRepository borrowRequestRepository;
     private UserRepository userRepository;
-
     private UserCommunityMapRepository userCommunityMapRepository;
+    private StatusRepository statusRepository;
+
+    /**
+     * Retrieves communities associated with a borrow request.
+     *
+     * @param requestId The ID of the borrow request for which communities are to be retrieved.
+     * @return List<Community> The communities associated with the borrow request.
+     * @throws ServiceException If an error occurs during the communities retrieval process.
+     */
     @Override
     public List<Community> getCommunitiesByRequestId(String requestId) throws ServiceException {
         try{
             List<Community> communities = borrowRequestCommunityMapRepository.getCommunitiesByRequestId(requestId);
-            System.out.println(communities);
             return communities;
         }
         catch(Exception e){
@@ -40,7 +45,14 @@ public class BorrowRequestCommunityMapServiceImpl  implements BorrowRequestCommu
             throw new ServiceException("Error encountered while fetching communities in which request with given request id is raised",e);
         }
     }
-    //
+
+    /**
+     * Retrieves borrow requests associated with a given community ID.
+     *
+     * @param communityId The ID of the community for which borrow requests are to be retrieved.
+     * @return List<BorrowRequest> The borrow requests associated with the given community ID.
+     * @throws ServiceException If an error occurs during the retrieval process.
+     */
     @Override
     public List<BorrowRequest> getRequestsByCommunityId(String communityId) throws ServiceException {
         try{
@@ -55,9 +67,10 @@ public class BorrowRequestCommunityMapServiceImpl  implements BorrowRequestCommu
                 });
                 requiredUser.setCommunityDetails(communityDetails);
                 request.setCommunityIds(userCommunityMapRepository.getCommunityIdsWithUserId(borrowerId));
-
+                Integer code=borrowRequestRepository.getStatusCodeForReqId(request.getBorrowRequestId());
+                Status status=statusRepository.getStatusByStatusCode(code);
+                request.setBorrowStatus(status);
             }
-
             return requests;
         }
         catch(Exception e){

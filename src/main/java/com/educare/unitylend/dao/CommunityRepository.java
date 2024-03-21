@@ -10,5 +10,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CommunityRepository {
     @Select("SELECT community_name FROM community WHERE community_id = #{communityId}")
-    String getCommunityName(@Param("communityId") String communityId);
+    String getCommunity(@Param("communityId") String communityId);
 }
