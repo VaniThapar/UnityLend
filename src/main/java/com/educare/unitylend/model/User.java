@@ -86,5 +86,6 @@ public class User {
     private LocalDate dob;
     private BigDecimal income;
     private Map<String,String> communityDetails;
+    private String communityDetailsJson;
 }
 
