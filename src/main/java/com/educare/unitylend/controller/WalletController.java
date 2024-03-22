@@ -32,13 +32,8 @@ public class WalletController extends BaseController {
      * @throws ControllerException If an error occurs during the wallet retrieval process.
      */
     @GetMapping("/get-wallet-for-user-id/{userId}")
-    public ResponseEntity<Wallet> getWalletForUserId(@PathVariable String userId) throws ControllerException, ServiceException {
+    public ResponseEntity<Wallet> getWalletForUserId(@PathVariable(required = true) String userId) throws ControllerException, ServiceException {
         try {
-            if(userId==null||userId.isEmpty()){
-                log.error("User id cannot be null");
-                return ResponseEntity.badRequest().body(null);
-            }
-
             Wallet wallet = walletService.getWalletForUserId(userId);
             if (wallet == null) {
                 log.info("No wallet found for given user id");
@@ -60,13 +55,8 @@ public class WalletController extends BaseController {
      * @throws ControllerException If an error occurs during the wallet retrieval process.
      */
     @GetMapping("/get-wallet-for-wallet-id/{walletId}")
-    public ResponseEntity<Wallet> getWalletForWalletId(@PathVariable String walletId) throws ControllerException, ServiceException {
+    public ResponseEntity<Wallet> getWalletForWalletId(@PathVariable(required = true) String walletId) throws ControllerException, ServiceException {
         try {
-            if(walletId==null||walletId.isEmpty()){
-                log.error("Wallet id cannot be null");
-                return ResponseEntity.badRequest().body(null);
-            }
-
             Wallet wallet = walletService.getWalletForWalletId(walletId);
             if (wallet == null) {
                 log.info("No wallet found for given wallet id");
@@ -89,12 +79,8 @@ public class WalletController extends BaseController {
      * @throws ControllerException If an error occurs during the process.
      */
     @GetMapping("/add-amount/{walletId}")
-    public ResponseEntity<String> addAmount(@PathVariable String walletId, @RequestParam BigDecimal amount) throws ControllerException, ServiceException {
+    public ResponseEntity<String> addAmount(@PathVariable(required = true) String walletId, @RequestParam(required = true) BigDecimal amount) throws ControllerException, ServiceException {
         try{
-            if(walletId==null||walletId.isEmpty()){
-                log.error("Wallet id cannot be null");
-                return ResponseEntity.badRequest().body(null);
-            }
             Boolean isAdded = walletService.addAmount(walletId, amount);
             if(!isAdded){
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Amount could not be added to the wallet");
@@ -116,12 +102,8 @@ public class WalletController extends BaseController {
      * @throws ControllerException If an error occurs during the process.
      */
     @GetMapping("/deduct-amount/{walletId}")
-    public ResponseEntity<String> deductAmount(@PathVariable String walletId, @RequestParam BigDecimal amount) throws ControllerException, ServiceException {
+    public ResponseEntity<String> deductAmount(@PathVariable(required = true) String walletId, @RequestParam(required = true) BigDecimal amount) throws ControllerException, ServiceException {
         try{
-            if(walletId==null||walletId.isEmpty()){
-                log.error("Wallet id cannot be null");
-                return ResponseEntity.badRequest().body(null);
-            }
             Boolean isDeducted = walletService.deductAmount(walletId,amount);
             if(!isDeducted){
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Amount could not be deducted from the wallet");
@@ -143,7 +125,7 @@ public class WalletController extends BaseController {
      * @throws ControllerException If an error occurs during the balance retrieval process.
      */
     @GetMapping("/get-wallet-balance/{walletId}")
-    public ResponseEntity<String> getWalletBalance(@PathVariable String walletId) throws ControllerException, ServiceException {
+    public ResponseEntity<String> getWalletBalance(@PathVariable(required = true) String walletId) throws ControllerException, ServiceException {
         try{
             if(walletId==null||walletId.isEmpty()){
                 log.error("Wallet id cannot be null");

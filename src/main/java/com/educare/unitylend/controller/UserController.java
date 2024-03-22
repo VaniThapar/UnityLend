@@ -83,12 +83,8 @@ public class UserController extends BaseController {
      * @throws ControllerException If an error occurs during the user retrieval process.
      */
     @GetMapping("/get-user-by-user-id/{userId}")
-    ResponseEntity<User> getUserForUserId(@PathVariable String userId) throws ControllerException {
+    ResponseEntity<User> getUserForUserId(@PathVariable(required = true) String userId) throws ControllerException {
        try{
-           if(userId==null || userId.isEmpty()){
-               log.error("User id is null");
-               return ResponseEntity.badRequest().body(null);
-           }
            User requiredUser=userService.getUserForUserId(userId);
            return ResponseEntity.ok(requiredUser);
        }
@@ -107,11 +103,8 @@ public class UserController extends BaseController {
      * @throws ControllerException If an error occurs during the user deletion process.
      */
     @DeleteMapping("/delete-user-by-user-id/{userId}")
-    ResponseEntity<String> deleteUser(@PathVariable String userId) throws ControllerException {
+    ResponseEntity<String> deleteUser(@PathVariable(required = true) String userId) throws ControllerException {
         try{
-            if(userId==null || userId.isEmpty()){
-                return ResponseEntity.badRequest().body("User id is null");
-            }
             Boolean isDeleted=userService.deleteUser(userId);
             if(!isDeleted){
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("User could not be deleted");

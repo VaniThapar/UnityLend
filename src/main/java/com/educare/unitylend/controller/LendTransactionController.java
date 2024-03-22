@@ -32,15 +32,12 @@ public class LendTransactionController extends BaseController {
      */
     @PostMapping("/lend")
     public ResponseEntity<String> initiateLendTransaction(
-            @RequestParam String lenderId,
-            @RequestParam String borrowRequestId,
-            @RequestParam BigDecimal amount
+            @RequestParam(required=true) String lenderId ,
+            @RequestParam(required=true) String borrowRequestId,
+            @RequestParam(required=true) BigDecimal amount
     ) throws ControllerException {
         try {
-            if (lenderId.isEmpty() || borrowRequestId.isEmpty() || amount == null) {
-                log.error("One of the required parameters is null");
-                return ResponseEntity.badRequest().body(null);
-            }
+
             Boolean isLendSuccessful = lendTransactionService.initiateLendTransaction(lenderId, borrowRequestId, amount);
 
             if (!isLendSuccessful) {
@@ -63,12 +60,8 @@ public class LendTransactionController extends BaseController {
      * @throws ControllerException If an error occurs while retrieving the lend transaction information.
      */
     @GetMapping("/get-lend-transaction-info/{lendTransactionId}")
-    public ResponseEntity<LendTransaction> getLendTransactionInfo(@PathVariable String lendTransactionId) throws ControllerException {
+    public ResponseEntity<LendTransaction> getLendTransactionInfo(@PathVariable(required = true) String lendTransactionId) throws ControllerException {
         try {
-            if (lendTransactionId == null || lendTransactionId.isEmpty()) {
-                log.error("LendTransaction Id is null");
-                return ResponseEntity.badRequest().body(null);
-            }
             LendTransaction lendTransaction = lendTransactionService.getLendTransactionInfo(lendTransactionId);
             if (lendTransaction == null) {
                 log.error("No lend transaction found with given transaction id");
@@ -90,12 +83,8 @@ public class LendTransactionController extends BaseController {
      * @throws ControllerException If an error occurs while retrieving the lend transactions.
      */
     @GetMapping("/get-all-lend-transactions-by-user/{userId}")
-    public ResponseEntity<List<LendTransaction>> getAllLendTransactionsByUserId(@PathVariable String userId) throws ControllerException {
+    public ResponseEntity<List<LendTransaction>> getAllLendTransactionsByUserId(@PathVariable(required = true) String userId) throws ControllerException {
         try {
-            if (userId == null || userId.isEmpty()) {
-                log.error("User id is null");
-                return ResponseEntity.badRequest().body(null);
-            }
             List<LendTransaction> lendTransactionsList = lendTransactionService.getLendTransactionsByUserId(userId);
             if (lendTransactionsList.isEmpty()) {
                 log.error("Given user has not made any transactions");

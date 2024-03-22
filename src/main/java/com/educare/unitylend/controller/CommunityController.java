@@ -32,13 +32,8 @@ public class CommunityController extends BaseController {
      * @throws ControllerException if an error occurs during the retrieval process.
      */
     @GetMapping("/get-communities-by-user-id/{userId}")
-    ResponseEntity<List<Community>> getCommunitiesByUserId(@PathVariable String userId) throws ControllerException {
+    ResponseEntity<List<Community>> getCommunitiesByUserId(@PathVariable(required = true) String userId) throws ControllerException {
         try {
-
-            if (userId == null || userId.isEmpty()) {
-                log.error("User id is null");
-                return ResponseEntity.badRequest().body(null);
-            }
 
             List<Community> communityList = userCommunityMapService.getCommunitiesByUserId(userId);
             if (communityList.isEmpty()) {

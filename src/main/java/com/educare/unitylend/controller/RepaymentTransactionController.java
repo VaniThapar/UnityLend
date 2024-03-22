@@ -30,13 +30,9 @@ public class RepaymentTransactionController extends BaseController {
      */
     @PostMapping("/repay")
     public ResponseEntity<String> initiateRepaymentTransaction(
-            @RequestParam String borrowRequestId
+            @RequestParam(required=true) String borrowRequestId
     ) throws ControllerException {
         try {
-            if (borrowRequestId.isEmpty()) {
-                log.error("Borrow Request Id is null");
-                return ResponseEntity.badRequest().body(null);
-            }
             Boolean isRepaymentSuccessful = repaymentTransactionService.initiateRepaymentTransaction(borrowRequestId);
 
             if (!isRepaymentSuccessful) {
@@ -60,13 +56,9 @@ public class RepaymentTransactionController extends BaseController {
      */
     @PostMapping("/repay-default-emi")
     public ResponseEntity<String> repayDefaultEMI(
-            @RequestParam String borrowRequestId
+            @RequestParam(required = true) String borrowRequestId
     ) throws ControllerException {
         try {
-            if (borrowRequestId.isEmpty()) {
-                log.error("Borrow Request Id is null");
-                return ResponseEntity.badRequest().body(null);
-            }
             Boolean isRepaymentSuccessful = repaymentTransactionService.repayDefaultEMI(borrowRequestId);
 
             if (!isRepaymentSuccessful) {
@@ -90,13 +82,8 @@ public class RepaymentTransactionController extends BaseController {
      */
 
     @GetMapping("/get-all-repayment-transactions-by-user/{userId}")
-    public ResponseEntity<List<RepaymentTransaction>> getAllRepaymentTransactionsByUserId(@PathVariable String userId) throws ControllerException {
+    public ResponseEntity<List<RepaymentTransaction>> getAllRepaymentTransactionsByUserId(@PathVariable(required = true) String userId) throws ControllerException {
         try {
-            if (userId == null || userId.isEmpty()) {
-                log.info("User id is null");
-                return ResponseEntity.badRequest().build();
-            }
-
             List<RepaymentTransaction> repaymentTransactionList = repaymentTransactionService.getRepaymentTransactionsByUserId(userId);
 
             if (repaymentTransactionList.isEmpty()) {
@@ -119,12 +106,8 @@ public class RepaymentTransactionController extends BaseController {
      * @throws ControllerException If an error occurs while fetching the repayment transaction information.
      */
     @GetMapping("/get-repayment-transaction-info/{repaymentTransactionId}")
-    public ResponseEntity<RepaymentTransaction> getRepaymentTransactionInfo(@PathVariable String repaymentTransactionId) throws ControllerException {
+    public ResponseEntity<RepaymentTransaction> getRepaymentTransactionInfo(@PathVariable(required = true) String repaymentTransactionId) throws ControllerException {
         try {
-            if (repaymentTransactionId == null || repaymentTransactionId.isEmpty()) {
-                log.error("Repayment Transaction Id is null");
-                return ResponseEntity.badRequest().body(null);
-            }
             RepaymentTransaction repaymentTransaction = repaymentTransactionService.getRepaymentTransactionInfo(repaymentTransactionId);
             if (repaymentTransaction == null) {
                 log.error("No repayment transaction found with given transaction id");

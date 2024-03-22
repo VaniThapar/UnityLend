@@ -55,9 +55,9 @@ public class TransactionServiceImpl implements TransactionService {
      * @throws ServiceException If an error occurs during the retrieval process.
      */
     @Override
-    public List<Transaction> getTransactionsBySender(String senderId) throws ServiceException {
+    public List<Transaction> getDebitTransactionsForUser(String senderId) throws ServiceException {
         try {
-            List<Transaction> transactionList = transactionRepository.getTransactionsBySender(senderId);
+            List<Transaction> transactionList = transactionRepository.getDebitTransactionsForUser(senderId);
             for (Transaction transaction : transactionList) {
                 String receiverId = transactionRepository.getReceiverIdByTransactionId(transaction.getTransactionId());
                 Integer statusCode = transactionRepository.getStatusCodeByTransactionId(transaction.getTransactionId());
@@ -88,9 +88,9 @@ public class TransactionServiceImpl implements TransactionService {
      * @throws ServiceException If an error occurs during the retrieval process.
      */
     @Override
-    public List<Transaction> getTransactionsBySenderToReceiver(String senderId, String receiverId) throws ServiceException {
+    public List<Transaction> getTransactions(String senderId, String receiverId) throws ServiceException {
         try {
-            List<Transaction> transactionList = transactionRepository.getTransactionsBySenderToReceiver(senderId, receiverId);
+            List<Transaction> transactionList = transactionRepository.getTransactions(senderId, receiverId);
             for (Transaction transaction : transactionList) {
                 Integer statusCode = transactionRepository.getStatusCodeByTransactionId(transaction.getTransactionId());
 
@@ -121,9 +121,9 @@ public class TransactionServiceImpl implements TransactionService {
      * @throws ServiceException If an error occurs during the retrieval process.
      */
     @Override
-    public List<Transaction> getTransactionsOfSenderByDateRange(String senderId, LocalDate startDate, LocalDate endDate) throws ServiceException {
+    public List<Transaction> getDebitTransactionByDateRangeForUser(String senderId, LocalDate startDate, LocalDate endDate) throws ServiceException {
         try {
-            List<Transaction> transactionList = transactionRepository.getTransactionsOfSenderByDateRange(senderId, startDate, endDate);
+            List<Transaction> transactionList = transactionRepository.getDebitTransactionByDateRangeForUser(senderId, startDate, endDate);
             for (Transaction transaction : transactionList) {
                 String receiverId = transactionRepository.getReceiverIdByTransactionId(transaction.getTransactionId());
                 Integer statusCode = transactionRepository.getStatusCodeByTransactionId(transaction.getTransactionId());

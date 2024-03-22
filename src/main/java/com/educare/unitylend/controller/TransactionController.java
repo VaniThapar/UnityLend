@@ -29,13 +29,9 @@ public class TransactionController extends BaseController {
      * @throws ControllerException If an error occurs during the transaction retrieval process.
      */
     @GetMapping("/get-transaction-by-sender/{senderId}")
-    ResponseEntity<List<Transaction>> getTransactionsBySender(@PathVariable String senderId) throws ControllerException {
+    ResponseEntity<List<Transaction>> getDebitTransactionsForUser(@PathVariable(required = true) String senderId) throws ControllerException {
         try {
-            if (senderId.isEmpty()) {
-                log.error("Sender Id is null");
-                return ResponseEntity.badRequest().body(null);
-            }
-            List<Transaction> transactionList = transactionService.getTransactionsBySender(senderId);
+            List<Transaction> transactionList = transactionService.getDebitTransactionsForUser(senderId);
             if (transactionList.isEmpty()) {
                 log.info("No transactions found for given sender");
                 return ResponseEntity.noContent().build();
@@ -56,13 +52,9 @@ public class TransactionController extends BaseController {
      * @throws ControllerException If an error occurs during the transaction retrieval process.
      */
     @GetMapping("/get-transaction/{senderId}/{receiverId}")
-    ResponseEntity<List<Transaction>> getTransactionsBySenderToReceiver(@PathVariable String senderId, @PathVariable String receiverId) throws ControllerException {
+    ResponseEntity<List<Transaction>> getTransactions(@PathVariable(required = true) String senderId, @PathVariable String receiverId) throws ControllerException {
         try {
-            if (senderId.isEmpty() || receiverId.isEmpty()) {
-                log.error("Sender Id or Receiver Id is null");
-                return ResponseEntity.badRequest().body(null);
-            }
-            List<Transaction> transactionList = transactionService.getTransactionsBySenderToReceiver(senderId, receiverId);
+            List<Transaction> transactionList = transactionService.getTransactions(senderId, receiverId);
             if (transactionList.isEmpty()) {
                 log.info("No transactions found for given sender and receiver");
                 return ResponseEntity.noContent().build();
@@ -85,21 +77,12 @@ public class TransactionController extends BaseController {
      * @throws ControllerException If an error occurs during the transaction retrieval process.
      */
     @GetMapping("/get-transaction-by-date/{senderId}")
-    public ResponseEntity<List<Transaction>> getTransactionsOfSenderByDateRange(
-            @PathVariable String senderId,
-            @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) throws ControllerException {
+    public ResponseEntity<List<Transaction>> getDebitTransactionByDateRangeForUser(
+            @PathVariable(required = true) String senderId,
+            @RequestParam(name = "startDate", required = true) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(name = "endDate", required = true) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) throws ControllerException {
         try {
-            if (senderId == null) {
-                log.error("Sender ID is null");
-                return ResponseEntity.badRequest().build();
-            }
-
-            if (startDate == null || endDate == null) {
-                log.error("Start date or end date is null");
-                return ResponseEntity.badRequest().build();
-            }
-            List<Transaction> transactionList = transactionService.getTransactionsOfSenderByDateRange(senderId, startDate, endDate);
+            List<Transaction> transactionList = transactionService.getDebitTransactionByDateRangeForUser(senderId, startDate, endDate);
             if (transactionList.isEmpty()) {
                 log.info("No transactions found by sender in the given date range");
                 return ResponseEntity.noContent().build();

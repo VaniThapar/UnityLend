@@ -1,6 +1,5 @@
 package com.educare.unitylend.dao;
 
-import com.educare.unitylend.model.LendTransaction;
 import com.educare.unitylend.model.Transaction;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -48,15 +47,15 @@ public interface TransactionRepository {
 
     @Select("SELECT transaction_id AS transactionId, amount, transaction_time AS transactionTime, last_updated_time AS lastUpdatedTime " +
             "FROM transaction WHERE sender_id = #{senderId}")
-    List<Transaction> getTransactionsBySender(@Param("senderId") String senderId);
+    List<Transaction> getDebitTransactionsForUser(@Param("senderId") String senderId);
 
     @Select("SELECT transaction_id AS transactionId, amount, transaction_time AS transactionTime, last_updated_time AS lastUpdatedTime " +
             "FROM transaction WHERE sender_id = #{senderId} AND receiver_id=#{receiverId}")
-    List<Transaction> getTransactionsBySenderToReceiver(@Param("senderId") String senderId, @Param("receiverId") String receiverId);
+    List<Transaction> getTransactions(@Param("senderId") String senderId, @Param("receiverId") String receiverId);
 
     @Select("SELECT transaction_id AS transactionId, amount, transaction_time AS transactionTime, last_updated_time AS lastUpdatedTime " +
             "FROM transaction WHERE sender_id = #{senderId} AND DATE(transaction_time) between #{startDate} and #{endDate}")
-    List<Transaction> getTransactionsOfSenderByDateRange(@Param("senderId") String senderId, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+    List<Transaction> getDebitTransactionByDateRangeForUser(@Param("senderId") String senderId, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 
     @Select("SELECT transaction_id AS transactionId, amount, transaction_time AS transactionTime, last_updated_time AS lastUpdatedTime " +
             "FROM transaction")
