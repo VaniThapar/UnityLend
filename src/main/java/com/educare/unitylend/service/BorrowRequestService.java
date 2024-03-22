@@ -8,13 +8,12 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public interface BorrowRequestService {
+    String validatingBorrowRequest(BorrowRequest borrowRequest) throws ServiceException;
     Boolean createBorrowRequest(BorrowRequest borrowRequest) throws ServiceException;
     List<BorrowRequest> getBorrowRequestForUserId(String userId) throws ServiceException;
-    List<BorrowRequest> getBorrowRequestForCommunity(String communityId) throws ServiceException;
-    Boolean updateEMIDefaults() throws ServiceException;
-    Boolean updateBorrowRequestStatus(Status status) throws ServiceException;
-    List<BorrowRequest> getBorrowRequestsInCommunityLessThanAmount(BigDecimal maxAmount) throws ServiceException;
-    List<BorrowRequest> getBorrowRequestsInCommunityGreaterThanAmount(BigDecimal minAmount) throws ServiceException;
-    List<BorrowRequest> getBorrowRequestsInCommunityInRange(BigDecimal minAmount, BigDecimal maxAmount) throws ServiceException;
+    Boolean updateBorrowRequestStatus(BorrowRequest borrowRequest, Status status) throws ServiceException;
+    List<BorrowRequest> getBorrowRequestsInCommunityLessThanAmount(BigDecimal maxAmount, String communityId) throws ServiceException;
+    List<BorrowRequest> getBorrowRequestsInCommunityGreaterThanAmount(BigDecimal minAmount, String communityId) throws ServiceException;
+    List<BorrowRequest> getBorrowRequestsInCommunityInRange(BigDecimal minAmount, BigDecimal maxAmount, String communityId) throws ServiceException;
     List<BorrowRequest> getAllBorrowRequests() throws ServiceException;
 }
