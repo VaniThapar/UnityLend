@@ -98,6 +98,10 @@ public class LendTransactionServiceImpl implements LendTransactionService {
     @Override
     public Boolean initiateLendTransaction(String lenderId, String borrowRequestId, BigDecimal amount) throws ServiceException {
         try {
+            if(amount.compareTo(BigDecimal.valueOf(0))<=0){
+                log.error("Amount is less than zero");
+                return false;
+            }
 
             Boolean isLendPossible=borrowRequestService.isLendAmountValid(borrowRequestId,amount);
             if(!isLendPossible){

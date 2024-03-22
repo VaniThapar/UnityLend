@@ -39,5 +39,4 @@ build/
 logs/
 
 .nfs*
-pom.xml
-src/main/resources/application.properties
+

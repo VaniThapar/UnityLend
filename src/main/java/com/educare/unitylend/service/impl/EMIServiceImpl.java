@@ -45,7 +45,6 @@ public class EMIServiceImpl implements EMIService {
             BigDecimal simpleInterest = (principalAmount.multiply(bigDecimalReturnPeriod).multiply(interestRate)).divide(new BigDecimal(100), 2, BigDecimal.ROUND_HALF_UP);
             BigDecimal finalMonthlyEMI = (principalAmount.add(simpleInterest)).divide(bigDecimalReturnPeriod, 2, BigDecimal.ROUND_HALF_UP);
 
-            log.info("Final monthly emi: "+finalMonthlyEMI);
             return finalMonthlyEMI;
         }
         catch (Exception e) {
@@ -72,7 +71,6 @@ public class EMIServiceImpl implements EMIService {
 
             BigDecimal borrowerMonthlyEMI=calculateBorrowEMIAmount(borrowRequestId);
             Integer statusCode=statusRepository.getStatusCodeByStatusName("Future");
-            log.info("status:: "+statusCode);
 
             for (Integer i = 1; i <= returnPeriod; i++) {
                 emiRepository.addEMIDetails(borrowerMonthlyEMI, i, borrowRequestId, statusCode);
