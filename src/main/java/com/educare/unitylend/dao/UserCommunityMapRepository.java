@@ -29,4 +29,8 @@ public interface UserCommunityMapRepository {
             "WHERE community_id IN (SELECT community_id FROM user_community_map WHERE user_id = #{userId})")
     List<Community> findCommunitiesByUserId(@Param("userId") String userId);
 
+
+    @Select("SELECT community_id from user_community_map where user_id=#{userId}")
+    List<String> getCommunityIdsWithUserId(@Param("userId") String userId);
+
 }
