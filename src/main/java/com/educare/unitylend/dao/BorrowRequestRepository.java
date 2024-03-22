@@ -133,11 +133,11 @@ public interface BorrowRequestRepository {
 
     @Select("SELECT borrow_request_id AS borrowRequestId, return_period_months AS returnPeriodMonths, collected_amount AS collectedAmount, requested_amount AS requestedAmount, " +
             "monthly_interest_rate AS monthlyInterestRate, is_defaulted AS isDefaulted, default_fine AS defaultFine, default_count AS defaultCount, created_at AS createdAt, " +
-            "last_modified_at AS lastModifiedAt FROM borrow_request WHERE borrow_request_id = #{requestId}")
-    BorrowRequest getBorrowRequestByRequestId(@Param("requestId") String requestId);
+            "last_modified_at AS lastModifiedAt FROM borrow_request WHERE borrow_request_id = #{borrowRequestId}")
+    BorrowRequest getBorrowRequestByRequestId(@Param("borrowRequestId") String borrowRequestId);
 
-    @Select("SELECT borrower_id FROM borrow_request WHERE borrow_request_id = #{requestId}")
-    String getUserIdByRequestId(@Param("requestId") String requestId);
+    @Select("SELECT borrower_id FROM borrow_request WHERE borrow_request_id = #{borrowRequestId}")
+    String getUserIdByRequestId(@Param("borrowRequestId") String borrowRequestId);
 
     @Update({"<script>",
             "UPDATE borrow_request",

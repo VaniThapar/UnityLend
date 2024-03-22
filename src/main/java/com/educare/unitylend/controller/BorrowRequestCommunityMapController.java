@@ -25,24 +25,20 @@ public class BorrowRequestCommunityMapController {
     /**
      * API endpoint for retrieving communities associated with a borrow request.
      *
-     * @param requestId The ID of the borrow request for which communities are to be retrieved.
+     * @param BorrowRequestId The ID of the borrow request for which communities are to be retrieved.
      * @return ResponseEntity<List<Community>> Indicating the communities for a borrow request.
      * @throws ControllerException If an error occurs during the communities retrieval process.
      */
-    @GetMapping("/get-communities/{requestId}")
-    public ResponseEntity<List<Community>> getCommunitiesByRequestId(@PathVariable String requestId) throws ControllerException {
+    @GetMapping("/get-communities/{BorrowRequestId}")
+    public ResponseEntity<List<Community>> getCommunitiesByRequestId(@PathVariable(required = true) String BorrowRequestId) throws ControllerException {
         try {
-            if (requestId == null || requestId.isEmpty()) {
-                log.error("Request ID cannot be null or empty");
-                return ResponseEntity.badRequest().body(null);
-            }
-            List<Community> communityList = borrowRequestCommunityMapService.getCommunitiesByRequestId(requestId);
+            List<Community> communityList = borrowRequestCommunityMapService.getCommunitiesByRequestId(BorrowRequestId);
             if (communityList == null || communityList.isEmpty()) {
                 return ResponseEntity.notFound().build();
             }
             return ResponseEntity.ok(communityList);
         } catch (Exception e) {
-            log.error("Error encountered in getting the communities with request ID: {}", requestId, e);
+            log.error("Error encountered in getting the communities with request ID: {}", BorrowRequestId, e);
             throw new ControllerException("Error encountered in getting the communities with request ID", e);
         }
     }
@@ -55,17 +51,13 @@ public class BorrowRequestCommunityMapController {
      * @throws ControllerException If an error occurs during the borrow requests retrieval process.
      */
     @GetMapping("/get-requests/{communityId}")
-    public ResponseEntity<List<BorrowRequest>> getRequestsByCommunityId(@PathVariable String communityId) throws ControllerException {
+    public ResponseEntity<List<BorrowRequest>> getBorrowRequestsForCommunity(@PathVariable(required = true) String communityId) throws ControllerException {
         try {
-            if (communityId == null || communityId.isEmpty()) {
-                log.error("Community ID cannot be null or empty");
-                return ResponseEntity.badRequest().body(null);
-            }
-            List<BorrowRequest> requests = borrowRequestCommunityMapService.getRequestsByCommunityId(communityId);
-            if (requests == null || requests.isEmpty()) {
+            List<BorrowRequest> borrowRequestList = borrowRequestCommunityMapService.getRequestsByCommunityId(communityId);
+            if (borrowRequestList == null || borrowRequestList.isEmpty()) {
                 return ResponseEntity.notFound().build();
             }
-            return ResponseEntity.ok(requests);
+            return ResponseEntity.ok(borrowRequestList);
         } catch (Exception e) {
             log.error("Error encountered in getting the requests for community with ID: {}", communityId, e);
             throw new ControllerException("Error encountered in getting the requests for community with given ID", e);

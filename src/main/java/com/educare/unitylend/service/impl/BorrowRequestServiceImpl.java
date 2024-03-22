@@ -204,8 +204,7 @@ public class BorrowRequestServiceImpl implements BorrowRequestService {
      * @return boolean Indicating whether the borrow request is valid or not
      * @throws ServiceException If an error occurs during the check.
      */
-    @Override
-    public boolean validateBorrowRequest(BorrowRequest borrowRequest) throws ServiceException{
+    public boolean incomeEmiBorrowRequest(BorrowRequest borrowRequest) throws ServiceException{
         try{
             Integer tenure = borrowRequest.getReturnPeriodMonths();
             BigDecimal monthlyIncome = borrowRequest.getBorrower().getIncome();
@@ -227,7 +226,6 @@ public class BorrowRequestServiceImpl implements BorrowRequestService {
      * @return boolean Indicating whether the borrower is a part of the community he wants to send borrow request to or not
      * @throws ServiceException If an error occurs during the check.
      */
-    @Override
     public boolean isUserPartOfCommunity(BorrowRequest borrowRequest) throws ServiceException{
         try{
             if(borrowRequest!=null) {
@@ -258,7 +256,6 @@ public class BorrowRequestServiceImpl implements BorrowRequestService {
      * @return boolean Indicating whether the borrower has a previous pending request or not
      * @throws ServiceException If an error occurs during the check.
      */
-    @Override
     public boolean isBorrowRequestPending(BorrowRequest borrowRequest) throws ServiceException{
         try{
             if(borrowRequest!=null) {
@@ -283,7 +280,6 @@ public class BorrowRequestServiceImpl implements BorrowRequestService {
      * @return boolean Indicating whether the borrower has any null required fields
      * @throws ServiceException If an error occurs during the check.
      */
-    @Override
     public boolean isAnythingNull(BorrowRequest borrowRequest) throws ServiceException{
         try{
             if(borrowRequest!=null) {
@@ -298,31 +294,6 @@ public class BorrowRequestServiceImpl implements BorrowRequestService {
         }
         catch(Exception e){
             throw new ServiceException("Error checking null conditions: " + e.getMessage(), e);
-        }
-    }
-
-    /**
-     * Checking whether the borrower has entered the correct password
-     * @param borrowRequest The borrow request object containing borrow request details to be created.
-     * @return boolean Indicating whether the entered password is correct or not
-     * @throws ServiceException If an error occurs during the check.
-     */
-    @Override
-    public boolean isPasswordCorrect(BorrowRequest borrowRequest) throws ServiceException{
-        try{
-            if(borrowRequest!=null) {
-                String passwordProvided = borrowRequest.getBorrower().getPassword();
-                String userId = borrowRequest.getBorrower().getUserId();
-                if (borrowRequestRepository.checkPassword(passwordProvided, userId)) return true;
-                return false;
-            }
-            else{
-                log.error("Error in execution");
-                return false;
-            }
-        }
-        catch(Exception e){
-            throw new ServiceException("Error checking password: " + e.getMessage(), e);
         }
     }
 
@@ -348,6 +319,37 @@ public class BorrowRequestServiceImpl implements BorrowRequestService {
             }
         }
         catch(Exception e){
+            throw new ServiceException("Error creating requests in implementation layer: " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Validating a borro request based on the above defined functions
+     * @param borrowRequest The borrow request object containing borrow request details to be created.
+     * @return boolean Checks whether request can be created
+     * @throws ServiceException If an error occurs during the addition of request to the table.
+     */
+    @Override
+    public String validatingBorrowRequest(BorrowRequest borrowRequest) throws ServiceException {
+        try {
+            String returnMessage;
+            if (isAnythingNull(borrowRequest)){
+                returnMessage = "Atleast one of the required field is null";
+            }
+            else if (!isUserPartOfCommunity(borrowRequest)){
+                returnMessage = "You are not a part of the listed communtities";
+            }
+            else if (isBorrowRequestPending(borrowRequest)){
+                returnMessage = "Pending borrow requests found. Complete previous borrow requests to raise a new one!";
+            }
+            else if (!incomeEmiBorrowRequest(borrowRequest)){
+                returnMessage = "Request not validated due to income-emi constraint";
+            }
+            else{
+                returnMessage = "No error";
+            }
+            return returnMessage;
+        } catch (Exception e) {
             throw new ServiceException("Error creating requests in implementation layer: " + e.getMessage(), e);
         }
     }

@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -35,28 +36,15 @@ public class BorrowRequestController extends BaseController {
      * @throws ControllerException If an error occurs during the borrow request creation process.
      */
     @PostMapping("/create-borrow-request")
-    ResponseEntity<?> createBorrowRequest(@RequestBody BorrowRequest borrowRequest) throws ControllerException{
+    ResponseEntity<?> createBorrowRequest(@RequestBody(required = true) BorrowRequest borrowRequest) throws ControllerException{
         try {
-            String userId = borrowRequest.getBorrower().getUserId();
-            if (userId == null || userId.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User Id cannot be empty.");
+            String message = borrowRequestService.validatingBorrowRequest(borrowRequest);
+            if(!message.equals("No error")){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
             }
-            if(borrowRequestService.isAnythingNull(borrowRequest)){
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("One of the required fields is empty!");
-            }
-            if(!borrowRequestService.isPasswordCorrect(borrowRequest)){
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password incorrect");
-            }
-            if(borrowRequestService.isBorrowRequestPending(borrowRequest)){
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Pending borrow requests found. Complete previous borrow requests to raise a new one!");
-            }
-            boolean isBorrowRequestValid = borrowRequestService.validateBorrowRequest(borrowRequest);
-            boolean UserPartOfCommunity = borrowRequestService.isUserPartOfCommunity(borrowRequest);
-            if (isBorrowRequestValid && UserPartOfCommunity) {
+            else{
                 borrowRequestService.createBorrowRequest(borrowRequest);
                 return ResponseEntity.ok(true);
-            } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Either you are not a part of the community or you do not satisfy the income-emi constraint.");
             }
         } catch (Exception e) {
             log.error("Error encountered in raising borrow request for user with ID: {}", borrowRequest.getBorrower(), e);
@@ -72,12 +60,8 @@ public class BorrowRequestController extends BaseController {
      * @throws ControllerException If an error occurs during the borrow request retrieval process.
      */
     @GetMapping("/get-borrow-request-by-user-id/{userId}")
-    ResponseEntity<List<BorrowRequest>> getBorrowRequestForUserId(@PathVariable String userId) throws ControllerException {
+    ResponseEntity<List<BorrowRequest>> getBorrowRequestForUserId(@PathVariable(required = true) String userId) throws ControllerException {
         try {
-            if (userId == null || userId.isEmpty()) {
-                log.error("User id cannot be null");
-                return ResponseEntity.badRequest().body(null);
-            }
             List<BorrowRequest> borrowRequestList = borrowRequestService.getBorrowRequestForUserId(userId);
             return ResponseEntity.ok(borrowRequestList);
         } catch (ServiceException e) {
@@ -94,17 +78,13 @@ public class BorrowRequestController extends BaseController {
      * @throws ControllerException If an error occurs during the borrow request retrieval process.
      */
     @GetMapping("/get-borrow-request-by-community-id/{communityId}")
-    ResponseEntity<List<BorrowRequest>> getBorrowRequestForCommunity(@PathVariable String communityId) throws ControllerException {
+    ResponseEntity<List<BorrowRequest>> getBorrowRequestForCommunity(@PathVariable(required = true) String communityId) throws ControllerException {
         try {
-            if (communityId == null || communityId.isEmpty()) {
-                log.error("Community id cannot be null");
-                return ResponseEntity.badRequest().body(null);
-            }
             List<BorrowRequest> borrowRequestList = borrowRequestCommunityMapService.getRequestsByCommunityId(communityId);
-            if (borrowRequestList == null || borrowRequestList.isEmpty()) {
-                log.error("No borrow requests found for given community");
-                return ResponseEntity.badRequest().body(null);
-            }
+//            if (borrowRequestList == null || borrowRequestList.isEmpty()) {
+//                log.error("No borrow requests found for given community");
+//                return ResponseEntity.badRequest().body(null);
+//            }
             return ResponseEntity.ok(borrowRequestList);
         } catch (ServiceException e) {
             log.error("Error encountered in fetching borrow requests in a community", e);
@@ -177,12 +157,8 @@ public class BorrowRequestController extends BaseController {
      * @throws ControllerException If an error occurs during the borrow request retrieval process.
      */
     @GetMapping("/get-borrow-request-in-community-by-interest/{communityId}/{interest}")
-    ResponseEntity<List<BorrowRequest>> getBorrowRequestsInCommunityByInterestRateGreaterThan(@PathVariable String communityId, @PathVariable BigDecimal interest) throws ControllerException {
+    ResponseEntity<List<BorrowRequest>> getBorrowRequestsInCommunityByInterestRateGreaterThan(@PathVariable(required = true) String communityId, @PathVariable(required = false) BigDecimal interest) throws ControllerException {
         try {
-            if (communityId == null || communityId.isEmpty() || interest == null) {
-                log.error("Community ID or interest rate cannot be null");
-                return ResponseEntity.badRequest().body(null);
-            }
             List<BorrowRequest> borrowRequestList = borrowRequestCommunityMapService.getRequestsByCommunityId(communityId);
             if (borrowRequestList == null || borrowRequestList.isEmpty()) {
                 log.error("No borrow requests found for given community and interest.");
@@ -211,10 +187,6 @@ public class BorrowRequestController extends BaseController {
     ResponseEntity<List<BorrowRequest>> getAllBorrowRequests() throws ControllerException {
         try {
             List<BorrowRequest> borrowRequestList = borrowRequestService.getAllBorrowRequests();
-            if (borrowRequestList == null || borrowRequestList.isEmpty()) {
-                log.error("No borrow requests created yet");
-                return ResponseEntity.badRequest().body(null);
-            }
             return ResponseEntity.ok(borrowRequestList);
         } catch (Exception e) {
             log.error("Error encountered in getting all borrow requests", e);
