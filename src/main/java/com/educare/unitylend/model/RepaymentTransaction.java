@@ -7,11 +7,14 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.Date;
 
+/**
+ * Represents a Repayment Transaction
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class RepaymentTransaction {
-    private String RepaymentTransactionId;
+    private String repaymentTransactionId;
     private Transaction transaction;
     private BorrowRequest borrowRequest;
     private LocalDateTime createdAt;

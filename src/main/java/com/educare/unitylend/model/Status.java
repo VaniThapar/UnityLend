@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Represents the Status of an activity (borrow request, transaction,etc.)
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

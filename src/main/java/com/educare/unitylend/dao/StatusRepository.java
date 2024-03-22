@@ -9,6 +9,9 @@ import org.springframework.stereotype.Repository;
 @Mapper
 @Repository
 public interface StatusRepository {
-    @Select("SELECT status_code as statusCode, status_name as statusName from status where status_code=#{statusCode}")
+    @Select("SELECT status_code AS statusCode, status_name AS statusName FROM status WHERE status_code = #{statusCode}")
     Status getStatusByStatusCode(@Param("statusCode") Integer statusCode);
+
+    @Select("Select status_code from status where status_name=#{statusName}")
+    Integer getStatusCodeByStatusName(@Param("statusName") String statusName);
 }

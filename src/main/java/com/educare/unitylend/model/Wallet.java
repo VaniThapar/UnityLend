@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.util.UUID;
 
+/**
+ * Represents wallet associated with each user
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
