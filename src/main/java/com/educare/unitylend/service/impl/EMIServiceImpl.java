@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 @Slf4j
 @AllArgsConstructor
@@ -118,7 +119,10 @@ public class EMIServiceImpl implements EMIService {
                 throw new IllegalArgumentException("No lent amount found for borrow request ID: " + borrowRequestId + " and lender ID: " + lenderId);
             }
             BigDecimal borrowerEmi=calculateBorrowEMIAmount(borrowRequestId);
-            BigDecimal amountToBeReceivedByLender = (lentAmount.divide(requestedAmount)).multiply(borrowerEmi);
+           // BigDecimal amountToBeReceivedByLender = (lentAmount.divide(requestedAmount)).multiply(borrowerEmi);
+            BigDecimal amountToBeReceivedByLender = lentAmount
+                    .divide(requestedAmount, 2, RoundingMode.HALF_UP) // Set scale to 2 decimal places and round half-up
+                    .multiply(borrowerEmi);
 
             return amountToBeReceivedByLender;
         } catch (Exception e) {

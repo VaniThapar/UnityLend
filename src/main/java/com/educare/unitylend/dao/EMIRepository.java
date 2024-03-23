@@ -40,17 +40,15 @@ public interface EMIRepository {
             "AND emi_date < CURRENT_DATE")
     void updateOverdueEMIsToDefaultedStatus(@Param("borrowRequestId") String borrowRequestId, @Param("defaultFine") BigDecimal defaultFine);
 
-    @Insert({"<script>",
-            "INSERT INTO borrow_request_emi (emi_id, emi_amount, emi_date, borrow_request_id, emi_status, emi_no)",
-            "VALUES",
-            "<if test='finalMonthlyEMI != null and monthIndex != null and borrowRequestId != null and status != null'>",
-            "(uuid_generate_v4(), #{finalMonthlyEMI}, CURRENT_DATE + INTERVAL '${monthIndex} MONTH', #{borrowRequestId}, #{status}, #{monthIndex})",
-            "</if>",
-            "</script>"})
+
+
+    @Insert("INSERT INTO borrow_request_emi (emi_id, emi_amount, emi_date, borrow_request_id, emi_status, emi_no)\n" +
+            "VALUES\n" +
+            "  (uuid_generate_v4(), #{finalMonthlyEMI}, CURRENT_DATE + INTERVAL '${monthIndex} MONTH', #{borrowRequestId}, #{status}, #{monthIndex});\n")
     void addEMIDetails(@Param("finalMonthlyEMI") BigDecimal finalMonthlyEMI,
                        @Param("monthIndex") Integer monthIndex,
-                       @Param("borrowRequestId") String borrowRequestId,
-                       @Param("status") Integer status);
+                      @Param("borrowRequestId") String borrowRequestId,
+                      @Param("status") Integer status);
 
 
     @Select("SELECT amount FROM transaction WHERE transaction_id IN (SELECT transaction_id FROM lend_transaction WHERE " +
