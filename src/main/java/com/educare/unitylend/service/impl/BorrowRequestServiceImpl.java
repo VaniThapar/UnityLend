@@ -6,6 +6,7 @@ import com.educare.unitylend.model.BorrowRequest;
 import com.educare.unitylend.model.Status;
 import com.educare.unitylend.model.User;
 import com.educare.unitylend.service.BorrowRequestService;
+import com.educare.unitylend.service.EMIService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.AllArgsConstructor;
@@ -29,6 +30,7 @@ public class BorrowRequestServiceImpl implements BorrowRequestService {
     private StatusRepository statusRepository;
     private UserCommunityMapRepository userCommunityMapRepository;
     private CommunityRepository communityRepository;
+    private EMIService emiService;
 
     /**
      * Retrieves all borrow requests.
@@ -135,57 +137,12 @@ public class BorrowRequestServiceImpl implements BorrowRequestService {
      * @return List of BorrowRequest objects meeting the criteria.
      * @throws ServiceException If an error occurs while retrieving borrow requests.
      */
-    @Override
-    public List<BorrowRequest> getBorrowRequestsInCommunityLessThanAmount(BigDecimal maxAmount, String communityId) throws ServiceException {
-        try {
-            if(maxAmount!=null && communityId!=null) {
-                return borrowRequestRepository.findByRequestedAmountLessThanAndCommunityIdsContaining(maxAmount, communityId);
-            }
-            else{
-                log.error("Cannot fetch requests");
-                return Collections.emptyList();
-            }
-        } catch (Exception e) {
-            throw new ServiceException("Error retrieving borrow requests with amount less than " + maxAmount, e);
-        }
-    }
 
-    /**
-     * Retrieves borrow requests in a community with amounts greater than or equal to a specified value.
-     *
-     * @param minAmount    The minimum amount requested in the borrow request.
-     * @param communityId  The ID of the community to search within.
-     * @return List of BorrowRequest objects meeting the criteria.
-     * @throws ServiceException If an error occurs while retrieving borrow requests.
-     */
-    @Override
-    public List<BorrowRequest> getBorrowRequestsInCommunityGreaterThanAmount(BigDecimal minAmount, String communityId) throws ServiceException {
-        try {
-            if(minAmount!=null && communityId!=null) {
-                return borrowRequestRepository.findByRequestedAmountGreaterThanEqualAndCommunityIdsContaining(minAmount, communityId);
-            }
-            else{
-                log.error("Cannot fetch requests.");
-                return Collections.emptyList();
-            }
-        } catch (Exception e) {
-            throw new ServiceException("Error retrieving borrow requests with amount greater than or equal to " + minAmount, e);
-        }
-    }
 
-    /**
-     * Retrieves borrow requests within a specified range of amounts in a community.
-     *
-     * @param minAmount    The minimum amount requested in the borrow request.
-     * @param maxAmount    The maximum amount requested in the borrow request.
-     * @param communityId  The ID of the community to search within.
-     * @return List of BorrowRequest objects meeting the criteria.
-     * @throws ServiceException If an error occurs while retrieving borrow requests.
-     */
     @Override
     public List<BorrowRequest> getBorrowRequestsInCommunityInRange(BigDecimal minAmount, BigDecimal maxAmount, String communityId) throws ServiceException {
         try {
-            if(minAmount!=null && maxAmount!=null && communityId!=null) {
+            if(maxAmount!=null && minAmount!=null && communityId!=null) {
                 return borrowRequestRepository.findByRequestedAmountBetweenAndCommunityIdsContaining(minAmount, maxAmount, communityId);
             }
             else{
@@ -196,6 +153,9 @@ public class BorrowRequestServiceImpl implements BorrowRequestService {
             throw new ServiceException("Error retrieving borrow requests with amount between " + minAmount + " and " + maxAmount, e);
         }
     }
+
+
+
 
     /**
      * Checking whether the borrow request is valid based on emi-income constraints
@@ -324,7 +284,7 @@ public class BorrowRequestServiceImpl implements BorrowRequestService {
     }
 
     /**
-     * Validating a borro request based on the above defined functions
+     * Validating a borrow request based on the above defined functions
      * @param borrowRequest The borrow request object containing borrow request details to be created.
      * @return boolean Checks whether request can be created
      * @throws ServiceException If an error occurs during the addition of request to the table.
@@ -353,5 +313,59 @@ public class BorrowRequestServiceImpl implements BorrowRequestService {
             throw new ServiceException("Error creating requests in implementation layer: " + e.getMessage(), e);
         }
     }
+
+    @Override
+    public BorrowRequest getBorrowRequestByRequestId(String borrowRequestId) throws ServiceException {
+        try {
+            BorrowRequest borrowRequest = borrowRequestRepository.getBorrowRequestByRequestId(borrowRequestId);
+
+            String userId = borrowRequestRepository.getUserIdByRequestId(borrowRequestId);
+            log.info("borr req:: " + borrowRequest);
+            log.info("user id:: " + userId);
+            User borrower = userRepository.getUserForUserId(userId);
+            borrowRequest.setBorrower(borrower);
+            return borrowRequest;
+        } catch (Exception e) {
+            log.error("Error encountered in fetching borrow request by id");
+            throw new ServiceException("Error encountered in fetching borrow request by id", e);
+        }
+    }
+
+    @Override
+    public Boolean updateCollectedAmount(String borrowRequestId, BigDecimal amount) throws ServiceException{
+        try {
+            Integer rowsAffected=borrowRequestRepository.updateCollectedAmount(borrowRequestId,amount);
+            BorrowRequest borrowRequest=borrowRequestRepository.getBorrowRequestByRequestId(borrowRequestId);
+
+            if(isAmountFullyCollected(borrowRequest)){
+                //update status of borrow req
+                Integer returnPeriod=borrowRequest.getReturnPeriodMonths();
+                emiService.addEMIDetails(returnPeriod,borrowRequestId);
+            }
+            return rowsAffected>0;
+        } catch (Exception e) {
+            log.error("Error encountered in updating collected amount in given borrow request");
+            throw new ServiceException("Error encountered in updating collected amount in given borrow request", e);
+        }
+    }
+
+    @Override
+    public Boolean isLendAmountValid(String borrowRequestId, BigDecimal amount) throws ServiceException {
+        try{
+            Boolean isLendPossible=borrowRequestRepository.isLendAmountValid(borrowRequestId,amount);
+            return isLendPossible;
+        }
+        catch (Exception e){
+            log.info("Error encountered while checking the possibility of lend operation");
+            throw new ServiceException("Error encountered while checking the possibility of lend operation",e);
+        }
+    }
+
+    private Boolean isAmountFullyCollected(BorrowRequest borrowRequest){
+        BigDecimal collectedAmount=borrowRequest.getCollectedAmount();
+        BigDecimal requestedAmount=borrowRequest.getRequestedAmount();
+        return collectedAmount.equals(requestedAmount);
+    }
+
 
 }

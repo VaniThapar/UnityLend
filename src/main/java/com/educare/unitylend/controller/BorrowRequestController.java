@@ -95,26 +95,65 @@ public class BorrowRequestController extends BaseController {
     /**
      * API endpoint for retrieving borrow requests in a community within an amount range.
      *@PathVariable String communityId
-     * @param minAmount   The minimum amount of the borrow requests.
+     * @param minAmount   The minimum amount of the borrow requests with default value 0
      * @param maxAmount   The maximum amount of the borrow requests.
-     * @param lessThan    Flag indicating if the amount should be less than maxAmount.
-     * @param greaterThan Flag indicating if the amount should be greater than minAmount.
      * @return ResponseEntity<List<BorrowRequest>> The list of borrow requests in the community within the specified amount range.
      * @throws ControllerException If an error occurs during the borrow request retrieval process.
      */
-    @PostMapping("/min/{communityId}")
+    //    @PostMapping("/min/{communityId}")
+//    ResponseEntity<List<BorrowRequest>> getBorrowRequestsInCommunityInAmountRange(
+//            @RequestParam(value = "minAmount", required = false) BigDecimal minAmount,
+//            @RequestParam(value = "maxAmount", required = true) BigDecimal maxAmount,
+//            @RequestParam(value = "lessThan", required = false, defaultValue = "false") boolean lessThan,
+//            @RequestParam(value = "greaterThan", required = false, defaultValue = "true") boolean greaterThan,
+//            @PathVariable String communityId
+//    ) throws ControllerException {
+//        try{
+//            log.info("minAmount: {}", minAmount);
+//            log.info("maxAmount: {}", maxAmount);
+//            log.info("lessThan: {}", lessThan);
+//            log.info("greaterThan: {}", greaterThan);
+//            log.info("communityId: {}", communityId);
+//            List<BorrowRequest> borrowRequests = new ArrayList<>();
+//            if (minAmount != null && maxAmount != null) {
+//                if (minAmount.compareTo(maxAmount) > 0) {
+//                    log.error("minAmount is greater than maxAmount which is not permissible");
+//                    return ResponseEntity.badRequest().body(borrowRequests);
+//                }
+//            }
+//            else if(minAmount==null && maxAmount==null){
+//                log.error("Both minAmount and maxAmount are empty");
+//                return ResponseEntity.badRequest().body(borrowRequests);
+//            }
+//            if(lessThan && greaterThan){
+//                log.error("Inaccurate Constrains");
+//                return ResponseEntity.badRequest().body(borrowRequests);
+//            }
+//            else if(lessThan){
+//                borrowRequests=borrowRequestService.getBorrowRequestsInCommunityLessThanAmount(maxAmount, communityId);
+//            }
+//            else if(greaterThan){
+//                borrowRequests=borrowRequestService.getBorrowRequestsInCommunityGreaterThanAmount(minAmount, communityId);
+//            }
+//            else{
+//                borrowRequests=borrowRequestService.getBorrowRequestsInCommunityInRange(minAmount,maxAmount, communityId);
+//            }
+//            return ResponseEntity.ok(borrowRequests);
+//        }
+//        catch(ServiceException e){
+//            log.error("Error in filtering borrow requests based on amount");
+//            throw new ControllerException("Error in filtering borrow requests based on amount",e);
+//        }
+//    }
+    @PostMapping("/get-borrow-request-in-community-by-amount/{communityId}")
     ResponseEntity<List<BorrowRequest>> getBorrowRequestsInCommunityInAmountRange(
-            @RequestParam(value = "minAmount", required = false) BigDecimal minAmount,
+            @RequestParam(value = "minAmount", required = false,  defaultValue = "0") BigDecimal minAmount,
             @RequestParam(value = "maxAmount", required = true) BigDecimal maxAmount,
-            @RequestParam(value = "lessThan", required = false, defaultValue = "false") boolean lessThan,
-            @RequestParam(value = "greaterThan", required = false, defaultValue = "true") boolean greaterThan,
             @PathVariable String communityId
     ) throws ControllerException {
         try{
             log.info("minAmount: {}", minAmount);
             log.info("maxAmount: {}", maxAmount);
-            log.info("lessThan: {}", lessThan);
-            log.info("greaterThan: {}", greaterThan);
             log.info("communityId: {}", communityId);
             List<BorrowRequest> borrowRequests = new ArrayList<>();
             if (minAmount != null && maxAmount != null) {
@@ -123,23 +162,9 @@ public class BorrowRequestController extends BaseController {
                     return ResponseEntity.badRequest().body(borrowRequests);
                 }
             }
-            else if(minAmount==null && maxAmount==null){
-                log.error("Both minAmount and maxAmount are empty");
-                return ResponseEntity.badRequest().body(borrowRequests);
-            }
-            if(lessThan && greaterThan){
-                log.error("Inaccurate Constrains");
-                return ResponseEntity.badRequest().body(borrowRequests);
-            }
-            else if(lessThan){
-                borrowRequests=borrowRequestService.getBorrowRequestsInCommunityLessThanAmount(maxAmount, communityId);
-            }
-            else if(greaterThan){
-                borrowRequests=borrowRequestService.getBorrowRequestsInCommunityGreaterThanAmount(minAmount, communityId);
-            }
-            else{
-                borrowRequests=borrowRequestService.getBorrowRequestsInCommunityInRange(minAmount,maxAmount, communityId);
-            }
+            borrowRequests=borrowRequestService.getBorrowRequestsInCommunityInRange(minAmount,maxAmount, communityId);
+
+
             return ResponseEntity.ok(borrowRequests);
         }
         catch(ServiceException e){
@@ -147,7 +172,6 @@ public class BorrowRequestController extends BaseController {
             throw new ControllerException("Error in filtering borrow requests based on amount",e);
         }
     }
-
 
     /**
      * API endpoint for retrieving borrow requests within a community based on interest rate.
