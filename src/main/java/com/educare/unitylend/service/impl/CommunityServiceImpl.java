@@ -29,7 +29,6 @@ public class CommunityServiceImpl implements CommunityService {
     public List<Community> getAllCommunities() throws ServiceException {
         try{
             List<Community>communityList=communityRepository.getAllCommunities();
-            log.info("community List: "+communityList);
             return communityList;
         }
         catch(Exception e){

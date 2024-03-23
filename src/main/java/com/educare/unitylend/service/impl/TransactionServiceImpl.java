@@ -189,6 +189,11 @@ public class TransactionServiceImpl implements TransactionService {
     public Transaction getTransactionByTransactionId(String transactionId) throws ServiceException {
         try {
             Transaction transaction = transactionRepository.getTransactionByTransactionId(transactionId);
+
+            if(transaction==null){
+                throw new Exception("Transaction is null");
+            }
+
             String senderId = transactionRepository.getSenderIdByTransactionId(transactionId);
             String receiverId = transactionRepository.getReceiverIdByTransactionId(transactionId);
             Integer statusCode = transactionRepository.getStatusCodeByTransactionId(transactionId);

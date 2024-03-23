@@ -37,6 +37,10 @@ public class EMIServiceImpl implements EMIService {
 
             BorrowRequest borrowRequest = borrowRequestRepository.getBorrowRequestByRequestId(borrowRequestId);
 
+            if(borrowRequest==null){
+                throw new Exception("Borrow request is null");
+            }
+
             Integer returnPeriod = borrowRequest.getReturnPeriodMonths();
             BigDecimal bigDecimalReturnPeriod = new BigDecimal(returnPeriod);
             BigDecimal principalAmount = borrowRequest.getRequestedAmount();
@@ -45,7 +49,6 @@ public class EMIServiceImpl implements EMIService {
             BigDecimal simpleInterest = (principalAmount.multiply(bigDecimalReturnPeriod).multiply(interestRate)).divide(new BigDecimal(100), 2, BigDecimal.ROUND_HALF_UP);
             BigDecimal finalMonthlyEMI = (principalAmount.add(simpleInterest)).divide(bigDecimalReturnPeriod, 2, BigDecimal.ROUND_HALF_UP);
 
-            log.info("Final monthly emi: "+finalMonthlyEMI);
             return finalMonthlyEMI;
         }
         catch (Exception e) {
@@ -72,7 +75,6 @@ public class EMIServiceImpl implements EMIService {
 
             BigDecimal borrowerMonthlyEMI=calculateBorrowEMIAmount(borrowRequestId);
             Integer statusCode=statusRepository.getStatusCodeByStatusName("Future");
-            log.info("status:: "+statusCode);
 
             for (Integer i = 1; i <= returnPeriod; i++) {
                 emiRepository.addEMIDetails(borrowerMonthlyEMI, i, borrowRequestId, statusCode);
@@ -109,7 +111,6 @@ public class EMIServiceImpl implements EMIService {
                 throw new IllegalArgumentException("No borrow request found for ID: " + borrowRequestId);
             }
 
-            BigDecimal finalMonthlyEMI = calculateBorrowEMIAmount(borrowRequestId);
             BigDecimal lentAmount = emiRepository.getLentAmountByBorrowRequestIdAndLenderId(borrowRequestId, lenderId);
             BigDecimal requestedAmount = borrowRequest.getRequestedAmount();
 

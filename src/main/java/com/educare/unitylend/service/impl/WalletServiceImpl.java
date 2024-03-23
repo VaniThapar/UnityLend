@@ -55,7 +55,16 @@ public class WalletServiceImpl implements WalletService {
     public Wallet getWalletForUserId(String userId) throws ServiceException {
         try {
             Wallet requiredWallet = walletRepository.getWalletForUserId(userId);
+
+            if (requiredWallet == null) {
+                throw new Exception("Wallet is null");
+            }
+
             User user = userService.getUserForUserId(userId);
+
+            if (user == null) {
+                throw new Exception("User is null");
+            }
             requiredWallet.setUser(user);
             return requiredWallet;
         } catch (Exception e) {
@@ -76,7 +85,17 @@ public class WalletServiceImpl implements WalletService {
     public Wallet getWalletForWalletId(String walletId) throws ServiceException {
         try {
             Wallet requiredWallet = walletRepository.getWalletForWalletId(walletId);
+
+            if (requiredWallet == null) {
+                throw new Exception("Wallet is null");
+            }
+
             User user = userService.getUserByWalletId(walletId);
+
+            if (user == null) {
+                throw new Exception("User is null");
+            }
+
             requiredWallet.setUser(user);
             return requiredWallet;
         } catch (Exception e) {
@@ -90,7 +109,7 @@ public class WalletServiceImpl implements WalletService {
      * Adds the specified amount to the wallet associated with the given wallet ID.
      *
      * @param walletId The ID of the wallet.
-     * @param amount The amount to add to the wallet.
+     * @param amount   The amount to add to the wallet.
      * @return True if the amount was successfully added to the wallet, false otherwise.
      * @throws ServiceException If an error occurs while adding the amount to the wallet.
      */
@@ -107,21 +126,27 @@ public class WalletServiceImpl implements WalletService {
     }
 
 
-/**
- * Deducts the specified amount from the wallet associated with the given wallet ID.
- *
- * @param walletId The ID of the wallet.
- * @param amount The amount to deduct from the wallet.
- * @return True if the amount was successfully deducted from the wallet, false otherwise.
- * @throws ServiceException If an error occurs while deducting the amount from the wallet.
- */
+    /**
+     * Deducts the specified amount from the wallet associated with the given wallet ID.
+     *
+     * @param walletId The ID of the wallet.
+     * @param amount   The amount to deduct from the wallet.
+     * @return True if the amount was successfully deducted from the wallet, false otherwise.
+     * @throws ServiceException If an error occurs while deducting the amount from the wallet.
+     */
 
     @Override
     public Boolean deductAmount(String walletId, BigDecimal amount) throws ServiceException {
         try {
-            Wallet wallet=getWalletForWalletId(walletId);
-            BigDecimal balance=wallet.getBalance();
-            if(balance.compareTo(amount)<0){
+            Wallet wallet = getWalletForWalletId(walletId);
+
+            if (wallet == null) {
+                throw new Exception("Wallet is null");
+            }
+
+
+            BigDecimal balance = wallet.getBalance();
+            if (balance.compareTo(amount) < 0) {
                 log.error("Insufficient Balance! Cannot deduct from wallet");
                 throw new Exception("Insufficient Balance! Cannot deduct from wallet");
             }

@@ -24,7 +24,6 @@ public class LendTransactionServiceImpl implements LendTransactionService {
     private UserService userService;
     private WalletService walletService;
 
-
     /**
 
      Retrieves information about a lend transaction based on the provided lend transaction ID.
@@ -36,6 +35,11 @@ public class LendTransactionServiceImpl implements LendTransactionService {
     public LendTransaction getLendTransactionInfo(String lendTransactionId) throws ServiceException {
         try {
             LendTransaction lendTransaction = lendTransactionRepository.getLendTransactionById(lendTransactionId);
+
+            if(lendTransaction==null){
+                throw new Exception("Lend transaction is null");
+            }
+
             setParametersOfLendTransaction(lendTransaction);
 
             return lendTransaction;
@@ -57,6 +61,11 @@ public class LendTransactionServiceImpl implements LendTransactionService {
     public List<LendTransaction> getLendTransactionsByUserId(String userId) throws ServiceException {
         try {
             List<LendTransaction> lendTransactions = lendTransactionRepository.getLendTransactionsByUserId(userId);
+
+            if(lendTransactions==null){
+                throw new Exception("Lend transaction List is null");
+            }
+
             setParametersOfLendTransaction(lendTransactions);
 
             return lendTransactions;
@@ -77,6 +86,11 @@ public class LendTransactionServiceImpl implements LendTransactionService {
     public List<LendTransaction> getAllLendTransactions() throws ServiceException {
         try {
             List<LendTransaction> lendTransactions = lendTransactionRepository.getAllLendTransactions();
+
+            if(lendTransactions==null){
+                throw new Exception("Lend transaction List is null");
+            }
+
             setParametersOfLendTransaction(lendTransactions);
 
             return lendTransactions;
@@ -98,6 +112,10 @@ public class LendTransactionServiceImpl implements LendTransactionService {
     @Override
     public Boolean initiateLendTransaction(String lenderId, String borrowRequestId, BigDecimal amount) throws ServiceException {
         try {
+            if(amount.compareTo(BigDecimal.valueOf(0))<=0){
+                log.error("Amount is less than zero");
+                return false;
+            }
 
             Boolean isLendPossible=borrowRequestService.isLendAmountValid(borrowRequestId,amount);
             if(!isLendPossible){
@@ -111,6 +129,11 @@ public class LendTransactionServiceImpl implements LendTransactionService {
             }
 
             BorrowRequest borrowRequest = borrowRequestService.getBorrowRequestByRequestId(borrowRequestId);
+
+            if(borrowRequest==null){
+                throw new Exception("Borrow request is null");
+            }
+
             User borrower = borrowRequest.getBorrower();
             String borrowerId = borrower.getUserId();
 
@@ -130,7 +153,7 @@ public class LendTransactionServiceImpl implements LendTransactionService {
 
             return isInsertionInTransactionSuccessful && isBorrowRequestUpdated &&
                     rowsAffectedInInsertionInLendTransactionSuccessful > 0;
-        } catch (ServiceException e) {
+        } catch (Exception e) {
             log.error("Error encountered in initiating lend operation");
             throw new ServiceException("Error encountered in initiating lend operation", e);
         }
@@ -147,10 +170,13 @@ public class LendTransactionServiceImpl implements LendTransactionService {
     private Boolean handleDebitFromLender(String lenderId, BigDecimal amount) {
         try {
             Wallet wallet = walletService.getWalletForUserId(lenderId);
+            if(wallet==null){
+                throw new Exception("Wallet is null");
+            }
             String walletId = wallet.getWalletId();
             walletService.deductAmount(walletId, amount);
             return true;
-        } catch (ServiceException e) {
+        } catch (Exception e) {
             log.error("Error encountered in debiting money from lender's wallet");
             return false;
         }
@@ -167,10 +193,13 @@ public class LendTransactionServiceImpl implements LendTransactionService {
     private Boolean handleCreditToBorrower(String borrowerId, BigDecimal amount) {
         try {
             Wallet wallet = walletService.getWalletForUserId(borrowerId);
+            if(wallet==null){
+                throw new Exception("Wallet is null");
+            }
             String walletId = wallet.getWalletId();
             walletService.addAmount(walletId, amount);
             return true;
-        } catch (ServiceException e) {
+        } catch (Exception e) {
             log.error("Error encountered in crediting money to borrower's wallet");
             return false;
         }

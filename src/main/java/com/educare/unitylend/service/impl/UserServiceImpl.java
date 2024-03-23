@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService {
             user.setCommunityDetailsJson(communityDetailsJson);
 
             int rowsAffected = userRepository.createUser(user);
-            String userId=user.getUserId();
+            String userId = user.getUserId();
             handleCommunityCreationForUser(communityDetails, userId);
             handleWalletCreation(userId);
 
@@ -69,8 +69,8 @@ public class UserServiceImpl implements UserService {
     public Boolean updateUserDetails(User user) throws ServiceException {
         try {
             String userId = user.getUserId();
-            User formerUser=userRepository.getUserForUserId(userId);
-            String formerCommunityDetailsJson=formerUser.getCommunityDetailsJson();
+            User formerUser = userRepository.getUserForUserId(userId);
+            String formerCommunityDetailsJson = formerUser.getCommunityDetailsJson();
 
             Map<String, String> formerCommunityDetails = objectMapper.readValue(formerCommunityDetailsJson, new TypeReference<Map<String, String>>() {
             });
@@ -85,7 +85,7 @@ public class UserServiceImpl implements UserService {
                 String communityId = communityRepository.findByCommunityTagAndCommunityName(communityTag, communityName).getCommunityId();
                 userCommunityMapRepository.deleteMapping(userId, communityId);
             }
-            handleCommunityCreationForUser(updatedCommunityDetails,userId);
+            handleCommunityCreationForUser(updatedCommunityDetails, userId);
             return rowsAffected > 0;
 
         } catch (Exception e) {
@@ -98,7 +98,7 @@ public class UserServiceImpl implements UserService {
     /**
      * Maps a user to a community.
      *
-     * @param userId The ID of the user to be mapped.
+     * @param userId      The ID of the user to be mapped.
      * @param communityId The ID of the community to which the user will be mapped.
      */
     void mapUserToCommunity(String userId, String communityId) {
@@ -115,12 +115,11 @@ public class UserServiceImpl implements UserService {
      *
      * @param userId The ID of the user for whom the wallet will be generated.
      */
-    void handleWalletCreation(String userId){
-        try{
+    void handleWalletCreation(String userId) {
+        try {
             walletRepository.generateWallet(userId);
             log.info("Wallet for user generated successfully");
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             log.error("Error encountered in wallet generation for user");
         }
     }
@@ -131,7 +130,7 @@ public class UserServiceImpl implements UserService {
      * If a community does not exist, it will be created.
      *
      * @param communityDetails A map containing community tags as keys and community names as values.
-     * @param userId The ID of the user for whom communities will be created.
+     * @param userId           The ID of the user for whom communities will be created.
      */
     void handleCommunityCreationForUser(Map<String, String> communityDetails, String userId) {
         for (String communityTag : communityDetails.keySet()) {
@@ -141,7 +140,7 @@ public class UserServiceImpl implements UserService {
                 communityRepository.createCommunity(communityTag, communityName);
             }
             Community community = communityRepository.findByCommunityTagAndCommunityName(communityTag, communityName);
-            String communityId=community.getCommunityId();
+            String communityId = community.getCommunityId();
             mapUserToCommunity(userId, communityId);
         }
     }
@@ -158,6 +157,9 @@ public class UserServiceImpl implements UserService {
     public User getUserForUserId(String userId) throws ServiceException {
         try {
             User requiredUser = userRepository.getUserForUserId(userId);
+            if (requiredUser == null) {
+                throw new Exception("User id is null");
+            }
             String communityDetailsJson = requiredUser.getCommunityDetailsJson();
             Map<String, String> communityDetails = objectMapper.readValue(communityDetailsJson, new TypeReference<Map<String, String>>() {
             });
@@ -167,6 +169,10 @@ public class UserServiceImpl implements UserService {
         } catch (JsonProcessingException e) {
             log.error("Error encountered in getting user by user id");
             throw new ServiceException("Error encountered in getting user by user id", e);
+        } catch (Exception e) {
+            log.error("Error encountered in getting user by user id");
+            throw new ServiceException("Error encountered in getting user by user id", e);
+
         }
     }
 
@@ -222,13 +228,12 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public User getUserByWalletId(String walletId) throws ServiceException {
-        try{
-            User requiredUser=userRepository.getUserByWalletId(walletId);
+        try {
+            User requiredUser = userRepository.getUserByWalletId(walletId);
             return requiredUser;
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             log.error("Error in getting user by wallet id");
-            throw new ServiceException("Error in getting user by wallet id",e);
+            throw new ServiceException("Error in getting user by wallet id", e);
         }
     }
 }
