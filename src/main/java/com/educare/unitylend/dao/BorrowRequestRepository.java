@@ -37,7 +37,7 @@ public interface BorrowRequestRepository {
 
 
     @Insert("INSERT INTO borrow_request (borrow_request_id, borrower_id, return_period_months, monthly_interest_rate, borrow_status, requested_amount, collected_amount, default_fine, default_count, is_defaulted) " +
-            "VALUES (uuid_generate_v4(), #{userId}, #{borrowRequest.returnPeriodMonths}, #{borrowRequest.monthlyInterestRate}, 1 , #{borrowRequest.requestedAmount}, 0, COALESCE(#{borrowRequest.defaultFine}, 5), 0, 0)")
+            "VALUES (uuid_generate_v4(), #{userId}, #{borrowRequest.returnPeriodMonths}, #{borrowRequest.monthlyInterestRate}, 1 , #{borrowRequest.requestedAmount}, 0, COALESCE(#{borrowRequest.defaultFine}, 5), 0, false)")
     @Options(useGeneratedKeys = true, keyProperty = "borrowRequest.borrowRequestId")
     Boolean createBorrowRequest(@Param("borrowRequest") BorrowRequest borrowRequest, @Param("userId") String userId);
 
