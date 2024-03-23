@@ -39,6 +39,10 @@ public class RepaymentTransactionServiceImpl implements RepaymentTransactionServ
         try {
             EMI nextScheduledEMI = paymentScheduleService.getNextScheduledEMI(borrowRequestId);
 
+            if(nextScheduledEMI==null){
+                throw new Exception("Next Scheduled EMI is null");
+            }
+
             if (paymentScheduleService.isDefaulted(nextScheduledEMI)) {
                 log.error("Your previous EMI payment is still overdue! Please pay it before proceeding for future EMI payments");
                 return false;
@@ -46,6 +50,11 @@ public class RepaymentTransactionServiceImpl implements RepaymentTransactionServ
 
             Boolean isRepaymentSuccessful = true;
             BorrowRequest borrowRequest = borrowRequestService.getBorrowRequestByRequestId(borrowRequestId);
+
+            if(borrowRequest==null){
+                throw new Exception("Borrow request is null");
+            }
+
             User borrower = borrowRequest.getBorrower();
             String borrowerId = borrower.getUserId();
 
@@ -98,7 +107,16 @@ public class RepaymentTransactionServiceImpl implements RepaymentTransactionServ
             Boolean isRepaymentSuccessful = true;
             EMI nextScheduledEMI = paymentScheduleService.getNextScheduledEMI(borrowRequestId);
 
+            if(nextScheduledEMI==null){
+                throw new Exception("Next Scheduled EMI is null");
+            }
+
             BorrowRequest borrowRequest = borrowRequestService.getBorrowRequestByRequestId(borrowRequestId);
+
+            if(borrowRequest==null){
+                throw new Exception("Borrow request is null");
+            }
+
             User borrower = borrowRequest.getBorrower();
             String borrowerId = borrower.getUserId();
 
@@ -188,6 +206,11 @@ public class RepaymentTransactionServiceImpl implements RepaymentTransactionServ
     public List<RepaymentTransaction> getRepaymentTransactionsByUserId(String userId) throws ServiceException {
         try {
             List<RepaymentTransaction> repaymentTransactions = repaymentTransactionRepository.getRepaymentTransactionsByUserId(userId);
+
+            if(repaymentTransactions==null){
+                throw new Exception("Repayment Transaction List is null");
+            }
+
             setParametersOfRepaymentTransaction(repaymentTransactions);
 
             return repaymentTransactions;
@@ -209,6 +232,11 @@ public class RepaymentTransactionServiceImpl implements RepaymentTransactionServ
     public RepaymentTransaction getRepaymentTransactionInfo(String repaymentTransactionId) throws ServiceException {
         try {
             RepaymentTransaction repaymentTransaction = repaymentTransactionRepository.getRepaymentTransactionById(repaymentTransactionId);
+
+            if(repaymentTransaction==null){
+                throw new Exception("Repayment Transaction is null");
+            }
+
             setParametersOfRepaymentTransaction(repaymentTransaction);
             return repaymentTransaction;
         } catch (Exception e) {
@@ -272,6 +300,11 @@ public class RepaymentTransactionServiceImpl implements RepaymentTransactionServ
     public List<RepaymentTransaction> getAllRepaymentTransactions() throws ServiceException {
         try {
             List<RepaymentTransaction> repaymentTransactions = repaymentTransactionRepository.getAllRepaymentTransactions();
+
+            if(repaymentTransactions==null){
+                throw new Exception("Repayment Transaction List is null");
+            }
+
             setParametersOfRepaymentTransaction(repaymentTransactions);
             return repaymentTransactions;
         } catch (Exception e) {

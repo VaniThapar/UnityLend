@@ -25,11 +25,6 @@ public interface CommunityRepository {
             "</script>"})
     void createCommunity(@Param("communityTag") String communityTag, @Param("communityName") String communityName);
 
-//    @Select("Select community_id as communityId, community_name as communityName, community_tag as communityTag " +
-//            "from community " +
-//            "where community_tag = #{communityTag} AND community_name = #{communityName}")
-//    Community findByCommunityTagAndCommunityName(@Param("communityTag")String communityTag,@Param("communityName")String communityName);
-
     @Select({
             "<script>",
             "SELECT community_id as communityId, community_name as communityName, community_tag as communityTag ",
@@ -46,4 +41,7 @@ public interface CommunityRepository {
 
     @Select("Select community_id as communityId,community_name as communityName, community_tag as communityTag from community")
     List<Community> getAllCommunities();
+
+    @Select("SELECT community_name FROM community WHERE community_id = #{communityId}")
+    String getCommunity(@Param("communityId") String communityId);
 }

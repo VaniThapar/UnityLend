@@ -6,6 +6,7 @@ import com.educare.unitylend.model.BorrowRequest;
 import com.educare.unitylend.model.Status;
 import com.educare.unitylend.model.User;
 import com.educare.unitylend.service.BorrowRequestService;
+import com.educare.unitylend.service.EMIService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.AllArgsConstructor;
@@ -29,6 +30,7 @@ public class BorrowRequestServiceImpl implements BorrowRequestService {
     private StatusRepository statusRepository;
     private UserCommunityMapRepository userCommunityMapRepository;
     private CommunityRepository communityRepository;
+    private EMIService emiService;
 
     /**
      * Retrieves all borrow requests.
@@ -40,8 +42,8 @@ public class BorrowRequestServiceImpl implements BorrowRequestService {
     public List<BorrowRequest> getAllBorrowRequests() throws ServiceException {
         try {
             List<BorrowRequest> borrowRequestList = borrowRequestRepository.getAllBorrowRequests();
-            for(BorrowRequest request : borrowRequestList){
-                String borrowerId=borrowRequestRepository.getBorrowerIdUsingRequestId(request.getBorrowRequestId());
+            for (BorrowRequest request : borrowRequestList) {
+                String borrowerId = borrowRequestRepository.getBorrowerIdUsingRequestId(request.getBorrowRequestId());
                 User requiredUser = userRepository.getUserForUserId(borrowerId);
                 request.setBorrower(requiredUser);
                 ObjectMapper objectMapper = new ObjectMapper();
@@ -50,8 +52,8 @@ public class BorrowRequestServiceImpl implements BorrowRequestService {
                 });
                 requiredUser.setCommunityDetails(communityDetails);
                 request.setCommunityIds(userCommunityMapRepository.getCommunityIdsWithUserId(borrowerId));
-                Integer code=borrowRequestRepository.getStatusCodeForReqId(request.getBorrowRequestId());
-                Status status=statusRepository.getStatusByStatusCode(code);
+                Integer code = borrowRequestRepository.getStatusCodeForReqId(request.getBorrowRequestId());
+                Status status = statusRepository.getStatusByStatusCode(code);
                 request.setBorrowStatus(status);
 
             }
@@ -72,7 +74,7 @@ public class BorrowRequestServiceImpl implements BorrowRequestService {
     @Override
     public List<BorrowRequest> getBorrowRequestForUserId(String userId) throws ServiceException {
         try {
-            if(userId != null) {
+            if (userId != null) {
                 List<BorrowRequest> borrowRequestList = borrowRequestRepository.getBorrowRequestsByUserId(userId);
                 for (BorrowRequest borrowRequest : borrowRequestList) {
                     User requiredUser = userRepository.getUserForUserId(userId);
@@ -88,8 +90,7 @@ public class BorrowRequestServiceImpl implements BorrowRequestService {
                     borrowRequest.setCommunityIds(userCommunityMapRepository.getCommunityIdsWithUserId(userId));
                 }
                 return borrowRequestList;
-            }
-            else{
+            } else {
                 log.error("User Id cannot be empty.");
                 return Collections.emptyList();
             }
@@ -103,21 +104,20 @@ public class BorrowRequestServiceImpl implements BorrowRequestService {
      * Updates the status of a borrow request.
      *
      * @param borrowRequest The borrow request to be updated.
-     * @param status The new status to be set for the borrow request.
+     * @param status        The new status to be set for the borrow request.
      * @return Boolean True if the update is successful, false otherwise.
      * @throws ServiceException If an error occurs during the update process.
      */
     @Override
     public Boolean updateBorrowRequestStatus(BorrowRequest borrowRequest, Status status) throws ServiceException {
         try {
-            if(borrowRequest != null && status != null) {
+            if (borrowRequest != null && status != null) {
                 Integer statusCode = status.getStatusCode();
                 String requestId = borrowRequest.getBorrowRequestId();
                 borrowRequestRepository.updateStatusOfBorrowRequest(statusCode, requestId);
                 borrowRequest.setBorrowStatus(status);
                 return true;
-            }
-            else{
+            } else {
                 log.error("Cannot update");
                 return false;
             }
@@ -130,18 +130,17 @@ public class BorrowRequestServiceImpl implements BorrowRequestService {
     /**
      * Retrieves borrow requests in a community with amounts less than a specified value.
      *
-     * @param maxAmount    The maximum amount requested in the borrow request.
-     * @param communityId  The ID of the community to search within.
+     * @param maxAmount   The maximum amount requested in the borrow request.
+     * @param communityId The ID of the community to search within.
      * @return List of BorrowRequest objects meeting the criteria.
      * @throws ServiceException If an error occurs while retrieving borrow requests.
      */
     @Override
     public List<BorrowRequest> getBorrowRequestsInCommunityLessThanAmount(BigDecimal maxAmount, String communityId) throws ServiceException {
         try {
-            if(maxAmount!=null && communityId!=null) {
+            if (maxAmount != null && communityId != null) {
                 return borrowRequestRepository.findByRequestedAmountLessThanAndCommunityIdsContaining(maxAmount, communityId);
-            }
-            else{
+            } else {
                 log.error("Cannot fetch requests");
                 return Collections.emptyList();
             }
@@ -153,18 +152,17 @@ public class BorrowRequestServiceImpl implements BorrowRequestService {
     /**
      * Retrieves borrow requests in a community with amounts greater than or equal to a specified value.
      *
-     * @param minAmount    The minimum amount requested in the borrow request.
-     * @param communityId  The ID of the community to search within.
+     * @param minAmount   The minimum amount requested in the borrow request.
+     * @param communityId The ID of the community to search within.
      * @return List of BorrowRequest objects meeting the criteria.
      * @throws ServiceException If an error occurs while retrieving borrow requests.
      */
     @Override
     public List<BorrowRequest> getBorrowRequestsInCommunityGreaterThanAmount(BigDecimal minAmount, String communityId) throws ServiceException {
         try {
-            if(minAmount!=null && communityId!=null) {
+            if (minAmount != null && communityId != null) {
                 return borrowRequestRepository.findByRequestedAmountGreaterThanEqualAndCommunityIdsContaining(minAmount, communityId);
-            }
-            else{
+            } else {
                 log.error("Cannot fetch requests.");
                 return Collections.emptyList();
             }
@@ -176,19 +174,18 @@ public class BorrowRequestServiceImpl implements BorrowRequestService {
     /**
      * Retrieves borrow requests within a specified range of amounts in a community.
      *
-     * @param minAmount    The minimum amount requested in the borrow request.
-     * @param maxAmount    The maximum amount requested in the borrow request.
-     * @param communityId  The ID of the community to search within.
+     * @param minAmount   The minimum amount requested in the borrow request.
+     * @param maxAmount   The maximum amount requested in the borrow request.
+     * @param communityId The ID of the community to search within.
      * @return List of BorrowRequest objects meeting the criteria.
      * @throws ServiceException If an error occurs while retrieving borrow requests.
      */
     @Override
     public List<BorrowRequest> getBorrowRequestsInCommunityInRange(BigDecimal minAmount, BigDecimal maxAmount, String communityId) throws ServiceException {
         try {
-            if(minAmount!=null && maxAmount!=null && communityId!=null) {
+            if (minAmount != null && maxAmount != null && communityId != null) {
                 return borrowRequestRepository.findByRequestedAmountBetweenAndCommunityIdsContaining(minAmount, maxAmount, communityId);
-            }
-            else{
+            } else {
                 log.error("Cannot fetch requests");
                 return Collections.emptyList();
             }
@@ -204,8 +201,8 @@ public class BorrowRequestServiceImpl implements BorrowRequestService {
      * @return boolean Indicating whether the borrow request is valid or not
      * @throws ServiceException If an error occurs during the check.
      */
-    public boolean incomeEmiBorrowRequest(BorrowRequest borrowRequest) throws ServiceException{
-        try{
+    public boolean incomeEmiBorrowRequest(BorrowRequest borrowRequest) throws ServiceException {
+        try {
             Integer tenure = borrowRequest.getReturnPeriodMonths();
             BigDecimal monthlyIncome = borrowRequest.getBorrower().getIncome();
             BigDecimal borrowedAmount = borrowRequest.getRequestedAmount();
@@ -213,8 +210,7 @@ public class BorrowRequestServiceImpl implements BorrowRequestService {
             BigDecimal limitMoney = monthlyIncome.divide(BigDecimal.valueOf(2));
             boolean isWithinLimit = monthlyEMI.compareTo(limitMoney) <= 0;
             return isWithinLimit;
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             throw new ServiceException("Error validating borrow requests: " + e.getMessage(), e);
         }
     }
@@ -226,9 +222,9 @@ public class BorrowRequestServiceImpl implements BorrowRequestService {
      * @return boolean Indicating whether the borrower is a part of the community he wants to send borrow request to or not
      * @throws ServiceException If an error occurs during the check.
      */
-    public boolean isUserPartOfCommunity(BorrowRequest borrowRequest) throws ServiceException{
-        try{
-            if(borrowRequest!=null) {
+    public boolean isUserPartOfCommunity(BorrowRequest borrowRequest) throws ServiceException {
+        try {
+            if (borrowRequest != null) {
                 List<String> requestedCommunityIds = borrowRequest.getCommunityIds();
                 Map<String, String> borrowerCommunities = borrowRequest.getBorrower().getCommunityDetails();
                 for (String requestedCommunityId : requestedCommunityIds) {
@@ -238,13 +234,11 @@ public class BorrowRequestServiceImpl implements BorrowRequestService {
                     }
                 }
                 return true;
-            }
-            else{
+            } else {
                 log.error("Cannot add");
                 return false;
             }
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             throw new ServiceException("Error verifying borrower's communities: " + e.getMessage(), e);
         }
     }
@@ -256,19 +250,17 @@ public class BorrowRequestServiceImpl implements BorrowRequestService {
      * @return boolean Indicating whether the borrower has a previous pending request or not
      * @throws ServiceException If an error occurs during the check.
      */
-    public boolean isBorrowRequestPending(BorrowRequest borrowRequest) throws ServiceException{
-        try{
-            if(borrowRequest!=null) {
+    public boolean isBorrowRequestPending(BorrowRequest borrowRequest) throws ServiceException {
+        try {
+            if (borrowRequest != null) {
                 String borrowerId = borrowRequest.getBorrower().getUserId();
                 if (borrowRequestRepository.isRequestPending(borrowerId)) return true;
                 return false;
-            }
-            else{
+            } else {
                 log.error("Error in execution");
                 return false;
             }
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             throw new ServiceException("Error checking pending requests: " + e.getMessage(), e);
         }
     }
@@ -280,51 +272,49 @@ public class BorrowRequestServiceImpl implements BorrowRequestService {
      * @return boolean Indicating whether the borrower has any null required fields
      * @throws ServiceException If an error occurs during the check.
      */
-    public boolean isAnythingNull(BorrowRequest borrowRequest) throws ServiceException{
-        try{
-            if(borrowRequest!=null) {
+    public boolean isAnythingNull(BorrowRequest borrowRequest) throws ServiceException {
+        try {
+            if (borrowRequest != null) {
                 if (borrowRequest.getBorrower().getUserId() == null || borrowRequest.getBorrower().getPassword() == null || borrowRequest.getBorrower().getIncome() == null || borrowRequest.getBorrower().getCommunityDetails() == null || borrowRequest.getReturnPeriodMonths() == null || borrowRequest.getMonthlyInterestRate() == null || borrowRequest.getRequestedAmount() == null || borrowRequest.getCommunityIds() == null || borrowRequest.getCommunityIds().isEmpty())
                     return true;
                 return false;
-            }
-            else{
+            } else {
                 log.error("Error in execution");
                 return false;
             }
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             throw new ServiceException("Error checking null conditions: " + e.getMessage(), e);
         }
     }
 
     /**
      * Creating a borrow-request and add it to the database
+     *
      * @param borrowRequest The borrow request object containing borrow request details to be created.
      * @return boolean Indicating whether the borrow request was successfully added to the database or not in the dao layer
      * @throws ServiceException If an error occurs during the addition of request to the table.
      */
     @Override
     public Boolean createBorrowRequest(BorrowRequest borrowRequest) throws ServiceException {
-        try{
-            if(borrowRequest!=null) {
+        try {
+            if (borrowRequest != null) {
                 Boolean flag = borrowRequestRepository.createBorrowRequest(borrowRequest, borrowRequest.getBorrower().getUserId());
                 String requestId = borrowRequest.getBorrowRequestId();
                 List<String> communityId = borrowRequest.getCommunityIds();
                 borrowRequestCommunityMapRepository.createBorrowRequestCommunityMapping(requestId, communityId);
                 return flag;
-            }
-            else{
+            } else {
                 log.error("Error in execution");
                 return false;
             }
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             throw new ServiceException("Error creating requests in implementation layer: " + e.getMessage(), e);
         }
     }
 
     /**
      * Validating a borro request based on the above defined functions
+     *
      * @param borrowRequest The borrow request object containing borrow request details to be created.
      * @return boolean Checks whether request can be created
      * @throws ServiceException If an error occurs during the addition of request to the table.
@@ -333,25 +323,72 @@ public class BorrowRequestServiceImpl implements BorrowRequestService {
     public String validatingBorrowRequest(BorrowRequest borrowRequest) throws ServiceException {
         try {
             String returnMessage;
-            if (isAnythingNull(borrowRequest)){
+            if (isAnythingNull(borrowRequest)) {
                 returnMessage = "Atleast one of the required field is null";
-            }
-            else if (!isUserPartOfCommunity(borrowRequest)){
+            } else if (!isUserPartOfCommunity(borrowRequest)) {
                 returnMessage = "You are not a part of the listed communtities";
-            }
-            else if (isBorrowRequestPending(borrowRequest)){
+            } else if (isBorrowRequestPending(borrowRequest)) {
                 returnMessage = "Pending borrow requests found. Complete previous borrow requests to raise a new one!";
-            }
-            else if (!incomeEmiBorrowRequest(borrowRequest)){
+            } else if (!incomeEmiBorrowRequest(borrowRequest)) {
                 returnMessage = "Request not validated due to income-emi constraint";
-            }
-            else{
+            } else {
                 returnMessage = "No error";
             }
             return returnMessage;
         } catch (Exception e) {
             throw new ServiceException("Error creating requests in implementation layer: " + e.getMessage(), e);
         }
+    }
+
+    @Override
+    public BorrowRequest getBorrowRequestByRequestId(String borrowRequestId) throws ServiceException {
+        try {
+            BorrowRequest borrowRequest = borrowRequestRepository.getBorrowRequestByRequestId(borrowRequestId);
+
+            String userId = borrowRequestRepository.getUserIdByRequestId(borrowRequestId);
+            User borrower = userRepository.getUserForUserId(userId);
+            borrowRequest.setBorrower(borrower);
+            return borrowRequest;
+        } catch (Exception e) {
+            log.error("Error encountered in fetching borrow request by id");
+            throw new ServiceException("Error encountered in fetching borrow request by id", e);
+        }
+    }
+
+    @Override
+    public Boolean updateCollectedAmount(String borrowRequestId, BigDecimal amount) throws ServiceException {
+        try {
+            Integer rowsAffected = borrowRequestRepository.updateCollectedAmount(borrowRequestId, amount);
+            BorrowRequest borrowRequest = borrowRequestRepository.getBorrowRequestByRequestId(borrowRequestId);
+
+            if (isAmountFullyCollected(borrowRequest)) {
+                Integer returnPeriod = borrowRequest.getReturnPeriodMonths();
+                emiService.addEMIDetails(returnPeriod, borrowRequestId);
+                log.info("Borrow Request Amount has been fully collected");
+                log.info("Monthly EMI details have been added in the EMI table");
+            }
+            return rowsAffected > 0;
+        } catch (Exception e) {
+            log.error("Error encountered in updating collected amount in given borrow request");
+            throw new ServiceException("Error encountered in updating collected amount in given borrow request", e);
+        }
+    }
+
+    @Override
+    public Boolean isLendAmountValid(String borrowRequestId, BigDecimal amount) throws ServiceException {
+        try {
+            Boolean isLendPossible = borrowRequestRepository.isLendAmountValid(borrowRequestId, amount);
+            return isLendPossible;
+        } catch (Exception e) {
+            log.info("Error encountered while checking the possibility of lend operation");
+            throw new ServiceException("Error encountered while checking the possibility of lend operation", e);
+        }
+    }
+
+    private Boolean isAmountFullyCollected(BorrowRequest borrowRequest) {
+        BigDecimal collectedAmount = borrowRequest.getCollectedAmount();
+        BigDecimal requestedAmount = borrowRequest.getRequestedAmount();
+        return collectedAmount.equals(requestedAmount);
     }
 
 }

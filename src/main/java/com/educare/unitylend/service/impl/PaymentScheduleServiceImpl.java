@@ -208,6 +208,11 @@ public class PaymentScheduleServiceImpl implements PaymentScheduleService {
             }
 
             BorrowRequest borrowRequest=borrowRequestRepository.getBorrowRequestByRequestId(borrowRequestId);
+
+            if(borrowRequest==null){
+                throw new Exception("Borrow request is null");
+            }
+
             BigDecimal defaultFine=borrowRequest.getDefaultFine();
 
             emiRepository.updateOverdueEMIsToDefaultedStatus(borrowRequestId,defaultFine);

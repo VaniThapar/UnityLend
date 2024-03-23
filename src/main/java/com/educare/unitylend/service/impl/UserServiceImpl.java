@@ -158,6 +158,9 @@ public class UserServiceImpl implements UserService {
     public User getUserForUserId(String userId) throws ServiceException {
         try {
             User requiredUser = userRepository.getUserForUserId(userId);
+            if(requiredUser==null){
+                throw new Exception("User id is null");
+            }
             String communityDetailsJson = requiredUser.getCommunityDetailsJson();
             Map<String, String> communityDetails = objectMapper.readValue(communityDetailsJson, new TypeReference<Map<String, String>>() {
             });
@@ -167,6 +170,11 @@ public class UserServiceImpl implements UserService {
         } catch (JsonProcessingException e) {
             log.error("Error encountered in getting user by user id");
             throw new ServiceException("Error encountered in getting user by user id", e);
+        }
+        catch(Exception e){
+            log.error("Error encountered in getting user by user id");
+            throw new ServiceException("Error encountered in getting user by user id", e);
+
         }
     }
 

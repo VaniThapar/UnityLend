@@ -37,6 +37,10 @@ public class EMIServiceImpl implements EMIService {
 
             BorrowRequest borrowRequest = borrowRequestRepository.getBorrowRequestByRequestId(borrowRequestId);
 
+            if(borrowRequest==null){
+                throw new Exception("Borrow request is null");
+            }
+
             Integer returnPeriod = borrowRequest.getReturnPeriodMonths();
             BigDecimal bigDecimalReturnPeriod = new BigDecimal(returnPeriod);
             BigDecimal principalAmount = borrowRequest.getRequestedAmount();
@@ -107,7 +111,6 @@ public class EMIServiceImpl implements EMIService {
                 throw new IllegalArgumentException("No borrow request found for ID: " + borrowRequestId);
             }
 
-            BigDecimal finalMonthlyEMI = calculateBorrowEMIAmount(borrowRequestId);
             BigDecimal lentAmount = emiRepository.getLentAmountByBorrowRequestIdAndLenderId(borrowRequestId, lenderId);
             BigDecimal requestedAmount = borrowRequest.getRequestedAmount();
 
