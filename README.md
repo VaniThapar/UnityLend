@@ -54,12 +54,19 @@ The class diagram can be accessed at [Unity_Lend_Class_Diagram](https://drive.go
 
 # E R Diagram
 
-The ER diagram can be accessed at [Unity_Lend_EER_Diagram](https://github.com/VaniThapar/UnityLend/files/14627912/Unity-Lend-EER.pdf)
+The ER diagram can be accessed at [Unity-Lend-ER-Diagram](https://github.com/VaniThapar/UnityLend/files/14731925/Unity-Lend-EER-Diagram.pdf)
 
-# Flow diagram for the lender
-The Flow diagram demonstrating the operations of a lender can be accessed at [Flow_Diagram_For_Lender](https://app.diagrams.net/#G1dLFlWWprYTwwtwjXvi5WEJS94RS7x-uo#%7B%22pageId%22%3A%22W7Y_DPB_WjcdcxQGYy3G%22%7D).
+# Flow diagrams
+Flow Diagarm for User Registration and Community Generation : [User Registration and Community Creation](https://github.com/VaniThapar/UnityLend/files/14731893/User.Registration.and.Community.Creation-Page-2.drawio.pdf)
+ 
+Flow Diagram for raising a Borrow Request : [Flow_Diagram_For_Raising_Borrow_Request](https://github.com/VaniThapar/UnityLend/files/14731894/Flow_Diagram_For_Raising_Borrow_Request.drawio.pdf)
 
-# Flow diagram for raising a borrow request
-The Flow diagram demonstrating the steps of raising a borrow request can be accessed at [Flow_Diagram_For_Raising_Request](https://drive.google.com/file/d/1pA5A4blyuBDjGBg7mWg6v0XT-DEOwUn8/view?usp=sharing).
+Flow Diagarm for generating EMI Schedule after Borrow Request is fulfilled : [Flow_Diagram_For_EMI_Generation](https://github.com/VaniThapar/UnityLend/files/14731899/Flow_Diagram_For_Lender.drawio.pdf)
+
+Flow Diagram for Lender lending against a Borrow Request : [Flow_Diagram_For_Lender](https://github.com/VaniThapar/UnityLend/files/14731912/Flow_Diagram_For_Lender.drawio.pdf)
+
+Flow Diagram for Borrower repaying the monthly EMI against a Borrow Request : [Flow_Diagram_for_Repayment](https://github.com/VaniThapar/UnityLend/files/14731900/Flow_Diagram_for_Repayment.drawio.pdf)
+
+
 
 
