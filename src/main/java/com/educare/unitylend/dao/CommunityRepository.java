@@ -13,8 +13,8 @@ import java.util.List;
 @Repository
 public interface CommunityRepository {
 
-    @Select("Select count(*)>0 from community where community_tag=#{communityTag} AND community_name=#{communityName}")
-    Boolean existsCommunity(@Param("communityTag")String communityTag,@Param("communityName")String communityName);
+    @Select("SELECT community_name FROM community WHERE community_id = #{communityId}")
+    String getCommunity(@Param("communityId") String communityId);
 
     @Insert({"<script>",
             "INSERT INTO community (community_id, community_tag, community_name)",
@@ -24,6 +24,9 @@ public interface CommunityRepository {
             "</if>",
             "</script>"})
     void createCommunity(@Param("communityTag") String communityTag, @Param("communityName") String communityName);
+
+    @Select("Select community_id as communityId,community_name as communityName, community_tag as communityTag from community")
+    List<Community> getAllCommunities();
 
     @Select({
             "<script>",
@@ -39,9 +42,8 @@ public interface CommunityRepository {
     })
     Community findByCommunityTagAndCommunityName(@Param("communityTag") String communityTag, @Param("communityName") String communityName);
 
-    @Select("Select community_id as communityId,community_name as communityName, community_tag as communityTag from community")
-    List<Community> getAllCommunities();
 
-    @Select("SELECT community_name FROM community WHERE community_id = #{communityId}")
-    String getCommunity(@Param("communityId") String communityId);
+    @Select("Select count(*)>0 from community where community_tag=#{communityTag} AND community_name=#{communityName}")
+    Boolean existsCommunity(@Param("communityTag")String communityTag,@Param("communityName")String communityName);
+
 }
