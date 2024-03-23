@@ -25,7 +25,7 @@ public class BorrowRequest {
     private BigDecimal collectedAmount;
     private Boolean isDefaulted;
     private BigDecimal defaultFine;
-    private  Integer defaultCount;
+    private Integer defaultCount;
     private LocalDateTime createdAt;
     private LocalDateTime lastModifiedAt;
     private List<String> communityIds;
