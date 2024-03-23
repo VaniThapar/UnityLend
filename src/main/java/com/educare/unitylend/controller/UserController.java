@@ -1,7 +1,6 @@
 package com.educare.unitylend.controller;
 
 import com.educare.unitylend.Exception.ControllerException;
-import com.educare.unitylend.Exception.ControllerException;
 import com.educare.unitylend.Exception.ServiceException;
 import com.educare.unitylend.model.User;
 import com.educare.unitylend.service.UserService;
