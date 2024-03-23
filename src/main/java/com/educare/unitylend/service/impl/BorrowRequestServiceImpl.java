@@ -193,6 +193,7 @@ public class BorrowRequestServiceImpl implements BorrowRequestService {
                 Map<String, String> borrowerCommunities = borrowRequest.getBorrower().getCommunityDetails();
                 for (String requestedCommunityId : requestedCommunityIds) {
                     String requestedCommunityName = communityRepository.getCommunity(requestedCommunityId);
+
                     if (!borrowerCommunities.containsValue(requestedCommunityName)) {
                         return false;
                     }
@@ -336,9 +337,11 @@ public class BorrowRequestServiceImpl implements BorrowRequestService {
         try {
             Integer rowsAffected=borrowRequestRepository.updateCollectedAmount(borrowRequestId,amount);
             BorrowRequest borrowRequest=borrowRequestRepository.getBorrowRequestByRequestId(borrowRequestId);
+            Integer statusCode=statusRepository.getStatusCodeByStatusName("Completed");
+            Status status=statusRepository.getStatusByStatusCode(statusCode);
 
             if(isAmountFullyCollected(borrowRequest)){
-                //update status of borrow req
+                updateBorrowRequestStatus(borrowRequest,status);
                 Integer returnPeriod=borrowRequest.getReturnPeriodMonths();
                 emiService.addEMIDetails(returnPeriod,borrowRequestId);
             }
